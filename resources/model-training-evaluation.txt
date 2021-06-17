@@ -1,0 +1,33 @@
+4 step process to work with ML algorithms in scikit-learn (no train-test split)
+
+- Import model from scikit-learn
+- Create an instance of the model to use (define hyperparameters: model’s parameters that it can’t learn from data)
+    - Examples of hyper parameters: number of neighbors in KNN, setting any coefficient/intercept to forcefully be 0.
+- Train the model on data
+- Predict on data with the model
+
+e.g.
+
+from sklearn.linear_model import LinearRegression
+lin_reg = LinearRegression()
+lin_reg.fit(X, y)
+y_pred = lin_reg.predict(X)
+
+
+N step process to work with ML algorithms in scikit-learn (train-test splits)
+
+- Import model from scikit-learn
+- Create an instance of the model to use (define hyperparameters: model’s parameters that it can’t learn from data)
+    - Examples of hyper parameters: number of neighbors in KNN, setting any coefficient/intercept to forcefully be 0.
+- Split data into (a) one training and one testing set, or (b) multiple training and multiple test sets (cross-validation)
+    - In 1-1 70-30 split, corresponds to 3 folds in many-many split (cross-validation)
+    - In 1-1 80-20 split, corresponds to 5 folds in many-many split
+    - In 1-1 90-10 split, corresponds to 10 folds in many-many split
+- Train the model on training data
+- Test performance on test data with the model
+    - In case of the many-many split (cross-validation), we’re going to the average of all performance metrics.
+    - Use this step to compare different models, but you cannot compare the performance for different values of K here.
+- Train the model FINAL on all data
+- Predict on new data using FINAL model
+
+If we wanted to be really rigorous, we would also have to consider a validation set. This is important when doing hyperparameter optimization.

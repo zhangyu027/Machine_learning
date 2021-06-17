@@ -1,0 +1,30 @@
+SQL - Structured Query Language
+
+- Used to interact with relational databases.
+- Many flavors: MySQL, Micrososft SQL Server, Amazon Redshift, Oracle DB
+
+Find data:
+SELECT (column_1, column_2, ...) FROM table [WHERE condition GROUP BY columns LIMIT number];
+
+
+Add data:
+INSERT INTO table (column_1, column_2, ...) VALUES (value_1, value_2, ...);
+
+
+Update data:
+UPDATE table SET column_1=value_1, column2=value_2, ... WHERE condition;
+
+
+Delete data:
+DELETE FROM table WHERE condition;
+
+
+Let's practice!
+
+https://www.w3schools.com/sql/trysql.asp?filename=trysql_op_in
+
+References:
+
+Detailed tutorials:
+https://www.w3schools.com/sql/default.asp
+https://sqlzoo.net/wiki/SELECT_basics

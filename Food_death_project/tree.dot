@@ -1,0 +1,32 @@
+digraph Tree {
+node [shape=box] ;
+0 [label="Confirmed <= -0.238\nmse = 0.014\nsamples = 129\nvalue = 0.143"] ;
+1 [label="Confirmed <= -0.703\nmse = 0.002\nsamples = 79\nvalue = 0.061"] ;
+0 -> 1 [labeldistance=2.5, labelangle=45, headlabel="True"] ;
+2 [label="Confirmed <= -0.812\nmse = 0.001\nsamples = 52\nvalue = 0.038"] ;
+1 -> 2 ;
+3 [label="mse = 0.0\nsamples = 23\nvalue = 0.019"] ;
+2 -> 3 ;
+4 [label="mse = 0.0\nsamples = 29\nvalue = 0.053"] ;
+2 -> 4 ;
+5 [label="Recovered <= -0.39\nmse = 0.001\nsamples = 27\nvalue = 0.106"] ;
+1 -> 5 ;
+6 [label="mse = 0.0\nsamples = 16\nvalue = 0.089"] ;
+5 -> 6 ;
+7 [label="mse = 0.001\nsamples = 11\nvalue = 0.131"] ;
+5 -> 7 ;
+8 [label="Confirmed <= 0.712\nmse = 0.007\nsamples = 50\nvalue = 0.272"] ;
+0 -> 8 [labeldistance=2.5, labelangle=-45, headlabel="False"] ;
+9 [label="Aquatic_Products, Other <= -0.055\nmse = 0.005\nsamples = 28\nvalue = 0.224"] ;
+8 -> 9 ;
+10 [label="mse = 0.003\nsamples = 25\nvalue = 0.21"] ;
+9 -> 10 ;
+11 [label="mse = 0.001\nsamples = 3\nvalue = 0.34"] ;
+9 -> 11 ;
+12 [label="Cereals_Excluding_Beer <= -0.548\nmse = 0.003\nsamples = 22\nvalue = 0.334"] ;
+8 -> 12 ;
+13 [label="mse = 0.001\nsamples = 17\nvalue = 0.351"] ;
+12 -> 13 ;
+14 [label="mse = 0.003\nsamples = 5\nvalue = 0.276"] ;
+12 -> 14 ;
+}

@@ -1,0 +1,83 @@
+Title: "Elementary and high school students performance and relation to the district education finance " -GA Final Project Research proposal
+Author: Yu Zhang
+output: 
+
+1. Introduction
+
+In the discussion of K-12 students' success, the issue of financing is prominent from the perspective of various stakeholders. Policymakers are engaged in asking how much public purse should be devoted to elementary and high school students related to competing demands on tuition, expenditure, and transportation. Federal education and census are concerned about the financial capacity to provide quality education and sustain the living hood. Besides, the family and students concerned about how they pay for education can guarantee the students' success beyond elementary and high school. 
+
+In observing the NAEP (National Assessment of Educational Progress) data and Educational financing data from the National Finance Census (National Center for Educational Statistics), we have been known the educational finance can be characterized by the goals of students' academic success, and by a strong influence by the financial capacity, by and large, we might predict the elementary and high school students academic success on mathematics and literacy to be influenced by the features of family and federal educational financing, this is for example, highly praise by educational scholar and researcher Joan Herman'description: "the keys resources, educational financing have been imposed the role to expand the enrollment and institutes. On the performance standards, the evaluation can be introduced to predict the student's performance"(2011). 
+
+2. Data Resource 
+https://www.kaggle.com/kabure/eda-us-education-finances
+Data set of the chracteristics
+NAPE data: Students G4-8 subject test Mathematics and Literacy Standardized test score by year 
+year
+State
+score 
+test_subject
+test_year
+
+include 2305 observations and 5 variables
+
+District Finance:
+
+STATE :state 
+ENROLL :enroll 
+NAME : district name 
+YRDATA : year 
+TOTALREV : total_revenue
+TFEDREV : federal_revenue
+TSTREV: state_revenue
+TLOCREV: local_revenue
+TOTALEXP: expenditure
+TCURINST: current_spending_instruction
+TCURSSVC: current_spending
+TCURONON: other_spending
+TCAPOUT: total_capital
+
+include 374161 observations and 13 variables
+
+3. Research question:
+
+1. What are the relationship between educational financing and elementary and high school student's performance in the last 10 years? 
+2. What is the main district financial prediction that drive the elementary and high school students mathematics and reading standardized test? 
+3.what are the policy recommendation for the educational policymaker to allocate the district educational financing and plan the resources?
+
+
+4. Data preparation
+Loading data
+handling missing value
+merge the tables
+numeric features and output variables
+
+5. Exploratory Data Analysis
+
+fig1. scatter plots between the features and (naep)score
+fig2. line plots of finance features by year
+fig3. percentage comparison of finance features
+
+table1. ranking of avg score on mathematics and reading of district
+table2. revenue ranking by state and districts
+
+6. Modeling preparation
+splitting data to the training and test data of 80% training and 20% test data.
+
+
+7: Models: Prediction
+Random Forest 
+Gradient Boosting Machine
+Support Vector Machine
+
+Model Performance Evaluation:
+1.ROC of cross-validation
+2.Accuracy of test data
+3.Predictive modeling ranking 
+4.Assess the model with the final testing set.
+
+Conclusion
+Key factors
+Predictive models ranks5
+
+Impact of the findings
+The project addresses the research and practitioners pursuing, which can be the key responsibilities in both academic and educational application. In an attempt to place in K-12 systems and institutions, we consider the higher financial expenditure, instructional supports, and others that could predict elementary and high school student's success. Besides, we consider the student's performance cohorts cluster in areas of districts and schools of various finance capacity.  

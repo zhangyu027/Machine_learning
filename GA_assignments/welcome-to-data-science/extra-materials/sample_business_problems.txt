@@ -1,0 +1,12 @@
+1. Attrition in an organization has gone up. Why did it happen?
+2. I want to build a product to recommend a playlist to a customer.
+3. I'd like my self-driving car to stop when it sees a pedestrian.
+4. There's marketing budget only for 3 ad campaigns. Who do I target?
+5. You're woken up at 6am with a call saying that YouTube went down in the night but has since recovered. Can you tell me when the event happened so we can debug?
+6. What is the likelihood that a customer will buy this product?
+7. Is this a good or bad review?
+8. How much demand will there be for my service tomorrow?
+9. Is this the cheapest way to deliver my goods?
+10. Is there a better way to segment my marketing strategies?
+11. What groups of products are customers purchasing together?
+12. Can we automate this simple yes/no decision?

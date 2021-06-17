@@ -1,0 +1,4 @@
+APIs: requests
+Simplest web scraping: requests + beautifulsoup4
+More sophisticated web scraping: requests + beautifulsoup4 + selenium
+Even more sophisticated web scraping: requests + beautifulsoup4 + selenium + proxy servers (+ human simulating logic, etc.)

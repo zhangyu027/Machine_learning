@@ -1,0 +1,60 @@
+Let's assume the branch the instructed created for tracking is called 'master'.
+Let's assume the branch the student created to do their work is called 'localmaster'.
+
+Setup:
+
+1. Fork the instructor repository from https://git.generalassemb.ly/naumz7/DATR-121
+
+2. On your computer, clone the repository with the command:
+
+[git clone https://git.generalassemb.ly/STUDENT/DATR-121] in Git Bash
+[Press File -> Clone repository button] in SourceTree
+
+3. On your computer, create a branch 'localmaster' (to contain student changes)
+
+4. Give the instructor repository the name 'upstream' and student repository the name 'origin' (this likely happens automatically and is redundant).
+
+[git remote add origin https://git.generalassemb.ly/STUDENT/DATR-121] in Git Bash
+[git remote add upstream https://git.generalassemb.ly/naumz7/DATR-121] in Git Bash
+[Repository -> Repository Settings -> Remotes -> Add remote] in SourceTree
+
+5. Check that the remotes have been added correctly.
+
+[git remote -v] in Git Bash
+[Repository -> Repository Settings -> Remotes] in SourceTree
+
+
+Regular:
+
+1. Ensure you are in the 'localmaster' branch (this is where you should always be when working)
+
+[Check that your terminal says 'localmaster'] in Git Bash
+[Check that your or bold] in SourceTree
+
+2. Switch to the 'master' branch (to prepare to download new lesson content)
+
+[git checkout master] in Git Bash
+[Double click on the branch name] in SourceTree
+
+3. Git pull from the instructor repo 'master' branch into your 'master' branch (to get new lesson content)
+
+[git pull upstream master] in Git Bash
+[Click Pull button, make sure to choose 'upstream' remote repository] in SourceTree
+
+
+4. Switch to the 'localmaster' branch (to come back to the version with your changes)
+
+[git checkout localmaster] in Git Bash
+[Double click name of the branch] in SourceTree
+
+5. Merge the 'master' branch into the 'localmaster' branch. (getting the new lesson content into your working branch)
+
+[git merge master] in Git Bash
+[Right click on the latest commit in the 'master' branch and select Merge] in SourceTree
+
+6. Continue working!
+
+7. Push your changes to the student repository.
+
+[git push --all origin] in Git Bash
+[Click on Push, ensure remote is set to origin] in SourceTree

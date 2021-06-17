@@ -1,0 +1,61 @@
+Business Project Research proposal
+
+1. Problem statement
+
+In the discussion of K-12 students' success, the issue of financing is prominent from the perspective of various stakeholders. Policymakers are engaged in asking how much public purse should be devoted to elementary and high school students related to competing demands on tuition, expenditure, and transportation. Federal education and census are concerned about the financial capacity to provide quality education and sustain the living hood. Besides, the family and students concerned about how they pay for education can guarantee the students' success beyond elementary and high school. 
+
+In observing the NAEP (National Assessment of Educational Progress) data and Educational financing data from the National Finance Census (National Center for Educational Statistics), we have been known the educational finance can be characterized by the goals of students' academic success, and by a strong influence by the financial capacity, by and large, we might predict the elementary and high school students academic success on mathematics and literacy to be influenced by the features of family and federal educational financing, this is for example, highly praise by educational scholar and researcher Joan Herman'description: "the keys resources, educational financing have been imposed the role to expand the enrollment and institutes. On the performance standards, the evaluation can be introduced to predict the student's performance"(2011). 
+
+NAPE data variables 
+
+Students G4-8 subject test Mathematics and Literacy Standardized test score by year 
+
+State Finance:
+
+Total expenditure
+Instructional expenditure
+Support Service expenditure 
+Enrollment by year
+Total revenue
+Federal revenue
+
+District Finance:
+
+Total expenditure
+Instructional expenditure
+Support Service expenditure 
+Enrollment by year
+Total revenue
+Federal revenue
+Enrollment
+
+Research question:
+
+1. What are the relationship between educational financing and elementary and high school student's performance in the last 10 years? 
+2. What are the characteristics of the financial on both district and state that can predict the students' success in 2021? 
+2. What are the school districts that are at risk to enroll the elementary and high school students and where are the school districts that benefit the students who performed above average? 
+4.what are the policy recommendation for the educational policymaker to allocate the financing and decide the planning?
+
+
+Research methods
+Metrics: the students' mathematics and literacy standardized test score above or below the average
+
+variables:
+EDA on the state and district finance expenditure and others by year.
+
+methods:
+1. linear regression 
+2. decision trees
+3. KNN
+
+Model Performance Evaluation:
+Accuracy
+Precision 
+
+Technical analysis
+1. clean data and handling missing value
+2. explore data analysis
+3. Apply the linear regression, KNN, and decision tree 
+
+Impact of the findings
+The project addresses the research and practitioners pursuing, which can be the key responsibilities in both academic and educational application. In an attempt to place in K-12 systems and institutions, we consider the higher financial expenditure, instructional supports, and others that could predict elementary and high school student's success. Besides, we consider the student's performance cohorts cluster in areas of districts and schools of various finance capacity.  

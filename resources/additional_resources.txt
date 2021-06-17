@@ -1,0 +1,12 @@
+Resources
+
+* Python
+
+1. https://leetcode.com/problemset/all/ and https://leetcode.com/explore/ - No better way to practice than to practice!
+2. https://docs.python-guide.org/intro/learning/ - Extensive set of learning resources
+
+* Linear algebra and Statistics
+
+1. https://www.khanacademy.org/math/linear-algebra - great videos on linear algebra. Not everything is relevant to data science.
+2. http://faculty.marshall.usc.edu/gareth-james/ISL/ - excellent book to dive into the details of statistics and ML algorithms
+3. https://www.khanacademy.org/math/statistics-probability - great courses on statistics. Many of these are relevant to data science.
