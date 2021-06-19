@@ -12,5 +12,8 @@ gpa_project/data/
 project-ICU-data/data/
 project-final/data/
 Customer Churn/
-Customer Segmentation/
+Customer Segmentation/Customer segmentation-backup.ipynb/
+Customer Segmentation/Customer segmentation.ipynb/
+Customer Segmentation/data/
+Time Series/Timeforcast-simple.ipynb/
 Time Series/data/
