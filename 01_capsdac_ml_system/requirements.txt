@@ -1,0 +1,10 @@
+pandas
+numpy
+scikit-learn
+xgboost
+joblib
+shap
+pyodbc
+streamlit
+python-dotenv
+matplotlib
