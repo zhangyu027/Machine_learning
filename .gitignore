@@ -1,0 +1,25 @@
+.DS_Store
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+
+# common large/generated content
+data/
+datasets/
+outputs/
+artifacts/
+models/
+checkpoints/
+
+# big binary types
+*.parquet
+*.zip
+*.pkl
+*.joblib
+*.h5
+*.pt
+*.pth
+*.onnx
