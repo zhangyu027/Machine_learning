@@ -2,7 +2,9 @@
 
 ## Overview
 This project predicts preschool enrollment outcomes using CAPSDAC education data. It demonstrates:
+Project Summary
 
+This project implements a distributed machine learning pipeline for hierarchical enrollment forecasting using Azure Synapse, PySpark, and Spark ML. It processes partitioned monthly parquet snapshots, constructs lag-based time-series features, trains a Random Forest regressor, and generates recursive short-horizon forecasts across vendor, site, and program levels. The system was designed to solve real operational planning problems while emphasizing production robustness, schema consistency, and scalable ML workflow design.
 - Synapse SQL extraction
 - Feature engineering
 - Random Forest / XGBoost modeling
