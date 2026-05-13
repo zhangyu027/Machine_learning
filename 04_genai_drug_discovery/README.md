@@ -165,3 +165,12 @@ A production-ready version would require chemistry-aware validation and domain e
 5. evaluate_candidates.py
 6. visualize_results.py
 7. GenAI_Drug_Discovery_End_to_End_Demo.ipynb
+
+## Git Push Steps 
+- cd /Users/yuzhang/projects/Machine_learning
+- git status
+- git add .
+- git commit -m "Update GenAI drug discovery portfolio project"
+- git push origin main
+- git push heroku main
+:wq
