@@ -1,45 +1,82 @@
 from pathlib import Path
 import pandas as pd
 
+
 ROOT = Path(__file__).resolve().parents[1]
 TRAIN_PATH = ROOT / "data" / "demo_smiles.csv"
-CANDIDATE_PATH = ROOT / "molecule_generation" / "generated_candidates.csv"
-OUT_PATH = ROOT / "evaluation" / "evaluation_report.csv"
+SCREENED_PATH = ROOT / "molecule_generation" / "screened_candidates.csv"
+REPORT_PATH = ROOT / "evaluation" / "evaluation_report.csv"
+SUMMARY_PATH = ROOT / "evaluation" / "evaluation_summary.csv"
+METRIC_TABLE_PATH = ROOT / "evaluation" / "real_evaluation_table.csv"
 
-def novelty_score(smiles: str, training_set: set[str]) -> int:
-    return 0 if smiles in training_set else 1
 
-def diversity_proxy(smiles: str) -> int:
-    return len(set(smiles))
-
-def simple_druglikeness_proxy(smiles: str) -> float:
-    score = 0.0
-    if "N" in smiles:
-        score += 0.5
-    if "O" in smiles:
-        score += 0.5
-    if len(smiles) <= 20:
-        score += 0.5
-    if "c1ccccc1" in smiles:
-        score += 0.5
-    return score
-
-def main() -> None:
-    train_df = pd.read_csv(TRAIN_PATH)
-    cand_df = pd.read_csv(CANDIDATE_PATH)
+def evaluate_candidates(
+    train_path=TRAIN_PATH,
+    screened_path=SCREENED_PATH,
+    report_path=REPORT_PATH,
+    summary_path=SUMMARY_PATH,
+):
+    train_df = pd.read_csv(train_path)
+    screened_df = pd.read_csv(screened_path)
 
     training_set = set(train_df["smiles"].astype(str).tolist())
-    cand_df["novelty"] = cand_df["smiles"].astype(str).apply(lambda s: novelty_score(s, training_set))
-    cand_df["diversity_proxy"] = cand_df["smiles"].astype(str).apply(diversity_proxy)
-    cand_df["druglikeness_proxy"] = cand_df["smiles"].astype(str).apply(simple_druglikeness_proxy)
 
-    ranked = cand_df.sort_values(
-        ["is_valid", "novelty", "druglikeness_proxy", "diversity_proxy"],
-        ascending=[False, False, False, False],
+    screened_df["is_novel"] = screened_df["generated_smiles"].apply(
+        lambda x: x not in training_set
     )
-    ranked.to_csv(OUT_PATH, index=False)
-    print(f"Saved evaluation report to {OUT_PATH}")
-    print(ranked.head(10).to_string(index=False))
+
+    screened_df["diversity_proxy"] = screened_df["generated_smiles"].apply(
+        lambda x: len(set(str(x)))
+    )
+
+    ranked_df = screened_df.sort_values(
+        ["is_valid", "is_novel", "druglikeness_proxy", "diversity_proxy"],
+        ascending=[False, False, False, False],
+    ).reset_index(drop=True)
+
+    summary = {
+        "num_training_molecules": len(train_df),
+        "num_generated_unique_molecules": len(ranked_df),
+        "validity_rate": ranked_df["is_valid"].mean(),
+        "novelty_rate": ranked_df["is_novel"].mean(),
+        "average_diversity_proxy": ranked_df["diversity_proxy"].mean(),
+        "average_druglikeness_proxy": ranked_df["druglikeness_proxy"].mean(),
+    }
+
+    ranked_df.to_csv(report_path, index=False)
+    summary_df = pd.DataFrame([summary])
+    summary_df.to_csv(summary_path, index=False)
+
+    # Real evaluation table for README / notebook / portfolio reporting
+    metric_table = pd.DataFrame({
+        "Metric": [
+            "Validity rate",
+            "Novelty",
+            "Diversity",
+            "Top candidates",
+        ],
+        "Meaning": [
+            "Percent generated molecules that pass basic checks",
+            "Generated molecules that are not copied from the training data",
+            "How different generated molecules are, using the diversity proxy",
+            "Best generated molecules after scoring and ranking",
+        ],
+        "Result": [
+            f"{summary['validity_rate']:.2%}",
+            f"{summary['novelty_rate']:.2%}",
+            f"{summary['average_diversity_proxy']:.3f}",
+            "Saved in evaluation/top_10_generated_candidates.csv after visualization",
+        ],
+    })
+
+    metric_table.to_csv(METRIC_TABLE_PATH, index=False)
+
+    print(f"Saved evaluation report to: {report_path}")
+    print(f"Saved evaluation summary to: {summary_path}")
+    print(f"Saved real evaluation table to: {METRIC_TABLE_PATH}")
+
+    return ranked_df, summary_df, metric_table
+
 
 if __name__ == "__main__":
-    main()
+    evaluate_candidates()

@@ -4,25 +4,32 @@ import pandas as pd
 import torch
 from torch.utils.data import Dataset
 
+
 class SmilesDataset(Dataset):
-    def __init__(self, csv_path: str, vocab_path: str, max_len: int = 32):
+    def __init__(self, csv_path, vocab_path, max_len=32):
         self.df = pd.read_csv(csv_path)
         self.vocab = json.loads(Path(vocab_path).read_text())
         self.max_len = max_len
-        self.samples = [self.encode(x) for x in self.df["smiles"].astype(str).tolist()]
+        self.smiles = self.df["smiles"].astype(str).tolist()
 
-    def encode(self, smiles: str):
-        ids = [self.vocab["<START>"]]
-        ids.extend([self.vocab[ch] for ch in smiles if ch in self.vocab])
-        ids.append(self.vocab["<END>"])
-        ids = ids[: self.max_len]
-        if len(ids) < self.max_len:
-            ids.extend([self.vocab["<PAD>"]] * (self.max_len - len(ids)))
-        return torch.tensor(ids, dtype=torch.long)
+    def encode(self, smiles):
+        token_ids = [self.vocab["<START>"]]
+
+        for ch in smiles:
+            if ch in self.vocab:
+                token_ids.append(self.vocab[ch])
+
+        token_ids.append(self.vocab["<END>"])
+        token_ids = token_ids[: self.max_len]
+
+        while len(token_ids) < self.max_len:
+            token_ids.append(self.vocab["<PAD>"])
+
+        return torch.tensor(token_ids, dtype=torch.long)
 
     def __len__(self):
-        return len(self.samples)
+        return len(self.smiles)
 
     def __getitem__(self, idx):
-        x = self.samples[idx]
-        return x[:-1], x[1:]
+        encoded = self.encode(self.smiles[idx])
+        return encoded[:-1], encoded[1:]
