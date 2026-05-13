@@ -1,0 +1,10 @@
+streamlit
+sentence-transformers
+faiss-cpu
+pypdf
+pandas
+numpy
+requests
+ollama
+scikit-learn
+matplotlib

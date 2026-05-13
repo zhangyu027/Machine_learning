@@ -1,0 +1,5 @@
+question,expected_source_keyword,hit_in_top_k,top_sources
+What is the project question?,personal_ai_assistant_overview,False,"Brownlee Scratch.pdf, Brownlee Scratch.pdf, Brownlee Scratch.pdf, Brownlee Scratch.pdf, Brownlee Scratch.pdf"
+What tools does the local RAG system use?,personal_ai_assistant_overview,False,"Brownlee Scratch.pdf, Brownlee Scratch.pdf, Brownlee Scratch.pdf, Brownlee Scratch.pdf, Brownlee Scratch.pdf"
+How can retrieval quality be evaluated?,rag_evaluation_notes,False,"Brownlee Scratch.pdf, Brownlee Scratch.pdf, Brownlee Scratch.pdf, Brownlee Scratch.pdf, Brownlee Scratch.pdf"
+Why is the system private?,privacy_policy_notes,False,"Brownlee Scratch.pdf, Brownlee Scratch.pdf, Brownlee Scratch.pdf, Brownlee Scratch.pdf, Brownlee Scratch.pdf"

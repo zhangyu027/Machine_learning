@@ -1,0 +1,5 @@
+question,expected_source_keyword
+What is the project question?,personal_ai_assistant_overview
+What tools does the local RAG system use?,personal_ai_assistant_overview
+How can retrieval quality be evaluated?,rag_evaluation_notes
+Why is the system private?,privacy_policy_notes
