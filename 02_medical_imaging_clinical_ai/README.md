@@ -1,146 +1,170 @@
-# Medical Imaging Clinical AI Pipeline
+# Medical Imaging Clinical AI
 
-A clean, portfolio-ready project that unifies:
+## Project Question
 
-- a **CNN baseline** for image classification
-- a **multimodal model** that combines image + clinical metadata
-- an optional **graph reasoning stage** that aggregates evidence from similar cases
+**Can combining medical images with structured clinical metadata improve disease-risk prediction compared with image-only AI?**
 
-This package is designed to be easy to explain in interviews and easy to extend into a real healthcare AI demo.
+This package is a portfolio-ready clinical AI project using **MedMNIST**, a public medical imaging benchmark that is easy to download and run locally.
 
-## Why merge the old projects?
+The project compares:
 
-Instead of keeping both `medical image pipeline` and `medical multimodal graph` as separate top-level projects, this package treats them as one evolving system:
+| Model | Input | Clinical meaning |
+|---|---|---|
+| CNN baseline | Image only | Imaging-only benchmark |
+| Multimodal | Image + metadata | Closer to clinical workflow |
+| Graph-enhanced | Similar cases | Adds case-based reasoning concept |
 
-1. **Baseline**: image-only CNN
-2. **Multimodal**: image + structured clinical features
-3. **Graph-enhanced**: use nearest-neighbor case relationships to refine predictions
+## What is included
 
-That gives you a stronger story for interviews:
-> "I started with a baseline medical imaging classifier, then extended it into a multimodal and graph-enhanced clinical AI system."
+- Main notebook: `notebooks/Medical_Imaging_Clinical_AI_End_to_End_Demo.ipynb`
+- MedMNIST public dataset loading
+- Synthetic clinical metadata CSV generation
+- CNN image-only baseline
+- Multimodal image + metadata model
+- Real evaluation table
+- Confusion matrix
+- ROC curve
+- Precision-recall curve
+- Grad-CAM heatmap
+- Model comparison bar chart
+- Clinical interpretation document
 
-## Project structure
+## How to run
 
-```text
-02_medical_imaging_clinical_ai/
-├── README.md
-├── GRAPH_README.md
-├── requirements.txt
-├── config.py
-├── .gitignore
-├── preprocessing/
-│   ├── __init__.py
-│   ├── dataset.py
-│   └── metadata.py
-├── model/
-│   ├── __init__.py
-│   ├── cnn_backbone.py
-│   ├── multimodal_model.py
-│   ├── graph_fusion.py
-│   ├── utils.py
-│   ├── train.py
-│   ├── evaluate.py
-│   └── predict.py
-├── inference_api/
-│   ├── __init__.py
-│   └── main.py
-├── docs/
-│   └── ARCHITECTURE_GRAPH.md
-├── artifacts/
-└── data/
-    ├── train/
-    ├── val/
-    └── test/
+```bash
+cd 02_medical_imaging_clinical_ai
+pip install -r requirements.txt
+jupyter notebook notebooks/Medical_Imaging_Clinical_AI_End_to_End_Demo.ipynb
 ```
 
-## Modeling options
+Run the notebook cells sequentially.
 
-Set `MODEL_TYPE` in the environment or in `config.py`.
 
-### 1) CNN baseline
-- image-only classification
-- simplest benchmark
-- best first experiment
+---
 
-### 2) Multimodal
-- image encoder
-- metadata encoder
-- fusion layer
-- better reflects real clinical workflows
+## How to Run the App
 
-### 3) Multimodal + graph refinement
-- use image/metadata embeddings
-- find similar cases with k-nearest neighbors
-- refine prediction with neighbor evidence
+This package includes a lightweight Streamlit app for viewing notebook outputs.
 
-## Quick start
-
-### Install
+### Step 1: Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Train CNN baseline
+### Step 2: Run the main notebook first
+cd /Users/yuzhang/Library/CloudStorage/Dropbox/MachineLearning/LLM-CustomChatBot-with-RAG
+python3 -m venv .venv311
+source .venv311/bin/activate
+pip install -r requirements.txt
+
+
+
 
 ```bash
-MODEL_TYPE=cnn python -m model.train
+jupyter notebook notebooks/Medical_Imaging_Clinical_AI_End_to_End_Demo.ipynb
 ```
 
-### Train multimodal model
+Run all cells. This creates:
+
+```text
+outputs/figures/
+outputs/tables/
+data/train_metadata.csv
+data/test_metadata.csv
+```
+
+### Step 3: Launch the Streamlit app
 
 ```bash
-MODEL_TYPE=multimodal_graph python -m model.train
+streamlit run app/streamlit_app.py
 ```
 
-### Evaluate
+Then open:
+
+```text
+http://localhost:8501
+```
+
+### If Streamlit shows a Torch watcher warning
+
+Use:
 
 ```bash
-python -m model.evaluate
+streamlit run app/streamlit_app.py --server.fileWatcherType none
 ```
 
-### Run API
+---
 
-```bash
-uvicorn inference_api.main:app --reload
+## Additional Project Components
+
+### preprocessing/
+
+Contains preprocessing utilities for:
+
+- synthetic metadata generation
+- metadata normalization
+- preprocessing summary output
+
+Main file:
+
+```text
+preprocessing/preprocess_medmnist.py
 ```
 
-## Example metadata CSV
+### graph/
 
-```csv
-rel_path,age,sex_binary,bmi,lab_crp,label
-train/negative/example1.png,54,0,24.2,3.1,0
-train/positive/example2.png,67,1,31.4,9.7,1
+Contains the graph-enhanced clinical reasoning extension.
+
+Main files:
+
+```text
+graph/README.md
+graph/case_similarity_graph.py
 ```
 
-## API example
+This is a conceptual extension for similar-case reasoning. It is intentionally lightweight because MedMNIST does not include full clinical records.
 
-POST `/predict`
+### artifacts/
 
-- `file`: image upload
-- `metadata_json`: optional JSON string
+Designed to store final reusable outputs:
 
-Example metadata payload:
-
-```json
-{"age": 63, "sex_binary": 1, "bmi": 29.1, "lab_crp": 8.4}
+```text
+artifacts/models/
+artifacts/figures/
+artifacts/tables/
+artifacts/reports/
 ```
 
-## Recommended interview demo flow
+The notebook writes primary outputs to `outputs/`, while `artifacts/` is included as a clean place to copy final deliverables for GitHub review.
 
-1. Explain the baseline CNN
-2. Show why image-only is limited in healthcare
-3. Add clinical metadata fusion
-4. Add graph reasoning over similar cases
-5. Deploy with FastAPI
 
-## Recommended next upgrades
+## Outputs
 
-- DICOM support
-- Grad-CAM visualization
-- experiment tracking
-- Docker
-- CI tests
-- threshold tuning
-- calibration curves
-- clinician-facing explanation output
+Figures are saved to:
+
+```text
+outputs/figures/
+```
+
+Tables are saved to:
+
+```text
+outputs/tables/
+```
+
+Clinical interpretation is saved to:
+
+```text
+docs/CLINICAL_INTERPRETATION.md
+```
+
+## Important clinical limitation
+
+This is a portfolio and education project. It is **decision support, not diagnosis**.
+
+The MedMNIST dataset is real public medical imaging data, but the structured metadata in this package is synthetic for demonstration. Replace it with real clinical metadata for real research.
+
+## Resume bullet
+
+Built a clinical multimodal AI pipeline using MedMNIST to compare image-only CNN prediction with image-plus-metadata prediction, including confusion matrix, ROC/PR curves, Grad-CAM explainability, and clinical interpretation documentation.
