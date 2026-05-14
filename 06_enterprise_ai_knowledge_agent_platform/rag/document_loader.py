@@ -1,0 +1,70 @@
+from pathlib import Path
+from typing import List, Dict
+from pypdf import PdfReader
+
+
+def load_txt(path: Path) -> str:
+    return path.read_text(encoding="utf-8", errors="ignore")
+
+
+def load_pdf(path: Path) -> str:
+    reader = PdfReader(str(path))
+    pages = []
+    for i, page in enumerate(reader.pages):
+        text = page.extract_text() or ""
+        pages.append(f"[Page {i + 1}]\\n{text}")
+    return "\\n\\n".join(pages)
+
+
+def load_documents(input_dir: str) -> List[Dict]:
+    input_path = Path(input_dir)
+    docs = []
+    if not input_path.exists():
+        raise FileNotFoundError(f"Input folder not found: {input_path}")
+
+    for path in sorted(input_path.rglob("*")):
+        if path.is_dir():
+            continue
+        if path.suffix.lower() == ".txt":
+            text = load_txt(path)
+        elif path.suffix.lower() == ".pdf":
+            text = load_pdf(path)
+        else:
+            continue
+
+        if text.strip():
+            docs.append({
+                "source": str(path),
+                "filename": path.name,
+                "text": text,
+                "modality": "document",
+            })
+    return docs
+
+
+def chunk_text(text: str, chunk_size: int = 900, chunk_overlap: int = 150) -> List[str]:
+    chunks = []
+    start = 0
+    text = text.strip()
+    while start < len(text):
+        end = start + chunk_size
+        chunk = text[start:end].strip()
+        if chunk:
+            chunks.append(chunk)
+        start += chunk_size - chunk_overlap
+    return chunks
+
+
+def create_chunks(documents: List[Dict], chunk_size: int = 900, chunk_overlap: int = 150) -> List[Dict]:
+    chunks = []
+    for doc in documents:
+        for idx, chunk in enumerate(chunk_text(doc["text"], chunk_size, chunk_overlap)):
+            chunks.append({
+                "chunk_id": f"{doc['filename']}::chunk_{idx}",
+                "filename": doc["filename"],
+                "source": doc["source"],
+                "chunk_index": idx,
+                "text": chunk,
+                "modality": doc.get("modality", "document"),
+            })
+    return chunks
