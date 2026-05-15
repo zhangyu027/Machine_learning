@@ -1,0 +1,4 @@
+name: ai_data_platform_lakehouse
+version: '1.0'
+profile: local_lakehouse
+model-paths: ["models"]

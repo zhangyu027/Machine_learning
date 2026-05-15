@@ -1,0 +1,9 @@
+pandas
+numpy
+pyarrow
+scikit-learn
+matplotlib
+streamlit
+mlflow
+jupyter
+joblib
