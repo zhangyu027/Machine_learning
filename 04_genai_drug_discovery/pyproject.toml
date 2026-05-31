@@ -1,14 +1,13 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools>=64", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "genai-drug-discovery-improved"
-version = "0.2.0"
-description = "Improved GenAI drug discovery portfolio workflow"
+name = "pharma-genai-drug-discovery"
+version = "2.0.0"
+description = "Portfolio-grade pharmaceutical GenAI drug discovery with ADMET, toxicity, RDKit features, and reliability scoring"
 requires-python = ">=3.9"
-dependencies = ["pandas", "numpy", "matplotlib"]
+dependencies = ["pandas>=1.5", "numpy>=1.23", "scikit-learn>=1.2", "streamlit>=1.28"]
 
-[project.scripts]
-genai-drug-run = "genai_drug_discovery.pipeline:main"
-genai-drug-viz = "genai_drug_discovery.visualize:main"
+[tool.setuptools.packages.find]
+include = ["pharma_genai*"]
