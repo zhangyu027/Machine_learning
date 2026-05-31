@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "genai-drug-discovery-improved"
+version = "0.2.0"
+description = "Improved GenAI drug discovery portfolio workflow"
+requires-python = ">=3.9"
+dependencies = ["pandas", "numpy", "matplotlib"]
+
+[project.scripts]
+genai-drug-run = "genai_drug_discovery.pipeline:main"
+genai-drug-viz = "genai_drug_discovery.visualize:main"

@@ -53,7 +53,7 @@ pip install -r requirements.txt
 ```
 
 ### Step 2: Run the main notebook first
-cd /Users/yuzhang/Library/CloudStorage/Dropbox/MachineLearning/LLM-CustomChatBot-with-RAG
+cd /Users/yuzhang/Library/CloudStorage/Dropbox/MachineLearning/
 python3 -m venv .venv311
 source .venv311/bin/activate
 pip install -r requirements.txt
