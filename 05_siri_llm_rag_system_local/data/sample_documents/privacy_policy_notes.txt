@@ -1,0 +1,9 @@
+Privacy Notes
+
+This local RAG assistant is designed for private document search.
+Documents are loaded from the local file system.
+The vector database is saved locally.
+The LLM is served locally through Ollama.
+
+This is useful for personal notes, class materials, project documentation, resume drafts, policy files, and research notes.
+Users should still avoid putting sensitive personal information into public repositories.

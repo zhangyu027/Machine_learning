@@ -1,0 +1,10 @@
+Personal AI Assistant RAG System
+
+This project demonstrates a local retrieval augmented generation assistant.
+The assistant can search private documents, retrieve relevant passages, and answer questions with citations.
+
+Project question:
+Can a local RAG assistant answer questions from private documents without sending data to paid cloud APIs?
+
+The system uses local embeddings with sentence-transformers, FAISS for vector search, and Ollama for local LLM generation.
+Because the model runs locally, documents do not need to be sent to subscription APIs.

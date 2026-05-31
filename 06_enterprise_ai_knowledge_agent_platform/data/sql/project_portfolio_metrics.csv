@@ -1,0 +1,6 @@
+project,domain,primary_skill,risk_level,portfolio_priority
+CAPSDAC Forecasting,Public Sector Education,Forecasting and data governance,High,5
+Medical Imaging Clinical AI,Healthcare,Multimodal ML and explainability,High,5
+Transportation Telemetry,Transportation,Telemetry lakehouse and neural prediction,Medium,4
+Local RAG Assistant,Enterprise AI,RAG and local LLM deployment,Medium,5
+GenAI Drug Discovery,Healthcare / Life Sciences,Generative modeling and evaluation,Medium,4

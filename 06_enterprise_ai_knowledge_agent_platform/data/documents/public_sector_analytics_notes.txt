@@ -1,0 +1,7 @@
+Public Sector Analytics Notes
+
+Public-sector analytics projects often require de-identification, secure data access, role-based
+permissions, reproducibility, and careful communication with non-technical stakeholders.
+
+For education and government data, the platform should avoid exposing raw PII and should
+separate public portfolio sample data from secure internal data sources.

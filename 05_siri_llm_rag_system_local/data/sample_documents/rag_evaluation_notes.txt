@@ -1,0 +1,5 @@
+RAG Evaluation Notes
+
+Retrieval quality can be evaluated by checking whether the top retrieved chunks contain the expected answer.
+Useful metrics include hit rate, top-k retrieval accuracy, and source coverage.
+For a portfolio project, it is helpful to include a small evaluation set with questions and expected keywords.

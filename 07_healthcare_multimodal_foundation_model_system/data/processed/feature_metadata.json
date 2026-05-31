@@ -1,0 +1,21 @@
+{
+  "structured_cols":[
+    "age",
+    "sex",
+    "prior_condition",
+    "site_id"
+  ],
+  "lab_cols":[
+    "lab_crp",
+    "lab_wbc",
+    "lab_creatinine",
+    "oxygen_saturation"
+  ],
+  "text_features":64,
+  "image_shape":[
+    1,
+    32,
+    32
+  ],
+  "n_patients":2500
+}

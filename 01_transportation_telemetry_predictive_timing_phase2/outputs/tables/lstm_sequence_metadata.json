@@ -1,0 +1,75 @@
+{
+  "sequence_length": 8,
+  "feature_columns": [
+    "scheduled_minutes",
+    "distance_miles",
+    "avg_speed_mph",
+    "brake_pressure",
+    "engine_temp",
+    "vibration_score",
+    "weather_severity",
+    "route_congestion",
+    "cargo_weight_tons",
+    "hour",
+    "day_of_week"
+  ],
+  "n_sequences": 10400,
+  "sequence_shape": [
+    10400,
+    8,
+    11
+  ],
+  "target_description": "Predict current delay risk and delay minutes from prior telemetry sequence.",
+  "sequence_info_sample": [
+    {
+      "train_id": "TRAIN_0001",
+      "target_event_time": "2026-01-06 10:14:00",
+      "route_id": "ROUTE_025"
+    },
+    {
+      "train_id": "TRAIN_0001",
+      "target_event_time": "2026-01-06 13:16:00",
+      "route_id": "ROUTE_024"
+    },
+    {
+      "train_id": "TRAIN_0001",
+      "target_event_time": "2026-01-06 14:14:00",
+      "route_id": "ROUTE_019"
+    },
+    {
+      "train_id": "TRAIN_0001",
+      "target_event_time": "2026-01-06 15:42:00",
+      "route_id": "ROUTE_025"
+    },
+    {
+      "train_id": "TRAIN_0001",
+      "target_event_time": "2026-01-06 18:10:00",
+      "route_id": "ROUTE_028"
+    },
+    {
+      "train_id": "TRAIN_0001",
+      "target_event_time": "2026-01-07 03:47:00",
+      "route_id": "ROUTE_006"
+    },
+    {
+      "train_id": "TRAIN_0001",
+      "target_event_time": "2026-01-07 14:26:00",
+      "route_id": "ROUTE_021"
+    },
+    {
+      "train_id": "TRAIN_0001",
+      "target_event_time": "2026-01-08 08:27:00",
+      "route_id": "ROUTE_026"
+    },
+    {
+      "train_id": "TRAIN_0001",
+      "target_event_time": "2026-01-08 21:41:00",
+      "route_id": "ROUTE_007"
+    },
+    {
+      "train_id": "TRAIN_0001",
+      "target_event_time": "2026-01-09 02:55:00",
+      "route_id": "ROUTE_006"
+    }
+  ]
+}

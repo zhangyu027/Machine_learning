@@ -1,0 +1,8 @@
+Healthcare AI Governance Notes
+
+Clinical AI systems should support decision-making but should not replace clinician judgment.
+A reliable enterprise AI platform should include data lineage, source citations, audit logs,
+privacy controls, hallucination checks, and confidence scoring.
+
+Important healthcare AI evaluation topics include model performance, fairness, calibration,
+explainability, uncertainty, and human review.
