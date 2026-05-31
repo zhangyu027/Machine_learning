@@ -72,7 +72,7 @@ def featurize_smiles(smiles: str) -> MolecularFeatures:
     try:
         mol = Chem.MolFromSmiles(smiles)
         if mol is None:
-            return MolecularFeatures(smiles, False, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,"rdkit", "RDKit could not parse SMILES")
+            return _fallback_features(smiles, "RDKit could not parse SMILES")
         heavy = mol.GetNumHeavyAtoms()
         hetero = sum(1 for a in mol.GetAtoms() if a.GetAtomicNum() not in (1,6))
         halogen = sum(1 for a in mol.GetAtoms() if a.GetSymbol() in {"F","Cl","Br","I"})
@@ -109,11 +109,4 @@ def morgan_fingerprint(smiles: str, radius: int = 2, n_bits: int = 2048) -> List
 
 def is_valid_smiles_proxy(smiles: str) -> bool:
     """Backward-compatible validity helper retained for older tests."""
-    return bool(featurize_smiles(smiles).valid)
-
-# Final override for backward compatibility with stricter syntax checks.
-def is_valid_smiles_proxy(smiles: str) -> bool:
-    smiles = (smiles or "").strip()
-    if not smiles or any(ch in smiles for ch in [" ", "\\"]) or smiles.count("(") != smiles.count(")") or smiles.count("[") != smiles.count("]"):
-        return False
     return bool(featurize_smiles(smiles).valid)

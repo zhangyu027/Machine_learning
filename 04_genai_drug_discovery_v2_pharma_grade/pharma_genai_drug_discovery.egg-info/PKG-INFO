@@ -1,9 +1,0 @@
-Metadata-Version: 2.4
-Name: pharma-genai-drug-discovery
-Version: 2.0.0
-Summary: Portfolio-grade pharmaceutical GenAI drug discovery with ADMET, toxicity, RDKit features, and reliability scoring
-Requires-Python: >=3.9
-Requires-Dist: pandas>=1.5
-Requires-Dist: numpy>=1.23
-Requires-Dist: scikit-learn>=1.2
-Requires-Dist: streamlit>=1.28
