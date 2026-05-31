@@ -1,0 +1,15 @@
+# Core deployable requirements for V3 demo and Streamlit/FastAPI validation
+pandas>=1.5
+numpy>=1.23
+scikit-learn>=1.2
+streamlit>=1.28
+pytest>=7.0
+requests>=2.31
+fastapi>=0.110
+uvicorn>=0.27
+pydantic>=2.0
+joblib>=1.2
+plotly>=5.18
+
+# Optional chemistry acceleration; V3 code gracefully falls back if unavailable
+# rdkit-pypi>=2022.9.5
