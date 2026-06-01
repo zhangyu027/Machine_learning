@@ -1,0 +1,19 @@
+{
+  "xgboost_readmission_model": {
+    "roc_auc": 0.7434415088288521,
+    "average_precision": 0.5618869735672942,
+    "test_rows": 7500
+  },
+  "propensity_score_matching": {
+    "att_readmission_difference": -0.10919664010338143,
+    "matched_pairs": 18572
+  },
+  "doubly_robust_estimation": {
+    "ate_readmission_difference": -0.08962324372970006
+  },
+  "causal_forest_style_t_learner": {
+    "mean_ite": -0.0770015665348943,
+    "benefit_recommended_patients": 12358
+  },
+  "clinical_recommendation": "Prioritize patients with high predicted readmission risk and negative estimated treatment effect for care-management outreach."
+}

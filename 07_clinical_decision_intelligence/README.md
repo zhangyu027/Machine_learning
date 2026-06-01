@@ -1,49 +1,36 @@
-# Clinical Decision Intelligence Platform
+# 07 Clinical Decision Intelligence V2
 
-## Project question
-Can we combine healthcare data engineering, predictive modeling, and causal inference to estimate clinical risk and treatment effectiveness in a way that is explainable and decision-ready?
+A healthcare/pharma/medical-device decision intelligence project combining predictive ML and causal inference.
 
-## Why this project matters
-This package is designed for pharma, medical device, healthcare analytics, and regulated data roles. It showcases a practical bridge from senior data engineering into AI/ML platform and senior data science work.
+## What is included
 
-## What it includes
-- Clinical data contract and validation
-- Patient-level feature engineering
-- XGBoost-style risk prediction with sklearn fallback
-- Propensity score estimation
-- Nearest-neighbor propensity matching
-- Causal forest-style heterogeneous treatment effect estimation using a T-learner fallback
-- Model evaluation
-- Executive clinical decision report
-- Sample synthetic clinical dataset
+- Real XGBoost readmission risk model
+- SHAP explainability report
+- Propensity score modeling and nearest-neighbor matching
+- Doubly robust treatment effect estimation
+- Causal-forest-style heterogeneous treatment effect estimation
+- Patient-level risk + treatment benefit recommendations
+- Saved model artifacts, model outputs, reports, and figures
 
-## Architecture
-```text
-Clinical raw data
-      ↓
-Validation and feature engineering
-      ↓
-Risk prediction model: XGBoost / gradient boosting fallback
-      ↓
-Propensity score model
-      ↓
-Propensity matching
-      ↓
-Causal forest-style treatment effect estimation
-      ↓
-Clinical decision intelligence report
-```
+## Key outputs
 
-## Quick start
+- `data/raw/patient_encounters.csv`
+- `data/processed/clinical_modeling_dataset.csv`
+- `models/xgboost_readmission_model.joblib`
+- `models/propensity_model.joblib`
+- `models/causal_forest_style_t_learner.joblib`
+- `reports/model_outputs/model_summary.json`
+- `reports/model_outputs/shap_feature_importance.csv`
+- `reports/model_outputs/patient_risk_effect_recommendations.csv`
+- `reports/figures/*.png`
+
+## Interview story
+
+I built a clinical decision intelligence platform that predicts readmission risk and estimates which patients benefit from a care-management intervention. The project combines XGBoost, SHAP, propensity score matching, doubly robust estimation, and heterogeneous treatment effect modeling.
+
+## Run
+
 ```bash
-cd 07_clinical_decision_intelligence
-python -m venv .venv
-source .venv/bin/activate
 pip install -r requirements.txt
-python scripts/generate_sample_clinical_data.py
-python scripts/run_demo.py
-pytest
+python scripts/run_full_pipeline.py
 ```
-
-## Interview positioning
-> I built a clinical decision intelligence pipeline that predicts patient risk using XGBoost-style gradient boosting and estimates treatment effectiveness using propensity score matching and causal forest-style heterogeneous treatment effects. The platform is designed for regulated healthcare and pharma analytics where explainability, traceability, and decision quality matter.

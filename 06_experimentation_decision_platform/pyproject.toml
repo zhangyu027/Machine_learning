@@ -1,8 +1,0 @@
-[project]
-name = "experimentation-decision-platform"
-version = "0.1.0"
-description = "A/B testing, CUPED, Bayesian testing, and causal decision intelligence platform"
-requires-python = ">=3.10"
-
-[tool.pytest.ini_options]
-pythonpath = ["src"]

@@ -1,49 +1,36 @@
-# Experimentation Decision Platform
+# 06 Experimentation Decision Platform V2
 
-## Project question
-Can we build a production-style experimentation and causal decision platform that helps executives determine whether a product, policy, or operational change truly caused measurable improvement?
+A senior-level experimentation and causal decision intelligence project inspired by Amazon-style applied research systems.
 
-## Why this project matters
-This project is designed to strengthen a senior data scientist / senior research scientist profile. It focuses on the skills often emphasized in Amazon-style applied research roles: experimentation, causal inference, statistical rigor, scalable decision systems, and clear business communication.
+## What is included
 
-## What it includes
-- A/B test analysis
+- A/B testing with frequentist confidence intervals
 - CUPED variance reduction
-- Bayesian A/B testing
-- Uplift modeling
-- Difference-in-differences
-- Synthetic-control style baseline comparison
-- Executive decision report generation
-- Streamlit-ready dashboard layer
-- Unit tests and sample experiment data
+- Bayesian A/B testing using Beta-Binomial posteriors
+- Sequential Bayesian experiment monitoring
+- Uplift modeling / heterogeneous treatment effects with a T-Learner
+- Thompson Sampling multi-armed bandit simulation
+- Executive decision report with ship / no-ship framing
+- Trained model artifact and user-level uplift scores
 
-## Architecture
-```text
-Raw experiment events
-        ↓
-Data validation
-        ↓
-Metric construction
-        ↓
-A/B testing + CUPED + Bayesian testing
-        ↓
-Causal/uplift modeling
-        ↓
-Decision recommendation
-        ↓
-Executive report
-```
+## Key outputs
 
-## Quick start
+- `data/raw/experiment_events.csv`
+- `data/processed/experiment_analysis_dataset.csv`
+- `models/uplift_t_learner.joblib`
+- `reports/model_outputs/executive_decision_report.json`
+- `reports/model_outputs/uplift_scores.csv`
+- `reports/model_outputs/sequential_monitoring.csv`
+- `reports/model_outputs/thompson_sampling_bandit.csv`
+- `reports/figures/*.png`
+
+## Interview story
+
+I built an experimentation decision platform that converts experiment logs into business decisions. It supports standard A/B testing, CUPED, Bayesian decisioning, sequential monitoring, uplift modeling, and bandit-style adaptive optimization.
+
+## Run
+
 ```bash
-cd 06_experimentation_decision_platform
-python -m venv .venv
-source .venv/bin/activate
 pip install -r requirements.txt
-python scripts/generate_sample_data.py
-python scripts/run_demo.py
-pytest
+python scripts/run_full_pipeline.py
 ```
-
-## Interview positioning
-> I built an experimentation decision platform that evaluates whether an intervention caused measurable improvement using A/B testing, CUPED variance reduction, Bayesian posterior probability, and uplift modeling. The system converts raw event data into executive-ready decisions with confidence, risk, and recommended action.
