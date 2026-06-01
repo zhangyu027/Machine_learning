@@ -1,0 +1,8 @@
+[project]
+name = "clinical-decision-intelligence"
+version = "0.1.0"
+description = "Clinical prediction and causal inference platform with XGBoost, propensity matching, and causal forest-style estimation"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

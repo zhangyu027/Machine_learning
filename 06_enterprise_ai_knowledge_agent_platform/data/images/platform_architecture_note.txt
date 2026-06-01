@@ -1,5 +1,0 @@
-Image note: enterprise AI platform architecture diagram.
-
-The diagram shows a user question routed through an agent router into document RAG, SQL analytics,
-and image-note tools. Retrieved evidence is aggregated and passed to a local Ollama model.
-The final answer includes citations, confidence score, and hallucination risk check.

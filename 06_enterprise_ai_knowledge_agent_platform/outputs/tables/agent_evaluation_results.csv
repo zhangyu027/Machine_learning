@@ -1,6 +1,0 @@
-question,expected_source_keyword,route,hit_in_sources,confidence_score,confidence_label,hallucination_risk,sources
-What should healthcare AI governance include?,healthcare_ai_governance,document_rag_agent,True,0.558,medium,low,"healthcare_ai_governance.txt, platform_architecture_note.txt, public_sector_analytics_notes.txt, enterprise_rag_architecture.txt"
-Why is de-identification important for public-sector analytics?,public_sector_analytics,document_rag_agent,True,0.518,medium,low,"public_sector_analytics_notes.txt, platform_architecture_note.txt, healthcare_ai_governance.txt, enterprise_rag_architecture.txt"
-What is an enterprise RAG architecture?,enterprise_rag_architecture,document_rag_agent,True,0.518,medium,low,"enterprise_rag_architecture.txt, platform_architecture_note.txt, public_sector_analytics_notes.txt, healthcare_ai_governance.txt"
-Which portfolio projects have highest priority?,project_portfolio_metrics,sql_agent,True,0.75,high,low,project_portfolio_metrics.csv
-What does the platform architecture diagram show?,platform_architecture_note,image_agent,True,0.481,medium,low,"platform_architecture_note.txt, enterprise_rag_architecture.txt, public_sector_analytics_notes.txt, healthcare_ai_governance.txt"

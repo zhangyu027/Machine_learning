@@ -1,8 +1,0 @@
-Enterprise RAG Architecture
-
-An enterprise knowledge agent platform combines document retrieval, SQL analytics,
-tool calling, and multi-agent orchestration. A typical workflow includes document ingestion,
-chunking, local embeddings, vector search, source-grounded answer generation, confidence scoring,
-and benchmark evaluation.
-
-Local deployment with Ollama and FAISS can support privacy-sensitive prototypes without paid cloud APIs.
