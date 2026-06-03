@@ -59,7 +59,7 @@ uvicorn pharma_genai.api.service:app --reload --port 8000
 Health check:
 
 ```bash
-curl http://localhost:8000/health
+curl http://127.0.0.1:8000/docs
 ```
 
 Analyze molecules:
