@@ -1,0 +1,13 @@
+{
+  "version": "V4 final clean",
+  "updated": [
+    "README rewritten for V4 consistency",
+    "Streamlit app patched with project-root import bootstrap",
+    "Download button label changed to Download V4 CSV",
+    "cli_v4.py added if missing",
+    "cli_v3.py backward-compatible wrapper added if missing",
+    "requirements-v3-full renamed to requirements-v4-optional when present",
+    "active rdkit-pypi dependency removed from base requirements",
+    "stale egg-info/cache files removed"
+  ]
+}

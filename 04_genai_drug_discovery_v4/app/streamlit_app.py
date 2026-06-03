@@ -2,6 +2,13 @@ from __future__ import annotations
 import pandas as pd
 import streamlit as st
 
+from pathlib import Path
+import sys
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 from pharma_genai.pipeline_v4 import analyze_many_v4, dataframe_from_results, lookup_and_analyze
 
 st.set_page_config(page_title="Pharmaceutical GenAI Drug Discovery V4", layout="wide")
@@ -46,7 +53,7 @@ if st.button("Run V4 Principal Enterprise Analysis", type="primary"):
         "confidence_score", "uncertainty_score", "reliability_label", "graph_backend"
     ]
     st.dataframe(df[[c for c in display_cols if c in df.columns]], use_container_width=True)
-    st.download_button("Download V3 CSV", df.to_csv(index=False).encode("utf-8"), "admet_v3_predictions.csv", "text/csv")
+    st.download_button("Download V4 CSV", df.to_csv(index=False).encode("utf-8"), "admet_v3_predictions.csv", "text/csv")
 
     for r in rows:
         with st.expander(f"{r['smiles']} — {r['development_priority']} / reliability: {r['reliability_label']}"):

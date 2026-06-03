@@ -1,39 +1,62 @@
-# Pharmaceutical GenAI Drug Discovery V4 Enterprise Platform
+# Pharmaceutical GenAI Drug Discovery V4 Principal Enterprise Platform
 
-This dedicated V3 project evolves the V2.1 pharmaceutical ML demo into an enterprise-style drug discovery AI platform. It keeps the Streamlit portfolio app deployable, while adding production-ready architectural seams for graph neural networks, public chemistry data integration, multi-task ADMET prediction, uncertainty estimation, explainability, RAG, FastAPI, Docker, MLflow-style tracking, and CI/CD.
+This V4 project upgrades the earlier pharmaceutical GenAI drug discovery work into a Principal-level enterprise AI platform. It keeps the Streamlit portfolio app easy to run while adding architecture seams for graph neural networks, ChEMBL/PubChem/DrugBank integration, multi-task ADMET prediction, toxicity screening, conformal-style uncertainty, SHAP-style explainability, PubMed-style RAG, FastAPI, Docker, MLflow-ready tracking, AWS/SageMaker deployment patterns, and CI/CD.
 
-## What changed from V2.1
+> Scientific disclaimer: this is a portfolio and decision-support prototype. It is not a validated clinical, regulatory, or production medicinal chemistry system. Predictions are demonstration outputs unless trained and validated on appropriate public or proprietary experimental datasets.
 
-V2.1 validated the core local workflow: SMILES input, molecular property prediction, ADMET/toxicity scoring, reliability labels, uncertainty explanations, and Streamlit output.
+## V4 Principal Enterprise capabilities
 
-V3 adds:
+- GNN-ready molecular AI with PyTorch Geometric optional support
+- ChEMBL-style training dataset and public chemistry connector pattern
+- PubChem, ChEMBL, DrugBank, and BindingDB-style integration layer
+- Multi-task ADMET and toxicity prediction
+- Conformal-style uncertainty intervals
+- Ensemble-disagreement reliability scoring
+- SHAP-ready explainability with deterministic fallback attribution
+- PubMed-style RAG evidence retrieval
+- FastAPI service layer with Swagger/OpenAPI documentation
+- Streamlit portfolio application
+- Docker / docker-compose deployment pattern
+- MLflow-ready tracking with JSON fallback
+- AWS / SageMaker / Terraform deployment skeleton
+- GitHub Actions CI/CD
 
-- Graph Neural Network readiness via PyTorch Geometric-compatible interfaces
-- ChEMBL, PubChem, DrugBank, and BindingDB integration layer
-- Multi-task ADMET prediction across absorption, BBB, CYP, clearance, solubility, toxicity, and drug-likeness tasks
-- Conformal-style uncertainty intervals and ensemble-disagreement reliability scoring
-- SHAP-ready explainability with deterministic fallback feature attribution
-- PubMed-style RAG literature evidence retrieval
-- FastAPI service layer for enterprise deployment
-- Docker and docker-compose deployment files
-- MLflow-ready experiment tracking with JSON fallback
-- GitHub Actions CI/CD pipeline
+## What changed from V3.1
+
+V3.1 fixed the public-data connector and made the aspirin PubChem lookup return a valid SMILES string. V4 moves beyond that fix into a Principal-level architecture:
+
+- Adds V4 naming and public interface through `pipeline_v4.py`
+- Adds Principal-level GNN, conformal prediction, SHAP, MLflow, Docker, and AWS deployment patterns
+- Keeps `pipeline_v3.py` only as a backward-compatible wrapper for older notebooks/tests
+- Removes active `rdkit-pypi` dependency from the base installation
+- Makes RDKit optional and safe to skip
+- Adds Streamlit bootstrap so the app can import `pharma_genai` reliably
 
 ## Quick start
 
 ```bash
-cd 04_genai_drug_discovery_v3_enterprise
-conda create -n pharma_v3 python=3.11 -y
-conda activate pharma_v3
+cd 04_genai_drug_discovery_v4
+conda create -n pharma_v4 python=3.11 -y
+conda activate pharma_v4
+
+python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 python -m pip install -e .
-python -m pytest
+python -m pytest -q
 ```
 
 ## Launch Streamlit
 
+Preferred command after editable install:
+
 ```bash
 streamlit run app/streamlit_app.py
+```
+
+Safe fallback command:
+
+```bash
+PYTHONPATH=. streamlit run app/streamlit_app.py
 ```
 
 Example SMILES:
@@ -47,7 +70,13 @@ Cn1cnc2c1c(=O)n(C)c(=O)n2C
 ## Run CLI
 
 ```bash
-python -m pharma_genai.cli_v3 --smiles "CCO" "CC(=O)Oc1ccccc1C(=O)O" --literature
+python -m pharma_genai.cli_v4 --smiles "CCO" "CC(=O)Oc1ccccc1C(=O)O" --literature
+```
+
+Legacy wrapper, if needed:
+
+```bash
+python -m pharma_genai.cli_v3 --smiles "CCO" --literature
 ```
 
 ## Run FastAPI
@@ -56,10 +85,16 @@ python -m pharma_genai.cli_v3 --smiles "CCO" "CC(=O)Oc1ccccc1C(=O)O" --literatur
 uvicorn pharma_genai.api.service:app --reload --port 8000
 ```
 
+Open Swagger UI:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
 Health check:
 
 ```bash
-curl http://127.0.0.1:8000/docs
+curl http://127.0.0.1:8000/health
 ```
 
 Analyze molecules:
@@ -70,15 +105,31 @@ curl -X POST http://localhost:8000/analyze \
   -d '{"smiles":["CCO","CC(=O)Oc1ccccc1C(=O)O"],"include_literature":true}'
 ```
 
-## Docker
+Lookup compound:
 
 ```bash
-cd 04_genai_drug_discovery_v3_enterprise
-Docker build -f deployment/Dockerfile -t pharma-genai-v3 .
-docker run -p 8501:8501 pharma-genai-v3
+curl -X POST http://localhost:8000/lookup \
+  -H "Content-Type: application/json" \
+  -d '{"compound_name":"aspirin"}'
 ```
 
-Or:
+## Docker
+
+Use this if `deployment/Dockerfile` exists:
+
+```bash
+docker build -f deployment/Dockerfile -t pharma-genai-v4 .
+docker run -p 8501:8501 pharma-genai-v4
+```
+
+If the Dockerfile is at the project root:
+
+```bash
+docker build -t pharma-genai-v4 .
+docker run -p 8501:8501 pharma-genai-v4
+```
+
+Or with compose:
 
 ```bash
 cd deployment
@@ -87,47 +138,25 @@ docker compose up --build
 
 ## Optional full scientific stack
 
-The default requirements are intentionally deployable. For a workstation or cloud instance with scientific dependencies, install:
+The default requirements are intentionally lightweight and deployable. Optional scientific dependencies are kept separate because RDKit, PyTorch Geometric, SHAP, MLflow, FAISS, and related packages can be platform-sensitive.
 
 ```bash
-python -m pip install -r requirements-v3-full.txt
+python -m pip install -r requirements-v4-optional.txt
 ```
 
-This enables RDKit, PyTorch Geometric, SHAP, MLflow, BioPython, sentence transformers, and FAISS.
-
-## Scientific disclaimer
-
-This is a portfolio and decision-support prototype. It is not a validated clinical, regulatory, or production medicinal chemistry system. Predictions are demonstration outputs unless trained and validated on appropriate proprietary or public experimental datasets.
-
-
-## V3.1 Enterprise Upgrade
-
-This package includes a V3.1 reliability and connector upgrade for the pharmaceutical GenAI drug discovery platform.
-
-### What changed
-
-- Fixed the PubChem aspirin fallback record so `PublicDataConnector().pubchem_lookup("aspirin")` returns a non-empty SMILES string.
-- Added deterministic offline PubChem, ChEMBL, and DrugBank-style connector records.
-- Added SMILES validation with optional RDKit support and a lightweight fallback validator.
-- Added an ADMET prediction service interface that can later be replaced by trained XGBoost, PyTorch, or GNN models.
-- Added uncertainty and reliability scoring for portfolio decision support.
-- Added an integrated candidate screening pipeline.
-- Added V3.1 integration tests covering public-data lookup, cross-source lookup, and end-to-end candidate screening.
-
-### Validation
-
-Run:
+RDKit is best installed with conda when needed:
 
 ```bash
-pytest -q
+conda install -c conda-forge rdkit
 ```
 
-The original failing test should now pass because aspirin resolves to:
+## Repository notes
 
-```text
-CC(=O)OC1=CC=CC=C1C(=O)O
-```
+- `pipeline_v4.py` is the current V4 public interface.
+- `pipeline_v3.py` may remain only as a backward-compatible wrapper.
+- Base validation should not require RDKit.
+- `pharma_genai_drug_discovery_v*.egg-info`, `.pytest_cache`, and `__pycache__` should not be committed.
 
-### Interview positioning
+## Interview positioning
 
-This upgrade moves the project from a demo molecule-generation system toward an enterprise-style pharmaceutical decision platform: public chemistry data integration, valid molecular representation, ADMET prediction, reliability scoring, and testable service interfaces.
+This project demonstrates an enterprise pharmaceutical AI platform that combines molecular representation, ADMET prediction, toxicity screening, uncertainty estimation, explainability, RAG literature evidence, API deployment, and MLOps-ready engineering. It is suitable for discussing Senior/Principal Data Scientist, ML Engineer, AI Platform Engineer, and healthcare/pharma analytics roles.
