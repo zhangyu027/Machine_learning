@@ -1,4 +1,7 @@
-"""Pharma GenAI V2: ADMET, molecular properties, toxicity, reliability, and UI utilities."""
-from .pipeline import analyze_smiles, analyze_file
-__all__ = ["analyze_smiles", "analyze_file"]
-__version__ = "2.0.0"
+"""Pharma GenAI Drug Discovery package."""
+try:
+    from .pipeline_v3 import analyze_smiles_v3, analyze_many_v3
+except Exception:  # keep package importable during partial installs
+    analyze_smiles_v3 = analyze_many_v3 = None
+
+__version__ = "3.0.0"

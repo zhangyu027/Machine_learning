@@ -47,7 +47,7 @@ def lipinski_violations(f: MolecularFeatures) -> int:
 
 def predict_admet_from_features(f: MolecularFeatures) -> ADMETPrediction:
     if not f.valid:
-        return ADMETPrediction(f.smiles, False, f.logp, f.tpsa, f.mol_wt, f.qed, 99, 0,0,1,0,1,1,1,1,"invalid", [f.error or "Invalid SMILES"])
+        return ADMETPrediction(f.smiles, False, f.logp, f.tpsa, f.mol_wt, f.qed, 99, 0,0,1,0,1,1,1,1,1,"invalid", [f.error or "Invalid SMILES"])
     violations=lipinski_violations(f)
     notes=[]
     if violations: notes.append(f"Lipinski violations: {violations}")
