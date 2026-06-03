@@ -1,0 +1,191 @@
+Metadata-Version: 2.4
+Name: pharma-genai-drug-discovery-v4
+Version: 3.0.0
+Summary: Enterprise pharmaceutical AI platform for ADMET, toxicity, GNN-ready molecular modeling, RAG, uncertainty, and MLOps.
+Author: Yu Zhang
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: pandas>=1.5
+Requires-Dist: numpy>=1.23
+Requires-Dist: scikit-learn>=1.2
+Requires-Dist: requests>=2.31
+Requires-Dist: pydantic>=2.0
+Provides-Extra: app
+Requires-Dist: streamlit>=1.28; extra == "app"
+Requires-Dist: plotly>=5.18; extra == "app"
+Provides-Extra: api
+Requires-Dist: fastapi>=0.110; extra == "api"
+Requires-Dist: uvicorn>=0.27; extra == "api"
+Provides-Extra: full
+Requires-Dist: torch>=2.1; extra == "full"
+Requires-Dist: torch-geometric>=2.4; extra == "full"
+Requires-Dist: shap>=0.44; extra == "full"
+Requires-Dist: mlflow>=2.9; extra == "full"
+Requires-Dist: biopython>=1.81; extra == "full"
+Requires-Dist: sentence-transformers>=2.2; extra == "full"
+Requires-Dist: faiss-cpu>=1.7.4; extra == "full"
+Provides-Extra: test
+Requires-Dist: pytest>=7.0; extra == "test"
+
+# Pharmaceutical GenAI Drug Discovery V4 Principal Enterprise Platform
+
+This V4 project upgrades the earlier pharmaceutical GenAI drug discovery work into a Principal-level enterprise AI platform. It keeps the Streamlit portfolio app easy to run while adding architecture seams for graph neural networks, ChEMBL/PubChem/DrugBank integration, multi-task ADMET prediction, toxicity screening, conformal-style uncertainty, SHAP-style explainability, PubMed-style RAG, FastAPI, Docker, MLflow-ready tracking, AWS/SageMaker deployment patterns, and CI/CD.
+
+> Scientific disclaimer: this is a portfolio and decision-support prototype. It is not a validated clinical, regulatory, or production medicinal chemistry system. Predictions are demonstration outputs unless trained and validated on appropriate public or proprietary experimental datasets.
+
+## V4 Principal Enterprise capabilities
+
+- GNN-ready molecular AI with PyTorch Geometric optional support
+- ChEMBL-style training dataset and public chemistry connector pattern
+- PubChem, ChEMBL, DrugBank, and BindingDB-style integration layer
+- Multi-task ADMET and toxicity prediction
+- Conformal-style uncertainty intervals
+- Ensemble-disagreement reliability scoring
+- SHAP-ready explainability with deterministic fallback attribution
+- PubMed-style RAG evidence retrieval
+- FastAPI service layer with Swagger/OpenAPI documentation
+- Streamlit portfolio application
+- Docker / docker-compose deployment pattern
+- MLflow-ready tracking with JSON fallback
+- AWS / SageMaker / Terraform deployment skeleton
+- GitHub Actions CI/CD
+
+## What changed from V3.1
+
+V3.1 fixed the public-data connector and made the aspirin PubChem lookup return a valid SMILES string. V4 moves beyond that fix into a Principal-level architecture:
+
+- Adds V4 naming and public interface through `pipeline_v4.py`
+- Adds Principal-level GNN, conformal prediction, SHAP, MLflow, Docker, and AWS deployment patterns
+- Keeps `pipeline_v3.py` only as a backward-compatible wrapper for older notebooks/tests
+- Removes active `rdkit-pypi` dependency from the base installation
+- Makes RDKit optional and safe to skip
+- Adds Streamlit bootstrap so the app can import `pharma_genai` reliably
+
+## Quick start
+
+```bash
+cd 04_genai_drug_discovery_v4
+conda create -n pharma_v4 python=3.11 -y
+conda activate pharma_v4
+
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+python -m pip install -e .
+python -m pytest -q
+```
+
+## Launch Streamlit
+
+Preferred command after editable install:
+
+```bash
+streamlit run app/streamlit_app.py
+```
+
+Safe fallback command:
+
+```bash
+PYTHONPATH=. streamlit run app/streamlit_app.py
+```
+
+Example SMILES:
+
+```text
+CCO
+CC(=O)Oc1ccccc1C(=O)O
+Cn1cnc2c1c(=O)n(C)c(=O)n2C
+```
+
+## Run CLI
+
+```bash
+python -m pharma_genai.cli_v4 --smiles "CCO" "CC(=O)Oc1ccccc1C(=O)O" --literature
+```
+
+Legacy wrapper, if needed:
+
+```bash
+python -m pharma_genai.cli_v3 --smiles "CCO" --literature
+```
+
+## Run FastAPI
+
+```bash
+uvicorn pharma_genai.api.service:app --reload --port 8000
+```
+
+Open Swagger UI:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+Health check:
+
+```bash
+curl http://127.0.0.1:8000/health
+```
+
+Analyze molecules:
+
+```bash
+curl -X POST http://localhost:8000/analyze \
+  -H "Content-Type: application/json" \
+  -d '{"smiles":["CCO","CC(=O)Oc1ccccc1C(=O)O"],"include_literature":true}'
+```
+
+Lookup compound:
+
+```bash
+curl -X POST http://localhost:8000/lookup \
+  -H "Content-Type: application/json" \
+  -d '{"compound_name":"aspirin"}'
+```
+
+## Docker
+
+Use this if `deployment/Dockerfile` exists:
+
+```bash
+docker build -f deployment/Dockerfile -t pharma-genai-v4 .
+docker run -p 8501:8501 pharma-genai-v4
+```
+
+If the Dockerfile is at the project root:
+
+```bash
+docker build -t pharma-genai-v4 .
+docker run -p 8501:8501 pharma-genai-v4
+```
+
+Or with compose:
+
+```bash
+cd deployment
+docker compose up --build
+```
+
+## Optional full scientific stack
+
+The default requirements are intentionally lightweight and deployable. Optional scientific dependencies are kept separate because RDKit, PyTorch Geometric, SHAP, MLflow, FAISS, and related packages can be platform-sensitive.
+
+```bash
+python -m pip install -r requirements-v4-optional.txt
+```
+
+RDKit is best installed with conda when needed:
+
+```bash
+conda install -c conda-forge rdkit
+```
+
+## Repository notes
+
+- `pipeline_v4.py` is the current V4 public interface.
+- `pipeline_v3.py` may remain only as a backward-compatible wrapper.
+- Base validation should not require RDKit.
+- `pharma_genai_drug_discovery_v*.egg-info`, `.pytest_cache`, and `__pycache__` should not be committed.
+
+## Interview positioning
+
+This project demonstrates an enterprise pharmaceutical AI platform that combines molecular representation, ADMET prediction, toxicity screening, uncertainty estimation, explainability, RAG literature evidence, API deployment, and MLOps-ready engineering. It is suitable for discussing Senior/Principal Data Scientist, ML Engineer, AI Platform Engineer, and healthcare/pharma analytics roles.

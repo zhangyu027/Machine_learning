@@ -26,7 +26,7 @@ TASKS = [
 
 class MultiTaskADMETPredictor:
     """V3 multi-task ADMET predictor with uncertainty-aware outputs."""
-    def __init__(self, model_name: str = "v3_proxy_multitask") -> None:
+    def __init__(self, model_name: str = "v4_principal_multitask_admet") -> None:
         self.model_name = model_name
 
     def predict_one(self, smiles: str) -> Dict[str, object]:
