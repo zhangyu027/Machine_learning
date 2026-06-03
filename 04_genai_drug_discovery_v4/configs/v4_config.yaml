@@ -1,4 +1,4 @@
-project: pharma_genai_drug_discovery_v3
+project: pharma_genai_drug_discovery_v4
 mode: portfolio_enterprise_demo
 data_sources:
   pubchem: optional_online

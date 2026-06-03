@@ -2,14 +2,14 @@ from __future__ import annotations
 import pandas as pd
 import streamlit as st
 
-from pharma_genai.pipeline_v3 import analyze_many_v3, dataframe_from_results, lookup_and_analyze
+from pharma_genai.pipeline_v4 import analyze_many_v4, dataframe_from_results, lookup_and_analyze
 
-st.set_page_config(page_title="Pharmaceutical GenAI Drug Discovery V3", layout="wide")
-st.title("Pharmaceutical GenAI Drug Discovery V3")
+st.set_page_config(page_title="Pharmaceutical GenAI Drug Discovery V4", layout="wide")
+st.title("Pharmaceutical GenAI Drug Discovery V4")
 st.caption("GNN-ready molecular AI • Multi-task ADMET • Toxicity • Reliability • SHAP-style attribution • PubMed RAG • FastAPI/MLOps-ready")
 
 with st.sidebar:
-    st.header("V3 Enterprise Modules")
+    st.header("V4 Principal Enterprise Modules")
     st.markdown("""
     - RDKit feature engineering with fallback
     - GNN-ready graph embeddings
@@ -30,14 +30,14 @@ smiles_text = st.text_area(
 
 compound_lookup = st.text_input("Optional compound lookup by name using PubChem/demo connector", "")
 
-if st.button("Run V3 Enterprise Analysis", type="primary"):
+if st.button("Run V4 Principal Enterprise Analysis", type="primary"):
     rows = []
     if compound_lookup.strip():
         try:
             rows.append(lookup_and_analyze(compound_lookup.strip()))
         except Exception as exc:
             st.warning(str(exc))
-    rows.extend(analyze_many_v3([s.strip() for s in smiles_text.splitlines() if s.strip()], include_literature=include_lit))
+    rows.extend(analyze_many_v4([s.strip() for s in smiles_text.splitlines() if s.strip()], include_literature=include_lit))
     df = dataframe_from_results(rows)
     st.subheader("Ranked candidates")
     display_cols = [

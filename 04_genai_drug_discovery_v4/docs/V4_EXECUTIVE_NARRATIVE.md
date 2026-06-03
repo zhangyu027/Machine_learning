@@ -1,11 +1,11 @@
 
-# Pharmaceutical GenAI Drug Discovery V3 Enterprise Platform
+# Pharmaceutical GenAI Drug Discovery V4 Enterprise Platform
 
 ## Interview Narrative and Executive Project Report
 
 ### 1. Executive summary
 
-This project is an enterprise-style pharmaceutical artificial intelligence platform designed to support early-stage drug discovery. The V3 system extends a validated V2.1 Streamlit application into a more complete architecture that reflects how a modern pharmaceutical data science team would combine cheminformatics, molecular machine learning, uncertainty estimation, explainability, literature retrieval, software engineering, and MLOps into one reusable decision-support workflow.
+This project is an enterprise-style pharmaceutical artificial intelligence platform designed to support early-stage drug discovery. The V4 system extends a validated V2.1 Streamlit application into a more complete architecture that reflects how a modern pharmaceutical data science team would combine cheminformatics, molecular machine learning, uncertainty estimation, explainability, literature retrieval, software engineering, and MLOps into one reusable decision-support workflow.
 
 The purpose of the project is not to claim clinical-grade prediction performance. Instead, the purpose is to demonstrate a realistic, interview-ready architecture for computational drug discovery. It shows how a data scientist or machine learning engineer can move beyond a notebook prototype and build a structured platform that accepts molecular inputs, engineers chemical features, predicts multiple ADMET and toxicity endpoints, quantifies reliability, explains model behavior, retrieves scientific evidence, exposes a web interface, exposes an API service, and prepares the project for containerized deployment and continuous integration.
 
@@ -25,7 +25,7 @@ This project focuses on that decision-support challenge. It asks: how can machin
 
 The V2.1 package established the validated foundation. It accepted SMILES strings in a Streamlit interface, calculated molecular descriptors, generated ADMET and toxicity estimates, ranked candidates, produced reliability labels, and exported results as a CSV. That version was important because it demonstrated an end-to-end working application rather than an isolated notebook. It validated that a user can input molecules and receive ranked pharmaceutical decision-support outputs.
 
-The V3 package changes the project from a portfolio application into an enterprise-style platform. It adds a graph neural network module that can support PyTorch Geometric in a full scientific environment while still providing fallback graph embeddings when heavy dependencies are not installed. This is important because molecular graphs are a natural representation of small molecules: atoms become nodes, bonds become edges, and learned message passing can capture structural patterns that handcrafted descriptors may miss.
+The V4 package changes the project from a portfolio application into an enterprise-style platform. It adds a graph neural network module that can support PyTorch Geometric in a full scientific environment while still providing fallback graph embeddings when heavy dependencies are not installed. This is important because molecular graphs are a natural representation of small molecules: atoms become nodes, bonds become edges, and learned message passing can capture structural patterns that handcrafted descriptors may miss.
 
 V3 also adds a data integration layer. In a production pharmaceutical environment, models are not trained or evaluated from a single CSV file. They draw from public and internal data sources such as ChEMBL, PubChem, DrugBank exports, BindingDB, assay databases, and proprietary compound registries. The V3 connector layer creates a clean abstraction for those data sources. The default package uses offline demo records for reproducibility, but the architecture is ready to support online API calls and local exports.
 
@@ -69,7 +69,7 @@ The modeling strategy is intentionally multi-modal. Descriptor-based models are 
 
 For a portfolio project, V3 uses transparent proxy functions so that the code can run without proprietary data. However, the interfaces are designed to support real models. A production version would train a multi-task model with experimental ADMET labels. Each task could share a common molecular encoder and have endpoint-specific heads. For example, a graph neural network could produce a latent molecular embedding, and separate heads could predict absorption, solubility, toxicity, and CYP inhibition. Multi-task learning is attractive because related endpoints can share information, especially when some labels are sparse.
 
-The V3 system also includes a path for conformal prediction. Conformal methods are valuable because they can provide calibrated uncertainty intervals under well-defined assumptions. In a real implementation, calibration data would be used to estimate nonconformity scores. The current package provides conformal-style intervals as a demonstration of how bounded probability intervals can be communicated to users.
+The V4 system also includes a path for conformal prediction. Conformal methods are valuable because they can provide calibrated uncertainty intervals under well-defined assumptions. In a real implementation, calibration data would be used to estimate nonconformity scores. The current package provides conformal-style intervals as a demonstration of how bounded probability intervals can be communicated to users.
 
 ### 7. Reliability and uncertainty
 
@@ -89,11 +89,11 @@ For example, high molecular weight may contribute to lower oral developability. 
 
 The PubMed-style RAG module addresses a different limitation of predictive models. A model can estimate risk, but scientists also need context. Why does ADMET matter? Why are graph neural networks useful? Why should uncertainty be communicated? Why is explainability important in chemistry? The RAG module retrieves concise evidence snippets from a literature-style corpus. In a production system, this could be replaced by PubMed, internal documents, patents, and clinical trial databases.
 
-The interview value of this module is that it shows awareness of modern AI architecture. Enterprise AI systems increasingly combine structured prediction with unstructured knowledge retrieval. A drug discovery team might use models to rank molecules and use RAG to summarize literature about targets, toxicity mechanisms, assay protocols, or known chemical liabilities. V3 demonstrates the pattern in a controlled and deployable way.
+The interview value of this module is that it shows awareness of modern AI architecture. Enterprise AI systems increasingly combine structured prediction with unstructured knowledge retrieval. A drug discovery team might use models to rank molecules and use RAG to summarize literature about targets, toxicity mechanisms, assay protocols, or known chemical liabilities. V4 demonstrates the pattern in a controlled and deployable way.
 
 ### 10. Deployment and MLOps
 
-The V3 project includes several deployment paths. Streamlit is used for the scientist-facing dashboard. It lets users enter SMILES strings, run V3 analysis, view ranked candidates, inspect reliability explanations, view graph summaries, review feature attributions, retrieve literature context, and download a CSV. FastAPI provides programmatic access through health, analyze, and lookup endpoints. Docker provides reproducible runtime packaging. GitHub Actions provides continuous integration. MLflow-ready tracking provides a pattern for experiment logging.
+The V3 project includes several deployment paths. Streamlit is used for the scientist-facing dashboard. It lets users enter SMILES strings, run V4 analysis, view ranked candidates, inspect reliability explanations, view graph summaries, review feature attributions, retrieve literature context, and download a CSV. FastAPI provides programmatic access through health, analyze, and lookup endpoints. Docker provides reproducible runtime packaging. GitHub Actions provides continuous integration. MLflow-ready tracking provides a pattern for experiment logging.
 
 These features matter in interviews because they show the ability to think beyond model accuracy. In real organizations, models need to be packaged, deployed, monitored, tested, versioned, and explained. A data scientist who can discuss both modeling and MLOps is more valuable than someone who only trains models in notebooks.
 
@@ -101,7 +101,7 @@ These features matter in interviews because they show the ability to think beyon
 
 The validation strategy has multiple levels. First, unit tests validate the pipeline, graph embedding, RAG retrieval, and data connector fallback behavior. Second, local Streamlit validation confirms that the user interface runs and produces outputs for representative molecules. Third, API validation confirms that FastAPI endpoints are available. Fourth, deployment validation confirms Docker and CI/CD readiness. Fifth, scientific validation would require benchmark datasets with experimental ADMET labels.
 
-For interview purposes, I would clearly separate software validation from scientific validation. The V3 package validates that the software workflow runs end-to-end. It does not claim clinical-grade predictive accuracy. A production version would require curated datasets, train/validation/test splits, external validation sets, calibration assessment, uncertainty calibration, domain-of-applicability testing, and prospective experimental confirmation.
+For interview purposes, I would clearly separate software validation from scientific validation. The V4 package validates that the software workflow runs end-to-end. It does not claim clinical-grade predictive accuracy. A production version would require curated datasets, train/validation/test splits, external validation sets, calibration assessment, uncertainty calibration, domain-of-applicability testing, and prospective experimental confirmation.
 
 ### 12. Business impact
 
@@ -125,4 +125,4 @@ The next roadmap step is to replace proxy functions with trained models. The fir
 
 ### 15. Conclusion
 
-V3 demonstrates the full progression from prototype to platform. V1 was a generative drug discovery concept. V2.1 was a validated pharmaceutical ML application. V3 is an enterprise architecture that integrates molecular AI, ADMET prediction, uncertainty, explainability, literature intelligence, and deployment infrastructure. It is strong interview material because it shows not only technical modeling skills but also system design, scientific communication, and product thinking.
+V4 demonstrates the full progression from prototype to platform. V1 was a generative drug discovery concept. V2.1 was a validated pharmaceutical ML application. V3 is an enterprise architecture that integrates molecular AI, ADMET prediction, uncertainty, explainability, literature intelligence, and deployment infrastructure. It is strong interview material because it shows not only technical modeling skills but also system design, scientific communication, and product thinking.

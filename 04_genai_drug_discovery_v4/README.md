@@ -1,4 +1,4 @@
-# Pharmaceutical GenAI Drug Discovery V3 Enterprise Platform
+# Pharmaceutical GenAI Drug Discovery V4 Enterprise Platform
 
 This dedicated V3 project evolves the V2.1 pharmaceutical ML demo into an enterprise-style drug discovery AI platform. It keeps the Streamlit portfolio app deployable, while adding production-ready architectural seams for graph neural networks, public chemistry data integration, multi-task ADMET prediction, uncertainty estimation, explainability, RAG, FastAPI, Docker, MLflow-style tracking, and CI/CD.
 
@@ -59,7 +59,7 @@ uvicorn pharma_genai.api.service:app --reload --port 8000
 Health check:
 
 ```bash
-curl http://localhost:8000/health
+curl http://127.0.0.1:8000/docs
 ```
 
 Analyze molecules:
@@ -131,21 +131,3 @@ CC(=O)OC1=CC=CC=C1C(=O)O
 ### Interview positioning
 
 This upgrade moves the project from a demo molecule-generation system toward an enterprise-style pharmaceutical decision platform: public chemistry data integration, valid molecular representation, ADMET prediction, reliability scoring, and testable service interfaces.
-
-
-## RDKit Installation Note
-
-`rdkit-pypi` has been removed from required dependencies because it is not available for every Python version/platform. The project uses optional RDKit support: if RDKit is installed, the SMILES validator uses it; otherwise, the lightweight fallback validator keeps the demo and tests runnable.
-
-Recommended:
-
-```bash
-pip install -r requirements.txt
-pytest -q
-```
-
-Optional:
-
-```bash
-conda install -c conda-forge rdkit
-```

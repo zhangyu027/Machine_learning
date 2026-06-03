@@ -16,7 +16,7 @@ class LookupRequest(BaseModel):
     compound_name: str
 
 
-app = FastAPI(title="Pharma GenAI Drug Discovery V3", version="3.0.0")
+app = FastAPI(title="Pharma GenAI Drug Discovery V4", version="3.0.0")
 
 
 @app.get("/health")

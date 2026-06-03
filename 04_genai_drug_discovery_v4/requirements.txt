@@ -1,4 +1,4 @@
-# Core deployable requirements for V3 demo and Streamlit/FastAPI validation
+# Core deployable requirements for V4 demo and Streamlit/FastAPI validation
 pandas>=1.5
 numpy>=1.23
 scikit-learn>=1.2
@@ -13,3 +13,7 @@ plotly>=5.18
 
 # Optional chemistry acceleration; V3 code gracefully falls back if unavailable
 # rdkit-pypi>=2022.9.5
+
+
+# RDKit is optional; install with conda if needed:
+# conda install -c conda-forge rdkit
