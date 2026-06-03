@@ -1,0 +1,13 @@
+-r requirements.txt
+# Full enterprise/scientific stack. Install only when your environment supports it.
+torch>=2.1
+torch-geometric>=2.4
+shap>=0.44
+mlflow>=2.9
+biopython>=1.81
+sentence-transformers>=2.2
+faiss-cpu>=1.7.4
+
+# RDKit is optional. Install separately only if your Python/platform supports it:
+# conda install -c conda-forge rdkit
+# or: pip install rdkit

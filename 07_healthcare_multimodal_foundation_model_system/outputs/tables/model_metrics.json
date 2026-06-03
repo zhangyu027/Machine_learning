@@ -1,8 +1,0 @@
-{
-  "accuracy": 0.7456,
-  "f1": 0.854262144821265,
-  "auc": 1.0,
-  "brier_score": 0.15839938819408417,
-  "n_test": 625,
-  "model_type": "multimodal image_text_labs_structured_fusion"
-}
