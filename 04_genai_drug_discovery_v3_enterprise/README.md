@@ -98,3 +98,36 @@ This enables RDKit, PyTorch Geometric, SHAP, MLflow, BioPython, sentence transfo
 ## Scientific disclaimer
 
 This is a portfolio and decision-support prototype. It is not a validated clinical, regulatory, or production medicinal chemistry system. Predictions are demonstration outputs unless trained and validated on appropriate proprietary or public experimental datasets.
+
+
+## V3.1 Enterprise Upgrade
+
+This package includes a V3.1 reliability and connector upgrade for the pharmaceutical GenAI drug discovery platform.
+
+### What changed
+
+- Fixed the PubChem aspirin fallback record so `PublicDataConnector().pubchem_lookup("aspirin")` returns a non-empty SMILES string.
+- Added deterministic offline PubChem, ChEMBL, and DrugBank-style connector records.
+- Added SMILES validation with optional RDKit support and a lightweight fallback validator.
+- Added an ADMET prediction service interface that can later be replaced by trained XGBoost, PyTorch, or GNN models.
+- Added uncertainty and reliability scoring for portfolio decision support.
+- Added an integrated candidate screening pipeline.
+- Added V3.1 integration tests covering public-data lookup, cross-source lookup, and end-to-end candidate screening.
+
+### Validation
+
+Run:
+
+```bash
+pytest -q
+```
+
+The original failing test should now pass because aspirin resolves to:
+
+```text
+CC(=O)OC1=CC=CC=C1C(=O)O
+```
+
+### Interview positioning
+
+This upgrade moves the project from a demo molecule-generation system toward an enterprise-style pharmaceutical decision platform: public chemistry data integration, valid molecular representation, ADMET prediction, reliability scoring, and testable service interfaces.
