@@ -1,167 +1,87 @@
-# Healthcare Multimodal Foundation Model System
+# 08 Healthcare Multimodal Foundation Model System
 
-## Project Question
+**Merged Principal Data Engineer Edition**
 
-**Can multimodal healthcare AI combine medical images, clinical notes, labs, and structured EHR data to improve risk prediction and clinical interpretability?**
-
-This is a flagship healthcare AI portfolio package tailored to Yu Zhang's background in medical imaging, clinical NLP, analytics, public-sector data governance, and explainable AI.
-
----
-
-## What This Package Includes
-
-- synthetic multimodal healthcare dataset
-- image-like clinical signal
-- clinical note text
-- lab values
-- structured EHR features
-- multimodal PyTorch fusion model
-- risk prediction
-- fairness evaluation
-- uncertainty estimation
-- clinical interpretation report
-- Streamlit dashboard
-- Jupyter notebook
-- architecture documentation
-
----
-
-## Architecture
+This package merges the original #08 folder structure:
 
 ```text
-Patient Record
- ├── Image-like clinical signal
- ├── Clinical note text
- ├── Lab values
- └── Structured EHR features
-        ↓
-Modality Encoders
-        ↓
-Multimodal Fusion Layer
-        ↓
-Risk Prediction
-        ↓
-Evaluation + Explainability + Fairness + Uncertainty
+app/
+data/
+docs/
+notebooks/
+scripts/
+src/
+tests/
 ```
 
----
+with the Principal Data Engineer upgrade layer:
 
-## Step-by-Step Run Instructions
-
-### Step 1: Create environment
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
+```text
+aws/
+  glue_jobs/
+  sagemaker/
+  step_functions/
+  terraform/
+executive_materials/
+.github/workflows/
 ```
 
-Windows:
+## Purpose
 
-```bash
-python -m venv .venv
-.venv\Scripts\activate
+This project is designed for **Principal Data Engineer / AWS Senior Data Engineer / Healthcare AI Platform** interviews.
+
+It demonstrates how to build the enterprise data foundation for multimodal healthcare AI:
+
+- FHIR-style patient and encounter data
+- Labs, vitals, clinical notes, and imaging metadata
+- S3 lakehouse architecture
+- Glue ETL to gold patient-encounter tables
+- Multimodal feature engineering
+- SageMaker training and model registry design
+- PII controls and healthcare governance
+- CI/CD and infrastructure-as-code skeleton
+
+## Why Merge Instead of Keeping V1/V2 Separately
+
+The Principal DE package is not a separate product. It is an architectural upgrade to the same healthcare multimodal AI system.
+
+Keeping one folder is clearer for recruiters:
+
+```text
+08_healthcare_multimodal_foundation_model_system
 ```
 
-### Step 2: Install dependencies
+rather than:
+
+```text
+08_healthcare_multimodal_foundation_model_system
+08_healthcare_multimodal_foundation_model_system_v2
+```
+
+## Local Demo
 
 ```bash
 pip install -r requirements.txt
-```
-
-### Step 3: Run the full pipeline
-
-```bash
 python scripts/run_pipeline.py
+pytest -q
 ```
 
-This runs:
+## Principal Data Engineer Interview Narrative
 
-1. synthetic healthcare data generation
-2. image/text/lab/EHR feature preparation
-3. multimodal model training
-4. fairness evaluation
-5. uncertainty review queue
-6. visualization generation
+“I designed the enterprise data foundation for regulated healthcare multimodal AI. The platform integrates FHIR-style patient and encounter data, labs, vitals, notes, and imaging metadata into a lakehouse architecture. It includes Glue-based ETL patterns, a gold patient-encounter table, feature engineering for multimodal modeling, SageMaker training orchestration, PII controls, model-card governance, and CI/CD readiness.”
 
-### Step 4: Open notebook
+## Recommended GitHub Cleanup
 
-```bash
-jupyter notebook notebooks/Healthcare_Multimodal_Foundation_Model_Demo.ipynb
-```
-
-### Step 5: Launch dashboard
-
-```bash
-streamlit run app/streamlit_app.py
-```
-
-If Streamlit has watcher issues:
-
-```bash
-streamlit run app/streamlit_app.py --server.fileWatcherType none
-```
-```
-git status
-git add .
-git commit -m "Add Healthcare Multimodal Foundation Model Demo"
-git push origin main
-```
----
-
-## Outputs
-
-### Tables
+Do not commit:
 
 ```text
-outputs/tables/model_metrics.json
-outputs/tables/classification_report.csv
-outputs/tables/confusion_matrix.csv
-outputs/tables/predictions.csv
-outputs/tables/fairness_subgroup_metrics.csv
-outputs/tables/uncertainty_review_queue.csv
+.venv/
+__pycache__/
+.pytest_cache/
+large raw images
+trained checkpoints
+outputs/
+*.zip
 ```
 
-### Figures
-
-```text
-outputs/figures/training_loss_curve.png
-outputs/figures/confusion_matrix.png
-outputs/figures/roc_curve.png
-outputs/figures/precision_recall_curve.png
-outputs/figures/model_metrics_bar_chart.png
-outputs/figures/fairness_accuracy_by_sex.png
-```
-
-### Model
-
-```text
-outputs/models/multimodal_risk_model.pt
-```
-
----
-
-## Important Clinical Limitation
-
-This is a synthetic educational and portfolio project. It is not a medical device and should not be used for diagnosis or patient care.
-
----
-
-## Research/Production Upgrade Path
-
-Future upgrades:
-
-- replace TF-IDF with ClinicalBERT or BioClinicalBERT
-- replace CNN with Vision Transformer
-- add SHAP explanations
-- add Grad-CAM heatmaps
-- add MLflow experiment tracking
-- add FHIR-style schema
-- add calibration curves
-- add external validation
-- add privacy and governance audit logs
-
----
-
-## Resume Bullet
-
-Built a multimodal healthcare AI risk prediction platform combining medical image-like data, clinical notes, lab values, and structured EHR features with PyTorch fusion modeling, fairness evaluation, uncertainty estimation, clinical interpretation documentation, and a Streamlit dashboard.
+Keep large data and models in S3, Git LFS, or release artifacts instead.

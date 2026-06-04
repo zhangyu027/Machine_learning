@@ -1,0 +1,18 @@
+{
+  "Comment": "Healthcare multimodal data platform pipeline",
+  "StartAt": "IngestFHIR",
+  "States": {
+    "IngestFHIR": {
+      "Type": "Pass",
+      "Next": "RunGlueGoldBuild"
+    },
+    "RunGlueGoldBuild": {
+      "Type": "Pass",
+      "Next": "RunSageMakerTraining"
+    },
+    "RunSageMakerTraining": {
+      "Type": "Pass",
+      "End": true
+    }
+  }
+}
