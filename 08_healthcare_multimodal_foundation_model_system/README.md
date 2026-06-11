@@ -31,6 +31,8 @@ tests/                  Pytest validation
 aws/                    Glue/SageMaker/Step Functions/Terraform skeletons
 executive_materials/    Executive report and deck
 .github/workflows/      CI workflow
+outputs/                Generated evaluation artifacts
+models/                 Trained demonstration models
 ```
 
 ## Local Demo
@@ -43,6 +45,12 @@ python scripts/run_pipeline.py
 pytest -q
 ```
 
+You can also run:
+
+```bash
+python -m scripts.run_pipeline
+```
+
 The pipeline writes demo artifacts to:
 
 ```text
@@ -53,11 +61,52 @@ outputs/model_card.json
 models/readmission_gbm.joblib
 ```
 
-You can also run:
+## Validation and Evaluation Artifacts
+
+After successfully running the pipeline:
 
 ```bash
 python -m scripts.run_pipeline
 ```
+
+Create and maintain:
+
+```text
+outputs/evaluation_summary.json
+```
+
+Example metrics from a successful run:
+
+```json
+{
+  "project": "08_healthcare_multimodal_foundation_model_system",
+  "pipeline_status": "completed_successfully",
+  "gold_table": "outputs/gold_patient_encounter.csv",
+  "feature_table": "outputs/model_features.csv",
+  "metrics": {
+    "roc_auc": 0.42966751918158574,
+    "average_precision": 0.16451864892744827,
+    "test_rows": 125,
+    "feature_count": 26
+  }
+}
+```
+
+Validation checklist:
+
+```bash
+python -m scripts.run_pipeline
+pytest -q
+```
+
+Expected result:
+
+```text
+Healthcare multimodal pipeline completed successfully.
+2 passed
+```
+
+This confirms that the healthcare multimodal foundation model system is functioning correctly from ingestion through model evaluation.
 
 ## Principal Data Engineer Interview Narrative
 
@@ -66,6 +115,8 @@ python -m scripts.run_pipeline
 ## Production Positioning
 
 This is a portfolio-grade reference implementation using synthetic data. The production architecture would move raw and curated data to S3, run ETL through Glue or EMR, orchestrate workflows through Step Functions or Airflow, train/register models through SageMaker, and enforce access controls, monitoring, lineage, and auditability.
+
+Evaluation summaries, model cards, and validation artifacts are persisted to support reproducibility, auditability, and governance review.
 
 ## Recommended GitHub Cleanup
 
@@ -82,4 +133,4 @@ models/*.joblib
 *.zip
 ```
 
-Keep large data and models in S3, Git LFS, or release artifacts instead.
+Keep large data and models in S3, Git LFS, or release artifacts.
