@@ -2,63 +2,40 @@
 
 **Merged Principal Data Engineer Edition**
 
-This package merges the original #08 folder structure:
+This package merges the original #08 folder structure with a Principal Data Engineer upgrade layer for healthcare AI platform interviews.
 
-```text
-app/
-data/
-docs/
-notebooks/
-scripts/
-src/
-tests/
-```
+## What This Demonstrates
 
-with the Principal Data Engineer upgrade layer:
-
-```text
-aws/
-  glue_jobs/
-  sagemaker/
-  step_functions/
-  terraform/
-executive_materials/
-.github/workflows/
-```
-
-## Purpose
-
-This project is designed for **Principal Data Engineer / AWS Senior Data Engineer / Healthcare AI Platform** interviews.
-
-It demonstrates how to build the enterprise data foundation for multimodal healthcare AI:
+This project shows how a Principal Data Engineer can design the enterprise data foundation for regulated healthcare multimodal AI:
 
 - FHIR-style patient and encounter data
 - Labs, vitals, clinical notes, and imaging metadata
-- S3 lakehouse architecture
-- Glue ETL to gold patient-encounter tables
+- Local synthetic data validation pipeline
+- Gold patient-encounter table construction
 - Multimodal feature engineering
-- SageMaker training and model registry design
-- PII controls and healthcare governance
-- CI/CD and infrastructure-as-code skeleton
+- Baseline readmission model for pipeline validation
+- Model-card and governance artifacts
+- AWS Glue, SageMaker, Step Functions, Terraform, and CI/CD skeletons
+- PII controls and healthcare governance patterns
 
-## Why Merge Instead of Keeping V1/V2 Separately
-
-The Principal DE package is not a separate product. It is an architectural upgrade to the same healthcare multimodal AI system.
-
-Keeping one folder is clearer for recruiters:
+## Folder Structure
 
 ```text
-08_healthcare_multimodal_foundation_model_system
-```
-
-rather than:
-
-```text
-08_healthcare_multimodal_foundation_model_system
-08_healthcare_multimodal_foundation_model_system_v2
+app/                    Streamlit entry point placeholder
+data/sample/            Synthetic local demo data
+docs/                   Executive and architecture documentation
+notebooks/              Demonstration notebook
+scripts/                Local runnable pipeline
+src/healthcare_mm/      Ingestion, lakehouse, features, models, MLOps, security
+tests/                  Pytest validation
+aws/                    Glue/SageMaker/Step Functions/Terraform skeletons
+executive_materials/    Executive report and deck
+.github/workflows/      CI workflow
 ```
 
 ## Local Demo
+
+From the project root:
 
 ```bash
 pip install -r requirements.txt
@@ -66,9 +43,29 @@ python scripts/run_pipeline.py
 pytest -q
 ```
 
+The pipeline writes demo artifacts to:
+
+```text
+outputs/gold_patient_encounter.csv
+outputs/model_features.csv
+outputs/model_metrics.json
+outputs/model_card.json
+models/readmission_gbm.joblib
+```
+
+You can also run:
+
+```bash
+python -m scripts.run_pipeline
+```
+
 ## Principal Data Engineer Interview Narrative
 
 “I designed the enterprise data foundation for regulated healthcare multimodal AI. The platform integrates FHIR-style patient and encounter data, labs, vitals, notes, and imaging metadata into a lakehouse architecture. It includes Glue-based ETL patterns, a gold patient-encounter table, feature engineering for multimodal modeling, SageMaker training orchestration, PII controls, model-card governance, and CI/CD readiness.”
+
+## Production Positioning
+
+This is a portfolio-grade reference implementation using synthetic data. The production architecture would move raw and curated data to S3, run ETL through Glue or EMR, orchestrate workflows through Step Functions or Airflow, train/register models through SageMaker, and enforce access controls, monitoring, lineage, and auditability.
 
 ## Recommended GitHub Cleanup
 
@@ -81,6 +78,7 @@ __pycache__/
 large raw images
 trained checkpoints
 outputs/
+models/*.joblib
 *.zip
 ```
 
