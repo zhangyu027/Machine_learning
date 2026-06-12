@@ -1,8 +1,8 @@
-__pycache__/
-*.pyc
 .venv/
-venv/
-.ipynb_checkpoints/
-.env
-outputs/models/*.joblib
+__pycache__/
+.pytest_cache/
+.DS_Store
+*.zip
+*.joblib
 mlruns/
+.ipynb_checkpoints/

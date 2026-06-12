@@ -1,7 +1,6 @@
-__pycache__/
-*.pyc
 .venv/
-venv/
+__pycache__/
+.pytest_cache/
+.DS_Store
+*.zip
 .ipynb_checkpoints/
-.env
-*.db-journal

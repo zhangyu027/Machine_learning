@@ -1,10 +1,10 @@
 {
-  "embedding_model": "all-MiniLM-L6-v2",
+  "embedding_model": "hash_fallback",
   "chunks": [
     {
       "chunk_id": "enterprise_rag_architecture.txt::chunk_0",
       "filename": "enterprise_rag_architecture.txt",
-      "source": "/Users/yuzhang/projects/Machine_learning/06_enterprise_ai_knowledge_agent_platform/data/documents/enterprise_rag_architecture.txt",
+      "source": "data/documents/enterprise_rag_architecture.txt",
       "chunk_index": 0,
       "text": "Enterprise RAG Architecture\n\nAn enterprise knowledge agent platform combines document retrieval, SQL analytics,\ntool calling, and multi-agent orchestration. A typical workflow includes document ingestion,\nchunking, local embeddings, vector search, source-grounded answer generation, confidence scoring,\nand benchmark evaluation.\n\nLocal deployment with Ollama and FAISS can support privacy-sensitive prototypes without paid cloud APIs.",
       "modality": "document"
@@ -12,7 +12,7 @@
     {
       "chunk_id": "healthcare_ai_governance.txt::chunk_0",
       "filename": "healthcare_ai_governance.txt",
-      "source": "/Users/yuzhang/projects/Machine_learning/06_enterprise_ai_knowledge_agent_platform/data/documents/healthcare_ai_governance.txt",
+      "source": "data/documents/healthcare_ai_governance.txt",
       "chunk_index": 0,
       "text": "Healthcare AI Governance Notes\n\nClinical AI systems should support decision-making but should not replace clinician judgment.\nA reliable enterprise AI platform should include data lineage, source citations, audit logs,\nprivacy controls, hallucination checks, and confidence scoring.\n\nImportant healthcare AI evaluation topics include model performance, fairness, calibration,\nexplainability, uncertainty, and human review.",
       "modality": "document"
@@ -20,7 +20,7 @@
     {
       "chunk_id": "public_sector_analytics_notes.txt::chunk_0",
       "filename": "public_sector_analytics_notes.txt",
-      "source": "/Users/yuzhang/projects/Machine_learning/06_enterprise_ai_knowledge_agent_platform/data/documents/public_sector_analytics_notes.txt",
+      "source": "data/documents/public_sector_analytics_notes.txt",
       "chunk_index": 0,
       "text": "Public Sector Analytics Notes\n\nPublic-sector analytics projects often require de-identification, secure data access, role-based\npermissions, reproducibility, and careful communication with non-technical stakeholders.\n\nFor education and government data, the platform should avoid exposing raw PII and should\nseparate public portfolio sample data from secure internal data sources.",
       "modality": "document"
@@ -28,10 +28,11 @@
     {
       "chunk_id": "platform_architecture_note.txt::chunk_0",
       "filename": "platform_architecture_note.txt",
-      "source": "/Users/yuzhang/projects/Machine_learning/06_enterprise_ai_knowledge_agent_platform/data/images/platform_architecture_note.txt",
+      "source": "data/images/platform_architecture_note.txt",
       "chunk_index": 0,
       "text": "Image note: enterprise AI platform architecture diagram.\n\nThe diagram shows a user question routed through an agent router into document RAG, SQL analytics,\nand image-note tools. Retrieved evidence is aggregated and passed to a local Ollama model.\nThe final answer includes citations, confidence score, and hallucination risk check.",
       "modality": "image_note"
     }
-  ]
+  ],
+  "fallback_dim": 384
 }

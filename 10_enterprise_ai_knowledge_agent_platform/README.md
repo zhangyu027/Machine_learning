@@ -1,101 +1,53 @@
-# Enterprise AI Knowledge Agent Platform
+# 10 Enterprise AI Knowledge Agent Platform
 
-## Project Question
+**Principal Data Engineer / Enterprise AI Platform Edition**
 
-**Can a private enterprise AI agent platform answer questions across documents, SQL tables, and image notes with citations, confidence scoring, and hallucination checks?**
-
-This package upgrades a local RAG chatbot into an **Enterprise AI Knowledge Agent Platform**.
-
-It is tailored to Yu Zhang's portfolio background in healthcare AI, education/public-sector analytics, data governance, RAG systems, data engineering, SQL analytics, and enterprise AI.
-
----
+This project upgrades a local RAG chatbot into an enterprise-style AI knowledge agent platform. It demonstrates document retrieval, SQL analytics, image-note retrieval, routing, confidence scoring, hallucination-risk checks, evaluation artifacts, and local/private deployment patterns.
 
 ## What This Project Includes
 
-- agent orchestration
-- multi-agent workflow
-- document RAG agent
-- SQL analytics agent
-- image-note agent
-- local/private deployment
-- Ollama support
-- FAISS vector search
-- local embeddings
-- PDF/TXT ingestion
-- SQL over local CSV data
-- citation confidence scoring
-- hallucination risk detection
-- evaluation benchmark
+- Agent orchestration and routing
+- Document RAG over local files
+- SQL analytics over local CSV/SQLite data
+- Image-note retrieval
+- FAISS vector search when available
+- Deterministic local fallback vector search when FAISS or sentence-transformers are unavailable
+- Optional Ollama local LLM integration
+- Citation confidence scoring
+- Hallucination risk checks
+- Benchmark evaluation workflow
 - Streamlit app
 - Jupyter notebook
 
----
-
-## Architecture
+## Folder Structure
 
 ```text
-User question
-     ↓
-Agent Router
-     ↓
-Document RAG Agent / SQL Agent / Image Notes Agent
-     ↓
-Evidence Aggregator
-     ↓
-Local Ollama LLM
-     ↓
-Citation Confidence Scoring
-     ↓
-Hallucination Risk Check
-     ↓
-Final Answer + Sources + Risk Report
+agents/                 Agent router and orchestrator
+app/                    Streamlit app
+build_index.py          Builds vector store and SQLite database
+data/                   Documents, image notes, and SQL sample data
+docs/                   Architecture and project documentation
+evaluation/             Evaluation questions and benchmark script
+notebooks/              Demo notebook
+outputs/                Generated evaluation outputs
+rag/                    Document loader, vector store, Ollama client
+tests/                  Pytest smoke tests
+tools/                  SQL, image, confidence, hallucination tools
+vector_store/           Local vector index and metadata
 ```
 
----
+## Local Demo
 
-## Step-by-Step Run Instructions
-
-### Step 1: Create environment
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-Windows:
-
-```bash
-python -m venv .venv
-.venv\Scripts\activate
-```
-
-### Step 2: Install dependencies
+From the project root:
 
 ```bash
 pip install -r requirements.txt
-```
-
-### Step 3: Build vector store and SQL database
-
-```bash
 python build_index.py
-```
-
-This creates:
-
-```text
-vector_store/index.faiss
-vector_store/metadata.json
-data/sql/enterprise_agent.db
-```
-
-### Step 4: Run the agent from terminal
-
-```bash
 python run_agent.py
+pytest -q
 ```
 
-### Step 5: Run benchmark evaluation
+Run benchmark evaluation:
 
 ```bash
 python evaluation/evaluate_agent.py
@@ -104,93 +56,67 @@ python evaluation/evaluate_agent.py
 Outputs:
 
 ```text
+vector_store/index.faiss              # when FAISS is installed
+vector_store/index_fallback.npz       # deterministic fallback vector index
+vector_store/metadata.json
+data/sql/enterprise_agent.db
 outputs/tables/agent_evaluation_results.csv
 outputs/tables/agent_evaluation_summary.csv
+evaluation/evaluation_summary.json
 ```
-
-### Step 6: Open notebook
-
-```bash
-jupyter notebook notebooks/Enterprise_AI_Knowledge_Agent_Demo.ipynb
-```
-
-### Step 7: Launch Streamlit app
-
-```bash
-streamlit run app/streamlit_app.py
-```
-
-If Streamlit has a watcher warning:
-
-```bash
-streamlit run app/streamlit_app.py --server.fileWatcherType none
-```
-
----
 
 ## Optional Ollama Setup
 
-Install Ollama:
-
-```text
-https://ollama.com
-```
-
-Pull a model:
+Install Ollama and pull a local model:
 
 ```bash
 ollama pull llama3.2
 ```
 
-Then in the Streamlit app, check:
-
-```text
-Use Ollama
-```
-
-Without Ollama, the platform still demonstrates routing, retrieval, SQL, confidence scoring, hallucination checks, and evaluation.
-
----
+The platform can run without Ollama by using retrieved evidence summaries. This keeps the demo runnable in environments without a local LLM.
 
 ## Example Questions
 
 ```text
 What should healthcare AI governance include?
-```
-
-```text
 Why is de-identification important for public-sector analytics?
-```
-
-```text
 Which portfolio projects have the highest priority and why?
-```
-
-```text
 What does the platform architecture diagram show?
 ```
 
----
-
 ## Why This Is More Than a Chatbot
 
-A chatbot usually produces a direct text answer.
+A chatbot usually produces a direct answer. This platform demonstrates enterprise AI system design:
 
-This platform:
+1. route the question,
+2. select tools,
+3. retrieve evidence,
+4. query structured data,
+5. cite sources,
+6. score confidence,
+7. check hallucination risk,
+8. persist evaluation outputs.
 
-1. routes questions,
-2. chooses tools,
-3. retrieves evidence,
-4. queries structured data,
-5. cites sources,
-6. scores confidence,
-7. checks hallucination risk,
-8. stores evaluation outputs.
+## Principal Data Engineer Interview Narrative
 
-That is closer to enterprise AI platform work.
+“I designed a private enterprise AI knowledge agent platform with document RAG, SQL analytics, image-note retrieval, orchestration, confidence scoring, hallucination risk checks, and evaluation artifacts. The system supports local/private deployment and demonstrates how enterprise AI platforms can be governed, evaluated, and integrated with structured and unstructured data sources.”
 
----
+## Production Positioning
 
-## Resume Bullet
+This is a portfolio-grade reference implementation using local synthetic/sample data. A production version would use governed document stores, enterprise identity and access controls, managed vector infrastructure, observability, audit logs, model governance, CI/CD, and human review workflows.
 
-Built a local/private Enterprise AI Knowledge Agent Platform with document RAG, SQL analytics, image-note retrieval, tool orchestration, FAISS vector search, Ollama integration, citation confidence scoring, hallucination risk checks, and benchmark evaluation for healthcare, public-sector, and enterprise data use cases.
+## Recommended GitHub Cleanup
+
+Do not commit:
+
+```text
+.venv/
+__pycache__/
+.pytest_cache/
+.DS_Store
+large raw documents
+private documents
+*.zip
+```
+
+Keep only synthetic/sample data and safe portfolio artifacts in GitHub.

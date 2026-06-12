@@ -1,0 +1,22 @@
+{
+  "project": "10_enterprise_ai_knowledge_agent_platform",
+  "pipeline_status": "ready_for_local_validation",
+  "validation_commands": [
+    "python build_index.py",
+    "python run_agent.py",
+    "python evaluation/evaluate_agent.py",
+    "pytest -q"
+  ],
+  "expected_artifacts": [
+    "vector_store/metadata.json",
+    "vector_store/index_fallback.npz",
+    "data/sql/enterprise_agent.db",
+    "outputs/tables/agent_evaluation_results.csv",
+    "outputs/tables/agent_evaluation_summary.csv"
+  ],
+  "validation_notes": [
+    "Project supports FAISS and sentence-transformers when installed.",
+    "A deterministic fallback vector search path is included so smoke tests and portfolio demos can run in constrained local environments.",
+    "Ollama is optional; run_agent.py uses retrieved evidence summaries when use_ollama=False."
+  ]
+}
