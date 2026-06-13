@@ -1,4 +1,0 @@
-Model,Input,Accuracy,AUC,F1,Clinical meaning
-CNN baseline,Image only,0.8669871794871795,0.9414639491562569,0.8891855807743658,Imaging-only benchmark
-Multimodal,Image + metadata,0.8782051282051282,0.9277449046679815,0.9057071960297767,Closer to clinical workflow
-Graph-enhanced,Similar cases,,,,Adds case-based reasoning

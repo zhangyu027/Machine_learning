@@ -1,11 +1,13 @@
-torch
-torchvision
-medmnist
 pandas
 numpy
-matplotlib
 scikit-learn
-tqdm
-jupyter
-
+pytest
 streamlit
+matplotlib
+
+# Optional notebook/deep learning extensions
+# torch
+# torchvision
+# medmnist
+# jupyter
+# tqdm
