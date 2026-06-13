@@ -1,5 +1,5 @@
 {
-  "embedding_model": "hash_fallback",
+  "embedding_model": "all-MiniLM-L6-v2",
   "chunks": [
     {
       "chunk_id": "enterprise_rag_architecture.txt::chunk_0",

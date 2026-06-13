@@ -1,8 +1,0 @@
-groq
-pandas
-numpy
-torch
-transformers
-tqdm
-faiss-cpu
-neo4j

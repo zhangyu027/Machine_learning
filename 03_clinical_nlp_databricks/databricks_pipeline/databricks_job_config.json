@@ -1,0 +1,10 @@
+{
+  "name": "clinical_nlp_lakehouse_pipeline",
+  "description": "Databricks-style Bronze to Silver to NLP feature pipeline for synthetic clinical notes.",
+  "tasks": [
+    {"task_key": "build_demo_dataset", "python_file": "notebooks/demo_dataset_builder.py"},
+    {"task_key": "silver_preprocess", "python_file": "databricks_pipeline/spark_preprocess.py"},
+    {"task_key": "train_baseline", "python_file": "nlp_models/train_baseline_tfidf.py"},
+    {"task_key": "evaluate", "python_file": "evaluation/evaluate_models.py"}
+  ]
+}

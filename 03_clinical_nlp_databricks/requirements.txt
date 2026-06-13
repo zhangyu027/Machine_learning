@@ -1,14 +1,9 @@
 pandas
 numpy
 scikit-learn
-pyspark
-mlflow
-transformers
-torch
-datasets
+joblib
 fastapi
 uvicorn
-python-dotenv
-pyyaml
-matplotlib
-seaborn
+pytest
+# Optional for Spark/Databricks-style local execution:
+pyspark

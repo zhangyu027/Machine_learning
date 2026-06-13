@@ -1,22 +1,13 @@
 from pathlib import Path
-import os
-from dotenv import load_dotenv
 
-load_dotenv()
-
-BASE_DIR = Path(__file__).resolve().parent
-DATA_DIR = BASE_DIR / "data"
-MODELS_DIR = BASE_DIR / "models"
-OUTPUT_DIR = BASE_DIR / "outputs"
-
-for p in [DATA_DIR, MODELS_DIR, OUTPUT_DIR]:
-    p.mkdir(parents=True, exist_ok=True)
-
-DATABRICKS_HOST = os.getenv("DATABRICKS_HOST", "")
-DATABRICKS_TOKEN = os.getenv("DATABRICKS_TOKEN", "")
-DATABRICKS_CLUSTER_ID = os.getenv("DATABRICKS_CLUSTER_ID", "")
-
-TEXT_COLUMN = "clinical_note"
-TARGET_COLUMN = "label"
-RANDOM_STATE = 42
-MAX_LENGTH = 256
+PROJECT_ROOT = Path(__file__).resolve().parent
+DATA_DIR = PROJECT_ROOT / "data" / "sample"
+OUTPUT_DIR = PROJECT_ROOT / "outputs"
+MODEL_DIR = PROJECT_ROOT / "models"
+RAW_DATA_PATH = DATA_DIR / "clinical_notes_raw.csv"
+PROCESSED_DATA_PATH = OUTPUT_DIR / "clinical_notes_processed.csv"
+FEATURE_DATA_PATH = OUTPUT_DIR / "clinical_nlp_features.csv"
+PREDICTIONS_PATH = OUTPUT_DIR / "baseline_predictions.csv"
+METRICS_PATH = OUTPUT_DIR / "model_metrics.json"
+EVALUATION_SUMMARY_PATH = OUTPUT_DIR / "evaluation_summary.json"
+MODEL_PATH = MODEL_DIR / "baseline_tfidf.joblib"
