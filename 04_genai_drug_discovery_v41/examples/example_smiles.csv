@@ -1,0 +1,5 @@
+smiles,name
+CCO,ethanol
+CC(=O)Oc1ccccc1C(=O)O,aspirin
+Cn1cnc2c1c(=O)n(C)c(=O)n2C,caffeine
+CC(C)Cc1ccc(cc1)[C@@H](C)C(=O)O,ibuprofen

@@ -1,0 +1,6 @@
+model,representation,endpoint,split,n_train,n_validation,n_test,roc_auc,pr_auc,brier,ece,status
+logistic_regression,RDKit_descriptors,TBD,bemis_murcko_scaffold,,,,,,,,awaiting_versioned_dataset
+random_forest,Morgan_fingerprint,TBD,bemis_murcko_scaffold,,,,,,,,awaiting_versioned_dataset
+xgboost,RDKit_or_Morgan,TBD,bemis_murcko_scaffold,,,,,,,,planned_extension
+multitask_mlp,multitask_representation,TBD,bemis_murcko_scaffold,,,,,,,,benchmark_pending
+molecular_gnn,molecular_graph,TBD,bemis_murcko_scaffold,,,,,,,,benchmark_pending

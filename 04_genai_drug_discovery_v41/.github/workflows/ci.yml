@@ -1,0 +1,26 @@
+name: pharma-genai-v4-ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r 04_genai_drug_discovery_v4/requirements.txt
+          python -m pip install -e 04_genai_drug_discovery_v4
+
+      - name: Test
+        run: |
+          python -m pytest 04_genai_drug_discovery_v4/tests -q
