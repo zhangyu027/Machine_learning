@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+.env
+artifacts/*.pt
+artifacts/*.pth
+artifacts/*.pkl
+artifacts/*.json
+.DS_Store
+models/checkpoints/*.pt
+evaluation/reports/*.png
+evaluation/reports/*.csv

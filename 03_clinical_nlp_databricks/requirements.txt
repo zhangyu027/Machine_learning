@@ -5,5 +5,7 @@ joblib
 fastapi
 uvicorn
 pytest
+pydantic>=2.7
+tabulate
 # Optional for Spark/Databricks-style local execution:
 pyspark

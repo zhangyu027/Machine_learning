@@ -1,5 +1,0 @@
-Metric,Meaning,Result
-Validity rate,Percent generated molecules that pass basic checks,87.80%
-Novelty,Generated molecules that are not copied from the training data,93.90%
-Diversity,"How different generated molecules are, using the diversity proxy",3.122
-Top candidates,Best generated molecules after scoring and ranking,Saved in evaluation/top_10_generated_candidates.csv after visualization

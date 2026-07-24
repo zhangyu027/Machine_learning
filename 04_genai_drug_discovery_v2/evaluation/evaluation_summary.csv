@@ -1,2 +1,0 @@
-num_training_molecules,num_generated_unique_molecules,validity_rate,novelty_rate,average_diversity_proxy,average_druglikeness_proxy
-30,82,0.8780487804878049,0.9390243902439024,3.1219512195121952,0.8475609756097561

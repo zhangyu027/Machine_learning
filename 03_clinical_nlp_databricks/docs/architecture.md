@@ -23,3 +23,26 @@ API inference and governance artifacts
 - Synthetic healthcare text data
 - Evaluation summary for auditability
 - Lightweight API endpoint for model serving demonstration
+
+## Entity extraction and trial matching extension
+
+```text
+Clinical note
+   ↓
+Entity extractor
+(age, diagnosis, medication, labs, hospitalization, negation)
+   ↓
+Structured patient profile
+   ↓
+Criterion engine
+   ├── inclusion criteria
+   └── exclusion criteria
+   ↓
+Matched / failed / unknown evidence
+   ↓
+Eligible / not eligible / needs review
+   ↓
+Human trial coordinator
+```
+
+The criterion engine keeps every decision traceable. Missing mandatory evidence is not silently treated as a pass; it routes the case to human review.
