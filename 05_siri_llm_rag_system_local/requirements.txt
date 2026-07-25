@@ -8,3 +8,13 @@ requests
 ollama
 scikit-learn
 matplotlib
+fastapi
+uvicorn[standard]
+prometheus-client
+pydantic
+pytest
+httpx
+opentelemetry-api
+opentelemetry-sdk
+opentelemetry-exporter-otlp-proto-http
+opentelemetry-instrumentation-fastapi

@@ -1,0 +1,21 @@
+services:
+  api:
+    build: .
+    env_file: .env
+    ports: ["8000:8000"]
+    depends_on: [mlflow]
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.22.0
+    command: mlflow server --host 0.0.0.0 --port 5000 --backend-store-uri sqlite:///mlflow.db --default-artifact-root /mlartifacts
+    ports: ["5000:5000"]
+    volumes: ["mlflow-data:/mlartifacts"]
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    ports: ["9090:9090"]
+    volumes: ["./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro"]
+  grafana:
+    image: grafana/grafana:11.2.0
+    ports: ["3000:3000"]
+    depends_on: [prometheus]
+volumes:
+  mlflow-data:

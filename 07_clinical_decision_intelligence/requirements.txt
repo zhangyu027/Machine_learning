@@ -5,3 +5,11 @@ xgboost
 shap
 joblib
 matplotlib
+fastapi
+uvicorn[standard]
+pydantic
+prometheus-client
+mlflow
+pyarrow
+httpx
+pytest

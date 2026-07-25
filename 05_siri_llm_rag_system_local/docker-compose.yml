@@ -1,0 +1,22 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+  api:
+    build: .
+    environment:
+      SIRI_RAG_API_KEY: ${SIRI_RAG_API_KEY:-change-me}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.2}
+      OLLAMA_HOST: http://ollama:11434
+      REQUESTS_PER_MINUTE: ${REQUESTS_PER_MINUTE:-30}
+    volumes:
+      - ./vector_store:/app/vector_store
+    ports:
+      - "8000:8000"
+    depends_on:
+      - ollama
+volumes:
+  ollama_data:

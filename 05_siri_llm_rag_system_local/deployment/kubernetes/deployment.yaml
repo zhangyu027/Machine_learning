@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: siri-rag-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: siri-rag-api
+  template:
+    metadata:
+      labels:
+        app: siri-rag-api
+    spec:
+      containers:
+        - name: api
+          image: your-registry/siri-rag:latest
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: siri-rag-secrets
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "2"
+              memory: "4Gi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: siri-rag-api
+spec:
+  selector:
+    app: siri-rag-api
+  ports:
+    - port: 80
+      targetPort: 8000
