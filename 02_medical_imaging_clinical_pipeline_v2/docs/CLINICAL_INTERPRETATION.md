@@ -31,3 +31,28 @@ A real clinical deployment would require clinician review, external validation, 
 ## Summary
 
 The multimodal model is useful as a portfolio demonstration because it reflects a more realistic clinical workflow than image-only classification. Predictions should always be interpreted with caution and reviewed by qualified clinical experts.
+
+
+## Production Deployment Considerations
+
+A production deployment would additionally require:
+
+• External validation
+
+• Continuous model monitoring
+
+• Data drift detection
+
+• Model versioning
+
+• Security review
+
+• HIPAA compliance
+
+• Audit logging
+
+• Human-in-the-loop review
+
+• Regulatory approval
+
+These capabilities are outside the scope of this portfolio project but represent important considerations for real-world clinical AI systems.
