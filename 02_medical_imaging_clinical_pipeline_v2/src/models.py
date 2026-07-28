@@ -1,4 +1,5 @@
 """Deep-learning model definitions for medical imaging classification."""
+
 from __future__ import annotations
 
 import torch
@@ -32,10 +33,7 @@ class SimpleCNN(nn.Module):
 
 
 class TransferLearningCNN(nn.Module):
-    """ResNet50 or EfficientNet-B0 classifier with configurable input channels.
-
-    Pretrained weights are optional so the project can run in offline environments.
-    """
+    """ResNet50 or EfficientNet-B0 classifier with configurable input channels."""
 
     def __init__(
         self,
@@ -46,31 +44,59 @@ class TransferLearningCNN(nn.Module):
         freeze_backbone: bool = False,
     ):
         super().__init__()
+
         try:
             from torchvision import models
         except ImportError as exc:
-            raise ImportError("torchvision is required for TransferLearningCNN") from exc
+            raise ImportError(
+                "torchvision is required for TransferLearningCNN"
+            ) from exc
 
         architecture = architecture.lower()
+
         if architecture == "resnet50":
             weights = models.ResNet50_Weights.DEFAULT if pretrained else None
             backbone = models.resnet50(weights=weights)
+
             if in_channels != 3:
-                backbone.conv1 = nn.Conv2d(in_channels, 64, kernel_size=7, stride=2, padding=3, bias=False)
+                backbone.conv1 = nn.Conv2d(
+                    in_channels,
+                    64,
+                    kernel_size=7,
+                    stride=2,
+                    padding=3,
+                    bias=False,
+                )
+
             feature_dim = backbone.fc.in_features
             backbone.fc = nn.Identity()
+
         elif architecture in {"efficientnet", "efficientnet_b0"}:
-            weights = models.EfficientNet_B0_Weights.DEFAULT if pretrained else None
+            weights = (
+                models.EfficientNet_B0_Weights.DEFAULT
+                if pretrained
+                else None
+            )
             backbone = models.efficientnet_b0(weights=weights)
+
             if in_channels != 3:
-                old = backbone.features[0][0]
+                old_layer = backbone.features[0][0]
                 backbone.features[0][0] = nn.Conv2d(
-                    in_channels, old.out_channels, old.kernel_size, old.stride, old.padding, bias=False
+                    in_channels,
+                    old_layer.out_channels,
+                    old_layer.kernel_size,
+                    old_layer.stride,
+                    old_layer.padding,
+                    bias=False,
                 )
+
             feature_dim = backbone.classifier[1].in_features
             backbone.classifier = nn.Identity()
+
         else:
-            raise ValueError("architecture must be 'resnet50' or 'efficientnet_b0'")
+            raise ValueError(
+                "architecture must be 'resnet50' or 'efficientnet_b0'"
+            )
 
         self.architecture = architecture
         self.backbone = backbone
@@ -78,6 +104,7 @@ class TransferLearningCNN(nn.Module):
             nn.Dropout(0.25),
             nn.Linear(feature_dim, num_classes),
         )
+
         if freeze_backbone:
             for parameter in self.backbone.parameters():
                 parameter.requires_grad = False
@@ -87,16 +114,46 @@ class TransferLearningCNN(nn.Module):
 
 
 class MultimodalClinicalModel(nn.Module):
-    def __init__(self, metadata_dim: int = 4, num_classes: int = 2):
-        super().__init__()
-        self.image_encoder = SimpleCNN(num_classes=64)
-        self.meta_encoder = nn.Sequential(
-            nn.Linear(metadata_dim, 16), nn.ReLU(), nn.Linear(16, 16), nn.ReLU()
-        )
-        self.classifier = nn.Sequential(nn.Linear(80, 64), nn.ReLU(), nn.Linear(64, num_classes))
+    """Combine image features with structured clinical metadata."""
 
-    def forward(self, image: torch.Tensor, metadata: torch.Tensor) -> torch.Tensor:
-        return self.classifier(torch.cat([self.image_encoder(image), self.meta_encoder(metadata)], dim=1))
+    def __init__(
+        self,
+        metadata_dim: int = 4,
+        num_classes: int = 2,
+        in_channels: int = 1,
+    ):
+        super().__init__()
+
+        self.image_encoder = SimpleCNN(
+            num_classes=num_classes,
+            in_channels=in_channels,
+        )
+        self.meta_encoder = nn.Sequential(
+            nn.Linear(metadata_dim, 16),
+            nn.ReLU(),
+            nn.Dropout(0.10),
+            nn.Linear(16, 16),
+            nn.ReLU(),
+        )
+        self.classifier = nn.Sequential(
+            nn.Linear(64 + 16, 64),
+            nn.ReLU(),
+            nn.Dropout(0.25),
+            nn.Linear(64, num_classes),
+        )
+
+    def forward(
+        self,
+        image: torch.Tensor,
+        metadata: torch.Tensor,
+    ) -> torch.Tensor:
+        image_features = self.image_encoder.forward_features(image)
+        metadata_features = self.meta_encoder(metadata.float())
+        combined_features = torch.cat(
+            [image_features, metadata_features],
+            dim=1,
+        )
+        return self.classifier(combined_features)
 
 
 class GradCAM:
@@ -104,10 +161,14 @@ class GradCAM:
 
     def __init__(self, model: nn.Module, target_layer: nn.Module):
         self.model = model
-        self.gradients = None
-        self.activations = None
-        target_layer.register_forward_hook(self._save_activation)
-        target_layer.register_full_backward_hook(self._save_gradient)
+        self.gradients: torch.Tensor | None = None
+        self.activations: torch.Tensor | None = None
+        self._forward_handle = target_layer.register_forward_hook(
+            self._save_activation
+        )
+        self._backward_handle = target_layer.register_full_backward_hook(
+            self._save_gradient
+        )
 
     def _save_activation(self, module, inputs, output):
         self.activations = output.detach()
@@ -115,14 +176,40 @@ class GradCAM:
     def _save_gradient(self, module, grad_input, grad_output):
         self.gradients = grad_output[0].detach()
 
-    def generate(self, image_tensor: torch.Tensor, class_idx: int | None = None) -> torch.Tensor:
+    def generate(
+        self,
+        image_tensor: torch.Tensor,
+        class_idx: int | None = None,
+    ) -> torch.Tensor:
         self.model.eval()
         output = self.model(image_tensor)
-        class_idx = output.argmax(dim=1).item() if class_idx is None else class_idx
-        self.model.zero_grad()
-        output[:, class_idx].backward()
+
+        if class_idx is None:
+            class_idx = int(output.argmax(dim=1).item())
+
+        self.model.zero_grad(set_to_none=True)
+        output[:, class_idx].sum().backward()
+
+        if self.gradients is None or self.activations is None:
+            raise RuntimeError(
+                "Grad-CAM hooks did not capture gradients and activations."
+            )
+
         weights = self.gradients.mean(dim=(2, 3), keepdim=True)
-        cam = F.relu((weights * self.activations).sum(dim=1, keepdim=True))
-        cam = F.interpolate(cam, size=image_tensor.shape[2:], mode="bilinear", align_corners=False)
-        cam = cam.squeeze().cpu()
+        cam = F.relu(
+            (weights * self.activations).sum(dim=1, keepdim=True)
+        )
+        cam = F.interpolate(
+            cam,
+            size=image_tensor.shape[2:],
+            mode="bilinear",
+            align_corners=False,
+        )
+        cam = cam.squeeze().detach().cpu()
+
         return (cam - cam.min()) / (cam.max() - cam.min() + 1e-8)
+
+    def close(self) -> None:
+        """Remove registered hooks when Grad-CAM is no longer needed."""
+        self._forward_handle.remove()
+        self._backward_handle.remove()

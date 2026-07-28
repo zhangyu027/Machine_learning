@@ -1,75 +1,203 @@
+"""Dataset and metadata utilities for the medical imaging demo."""
+
+from __future__ import annotations
+
 from pathlib import Path
+from typing import Any
+
 import numpy as np
 import pandas as pd
 import torch
 from torch.utils.data import Dataset
 
 
-def create_synthetic_metadata(labels, output_path):
+METADATA_COLUMNS = ["age", "sex", "prior_condition", "scanner_site"]
+
+
+def create_synthetic_metadata(
+    labels: Any,
+    output_path: str | Path,
+) -> pd.DataFrame:
+    """Create reproducible synthetic clinical metadata for demonstration use."""
     rng = np.random.default_rng(42)
-    labels = np.array(labels).reshape(-1)
-    n = len(labels)
+    labels_array = np.asarray(labels).reshape(-1)
+    sample_count = len(labels_array)
 
-    df = pd.DataFrame({
-        "patient_id": [f"P{i:05d}" for i in range(n)],
-        "age": rng.normal(55, 15, n).clip(18, 90).round(0),
-        "sex": rng.integers(0, 2, n),
-        "prior_condition": rng.binomial(1, 0.30, n),
-        "scanner_site": rng.integers(0, 3, n),
-        "label": labels,
-    })
+    dataframe = pd.DataFrame(
+        {
+            "patient_id": [f"P{i:05d}" for i in range(sample_count)],
+            "age": rng.normal(55, 15, sample_count).clip(18, 90).round(0),
+            "sex": rng.integers(0, 2, sample_count),
+            "prior_condition": rng.binomial(1, 0.30, sample_count),
+            "scanner_site": rng.integers(0, 3, sample_count),
+            "label": labels_array,
+        }
+    )
 
-    # Mild signal for demo: positive cases have slightly higher prior condition probability.
-    pos = df["label"] == 1
-    df.loc[pos, "prior_condition"] = rng.binomial(1, 0.50, pos.sum())
+    # Mild synthetic signal for demonstration only.
+    positive_rows = dataframe["label"] == 1
+    dataframe.loc[positive_rows, "prior_condition"] = rng.binomial(
+        1,
+        0.50,
+        int(positive_rows.sum()),
+    )
 
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(output_path, index=False)
-    return df
+    dataframe.to_csv(output_path, index=False)
+    return dataframe
 
 
-def normalize_metadata(df):
-    meta = df[["age", "sex", "prior_condition", "scanner_site"]].copy()
-    meta["age"] = (meta["age"] - meta["age"].mean()) / (meta["age"].std() + 1e-8)
-    meta["scanner_site"] = meta["scanner_site"] / max(meta["scanner_site"].max(), 1)
-    return meta.astype("float32").values
+def fit_metadata_normalizer(dataframe: pd.DataFrame) -> dict[str, float]:
+    """Fit normalization statistics using training metadata only."""
+    _validate_metadata_columns(dataframe)
+
+    age_mean = float(dataframe["age"].mean())
+    age_std = float(dataframe["age"].std())
+
+    if not np.isfinite(age_std) or age_std <= 0:
+        age_std = 1.0
+
+    scanner_max = float(max(dataframe["scanner_site"].max(), 1))
+
+    return {
+        "age_mean": age_mean,
+        "age_std": age_std,
+        "scanner_max": scanner_max,
+    }
+
+
+def normalize_metadata(
+    dataframe: pd.DataFrame,
+    normalizer: dict[str, float] | None = None,
+    *,
+    return_normalizer: bool = False,
+):
+    """Normalize metadata without leaking validation/test statistics.
+
+    Existing notebook compatibility is preserved: by default this returns only
+    the NumPy feature matrix. Set ``return_normalizer=True`` when fitting the
+    training split so the same statistics can be reused on validation/test data.
+    """
+    _validate_metadata_columns(dataframe)
+
+    fitted_normalizer = (
+        fit_metadata_normalizer(dataframe)
+        if normalizer is None
+        else normalizer
+    )
+
+    required_keys = {"age_mean", "age_std", "scanner_max"}
+    missing_keys = required_keys.difference(fitted_normalizer)
+    if missing_keys:
+        raise ValueError(
+            "Normalizer is missing required keys: "
+            + ", ".join(sorted(missing_keys))
+        )
+
+    metadata = dataframe[METADATA_COLUMNS].copy()
+    metadata["age"] = (
+        metadata["age"] - fitted_normalizer["age_mean"]
+    ) / fitted_normalizer["age_std"]
+    metadata["scanner_site"] = (
+        metadata["scanner_site"] / fitted_normalizer["scanner_max"]
+    )
+
+    values = metadata.astype("float32").to_numpy()
+
+    if return_normalizer:
+        return values, fitted_normalizer
+    return values
+
+
+def _validate_metadata_columns(dataframe: pd.DataFrame) -> None:
+    missing = [column for column in METADATA_COLUMNS if column not in dataframe]
+    if missing:
+        raise ValueError(
+            "Metadata is missing required columns: " + ", ".join(missing)
+        )
+
+
+def _prepare_image(image: Any) -> torch.Tensor:
+    image_array = np.asarray(image, dtype=np.float32)
+
+    if image_array.ndim == 2:
+        image_array = image_array[None, :, :]
+    elif image_array.ndim == 3:
+        # Convert HWC to CHW when the channel dimension is last.
+        if image_array.shape[-1] in (1, 3, 4):
+            image_array = image_array.transpose(2, 0, 1)
+    else:
+        raise ValueError(
+            f"Expected a 2D or 3D image, received shape {image_array.shape}."
+        )
+
+    # Remove alpha if present.
+    if image_array.shape[0] == 4:
+        image_array = image_array[:3]
+
+    # This project uses one-channel image models.
+    if image_array.shape[0] == 3:
+        image_array = image_array.mean(axis=0, keepdims=True)
+
+    if image_array.shape[0] != 1:
+        raise ValueError(
+            f"Expected one image channel after conversion; got {image_array.shape[0]}."
+        )
+
+    # Normalize common integer image ranges while preserving already normalized data.
+    if image_array.size and image_array.max() > 1.0:
+        image_array = image_array / 255.0
+
+    return torch.as_tensor(image_array, dtype=torch.float32)
 
 
 class ImageOnlyDataset(Dataset):
-    def __init__(self, images, labels):
-        self.images = images
-        self.labels = np.array(labels).reshape(-1)
+    """PyTorch dataset returning ``(image, label)``."""
 
-    def __len__(self):
+    def __init__(self, images: Any, labels: Any):
+        self.images = np.asarray(images)
+        self.labels = np.asarray(labels).reshape(-1)
+
+        if len(self.images) != len(self.labels):
+            raise ValueError(
+                "images and labels must contain the same number of records"
+            )
+
+    def __len__(self) -> int:
         return len(self.labels)
 
-    def __getitem__(self, idx):
-        image = self.images[idx].astype("float32") / 255.0
-        if image.ndim == 2:
-            image = image[None, :, :]
-        elif image.ndim == 3:
-            image = image.transpose(2, 0, 1)
-        if image.shape[0] == 3:
-            image = image.mean(axis=0, keepdims=True)
-        return torch.tensor(image), torch.tensor(self.labels[idx], dtype=torch.long)
+    def __getitem__(self, idx: int):
+        return (
+            _prepare_image(self.images[idx]),
+            torch.as_tensor(self.labels[idx], dtype=torch.long),
+        )
 
 
 class MultimodalDataset(Dataset):
-    def __init__(self, images, labels, metadata):
-        self.images = images
-        self.labels = np.array(labels).reshape(-1)
-        self.metadata = metadata
+    """PyTorch dataset returning ``(image, metadata, label)``."""
 
-    def __len__(self):
+    def __init__(self, images: Any, labels: Any, metadata: Any):
+        self.images = np.asarray(images)
+        self.labels = np.asarray(labels).reshape(-1)
+        self.metadata = np.asarray(metadata, dtype=np.float32)
+
+        record_count = len(self.labels)
+        if len(self.images) != record_count:
+            raise ValueError(
+                "images and labels must contain the same number of records"
+            )
+        if len(self.metadata) != record_count:
+            raise ValueError(
+                "metadata and labels must contain the same number of records"
+            )
+
+    def __len__(self) -> int:
         return len(self.labels)
 
-    def __getitem__(self, idx):
-        image = self.images[idx].astype("float32") / 255.0
-        if image.ndim == 2:
-            image = image[None, :, :]
-        elif image.ndim == 3:
-            image = image.transpose(2, 0, 1)
-        if image.shape[0] == 3:
-            image = image.mean(axis=0, keepdims=True)
-        return torch.tensor(image), torch.tensor(self.metadata[idx]), torch.tensor(self.labels[idx], dtype=torch.long)
+    def __getitem__(self, idx: int):
+        return (
+            _prepare_image(self.images[idx]),
+            torch.as_tensor(self.metadata[idx], dtype=torch.float32),
+            torch.as_tensor(self.labels[idx], dtype=torch.long),
+        )

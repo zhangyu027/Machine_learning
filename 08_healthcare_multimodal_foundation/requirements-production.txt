@@ -1,0 +1,14 @@
+fastapi>=0.110
+uvicorn>=0.29
+pydantic>=2.6
+prometheus-client>=0.20
+mlflow>=2.12
+opentelemetry-api>=1.24
+opentelemetry-sdk>=1.24
+# Optional GPU/distributed stack:
+# torch>=2.2
+# transformers>=4.40
+# deepspeed>=0.14
+# ray[train]>=2.10
+# feast>=0.38
+# faiss-cpu>=1.8

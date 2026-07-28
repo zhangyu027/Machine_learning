@@ -134,3 +134,64 @@ models/*.joblib
 ```
 
 Keep large data and models in S3, Git LFS, or release artifacts.
+
+# V2 Production Multimodal Foundation Upgrade
+
+This edition adds an executable and production-oriented AI layer on top of the existing healthcare lakehouse:
+
+- **Multimodal transformer:** vision, clinical-text, and structured-EHR projection and fusion, with an optional PyTorch transformer implementation.
+- **Vector retrieval:** normalized similarity search with metadata filtering and a migration path to FAISS/Milvus.
+- **Clinical RAG:** evidence-first retrieval, citations, confidence thresholds, and clinician-review fallback.
+- **GPU optimization:** container/Kubernetes GPU resource scaffold; production path supports mixed precision, batching, and compiled inference.
+- **MLflow:** experiment logging and model-registry integration with an offline JSON fallback.
+- **Kubernetes:** replicated deployment, readiness probe, service, autoscaling, and GPU limits.
+- **Observability:** Prometheus request/latency metrics and optional OpenTelemetry dependencies.
+- **Distributed training:** torchrun environment helpers and documented DeepSpeed/Ray extension path.
+- **Feature store:** online feature retrieval interface designed for later Feast replacement.
+- **FHIR integration:** Bundle ingestion and FHIR R4-style RiskAssessment output.
+- **Clinician review:** append-only accept/reject/override feedback for audit and retraining.
+- **Automated evaluation:** Recall@K, MRR, citation precision, and groundedness.
+
+## Production API
+
+```bash
+pip install -r requirements.txt -r requirements-production.txt
+export PYTHONPATH=.
+export API_KEY=demo-key
+uvicorn api.main:app --reload
+```
+
+Endpoints:
+
+```text
+GET  /health
+GET  /metrics
+POST /v1/predict
+POST /v1/reviews
+```
+
+## V2 Architecture
+
+```text
+FHIR/EHR + Clinical Notes + Imaging
+              ↓
+      Lakehouse / Feature Store
+              ↓
+Vision Encoder + Text Encoder + Structured Encoder
+              ↓
+       Transformer Fusion Layer
+              ↓
+Risk Head + Multimodal Embedding Index
+              ↓
+ Clinical RAG + Evidence Validation
+              ↓
+FHIR RiskAssessment + Clinician Review
+              ↓
+MLflow Registry + Prometheus/OpenTelemetry
+              ↓
+Docker / Kubernetes / GPU Serving
+```
+
+## Responsible interview positioning
+
+This is a synthetic-data, portfolio-grade reference implementation. The local NumPy fusion encoder, in-memory vector store, FHIR simulator, and JSON registry fallback are executable demonstrations. PyTorch distributed training, Feast, external FHIR servers, production vector databases, GPU serving, and hospital deployment are integration paths and scaffolds—not claims of live clinical deployment.
