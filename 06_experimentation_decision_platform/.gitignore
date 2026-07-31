@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Environments and secrets
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+__MACOSX/
+.ipynb_checkpoints/
+
+# Generated artifacts
+data/processed/
+models/
+reports/model_outputs/
+reports/figures/
+artifacts/
+mlruns/
+*.joblib
+*.pkl
+*.log
+
+# Packaging
+build/
+dist/
+*.egg-info/
+*.zip
+*.tar.gz

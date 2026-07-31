@@ -1,0 +1,9 @@
+services:
+  api:
+    build: .
+    image: experimentation-decision-platform:3.0.0
+    environment:
+      API_KEY: ${API_KEY:?API_KEY must be set}
+    ports:
+      - "8000:8000"
+    restart: unless-stopped

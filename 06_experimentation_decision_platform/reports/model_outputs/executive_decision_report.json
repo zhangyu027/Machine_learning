@@ -1,52 +1,58 @@
 {
-  "frequentist_results": {
+  "project": "06_experimentation_decision_platform",
+  "pipeline_status": "completed_successfully",
+  "observations": 25000,
+  "frequentist": {
     "post_period_revenue": {
       "control_mean": 19.38259879759519,
       "treatment_mean": 22.10032894211577,
       "absolute_lift": 2.71773014452058,
-      "relative_lift_pct": 14.021495119207417,
+      "relative_lift_pct": 14.021495119930824,
+      "standard_error": 0.13451827480620923,
       "ci_95": [
         2.45407432590041,
         2.9813859631407498
-      ]
+      ],
+      "n_control": 12475,
+      "n_treatment": 12525
     },
     "cuped_revenue": {
-      "control_mean": 19.43664465457617,
-      "treatment_mean": 22.046498837058866,
-      "absolute_lift": 2.609854182482696,
-      "relative_lift_pct": 13.42749342147363,
+      "control_mean": 19.436642492741896,
+      "treatment_mean": 22.04650099026307,
+      "absolute_lift": 2.6098584975211736,
+      "relative_lift_pct": 13.427517116167346,
+      "standard_error": 0.10827058862016924,
       "ci_95": [
-        2.3976438204464494,
-        2.8220645445189425
-      ]
+        2.397648143825642,
+        2.8220688512167054
+      ],
+      "n_control": 12475,
+      "n_treatment": 12525
     },
     "converted": {
       "control_mean": 0.7240080160320641,
       "treatment_mean": 0.7640718562874251,
       "absolute_lift": 0.04006384025536103,
-      "relative_lift_pct": 5.533618318150022,
+      "relative_lift_pct": 5.533618325793056,
+      "standard_error": 0.00551476207036858,
       "ci_95": [
         0.02925490659743861,
         0.050872773913283445
-      ]
+      ],
+      "n_control": 12475,
+      "n_treatment": 12525
     }
   },
   "bayesian_conversion_test": {
-    "control_posterior_mean": 0.7239755224634106,
-    "treatment_posterior_mean": 0.7640240057456263,
     "prob_treatment_better": 1.0,
-    "expected_lift": 0.04004848328221578,
+    "expected_lift": 0.04006468453639521,
     "credible_interval_95": [
-      0.029223019342025806,
-      0.050859455943734956
+      0.029290250210569434,
+      0.05082116121603954
     ],
     "expected_loss_if_ship": 0.0,
-    "expected_loss_if_do_not_ship": 0.04004848328221578
+    "expected_loss_if_do_not_ship": 0.04006468453639521,
+    "draws": 100000
   },
-  "decision_recommendation": "Ship treatment if business risk tolerance accepts the expected loss; prioritize high_value and returning segments based on uplift scores.",
-  "guardrail_notes": [
-    "Monitor sequential probability and sample-ratio mismatch.",
-    "Use CUPED revenue as the primary revenue decision metric.",
-    "Use uplift scores for targeted rollout."
-  ]
+  "decision": "ship"
 }
