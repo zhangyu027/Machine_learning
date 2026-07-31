@@ -1,3 +1,32 @@
+Metadata-Version: 2.4
+Name: pharma-genai-drug-discovery-v4
+Version: 4.1.0
+Summary: Scientific ML drug discovery platform for scaffold-aware ADMET benchmarking, uncertainty, applicability domains, evidence support, and reproducible deployment.
+Author: Yu Zhang
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: pandas>=1.5
+Requires-Dist: numpy>=1.23
+Requires-Dist: scikit-learn>=1.2
+Requires-Dist: requests>=2.31
+Requires-Dist: pydantic>=2.0
+Provides-Extra: app
+Requires-Dist: streamlit>=1.28; extra == "app"
+Requires-Dist: plotly>=5.18; extra == "app"
+Provides-Extra: api
+Requires-Dist: fastapi>=0.110; extra == "api"
+Requires-Dist: uvicorn>=0.27; extra == "api"
+Provides-Extra: full
+Requires-Dist: torch>=2.1; extra == "full"
+Requires-Dist: torch-geometric>=2.4; extra == "full"
+Requires-Dist: shap>=0.44; extra == "full"
+Requires-Dist: mlflow>=2.9; extra == "full"
+Requires-Dist: biopython>=1.81; extra == "full"
+Requires-Dist: sentence-transformers>=2.2; extra == "full"
+Requires-Dist: faiss-cpu>=1.7.4; extra == "full"
+Provides-Extra: test
+Requires-Dist: pytest>=7.0; extra == "test"
+
 # Scientific ML Drug Discovery Platform V4.1
 
 An end-to-end molecular AI platform for **compound representation, scaffold-aware ADMET benchmarking, uncertainty-aware candidate prioritization, explainability, evidence retrieval, and reproducible ML deployment**.

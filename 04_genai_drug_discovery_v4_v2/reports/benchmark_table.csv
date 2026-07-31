@@ -1,6 +1,3 @@
-model,representation,endpoint,split,n_train,n_validation,n_test,roc_auc,pr_auc,brier,ece,status
-logistic_regression,RDKit_descriptors,TBD,bemis_murcko_scaffold,,,,,,,,awaiting_versioned_dataset
-random_forest,Morgan_fingerprint,TBD,bemis_murcko_scaffold,,,,,,,,awaiting_versioned_dataset
-xgboost,RDKit_or_Morgan,TBD,bemis_murcko_scaffold,,,,,,,,planned_extension
-multitask_mlp,multitask_representation,TBD,bemis_murcko_scaffold,,,,,,,,benchmark_pending
-molecular_gnn,molecular_graph,TBD,bemis_murcko_scaffold,,,,,,,,benchmark_pending
+model,representation,split,n_train,n_validation,n_test,accuracy,balanced_accuracy,f1,brier_score,roc_auc,average_precision
+logistic_rdkit_descriptors,descriptors,bemis_murcko_scaffold,5806,726,726,0.7493112947658402,0.6263966480446927,0.052083333333333336,0.18243670103818602,0.7111731843575418,0.08348062236472792
+random_forest_morgan,morgan_256,bemis_murcko_scaffold,5806,726,726,0.9848484848484849,0.6472067039106145,0.35294117647058826,0.01433559801305242,0.6581005586592179,0.26015075744112853

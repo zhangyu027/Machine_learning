@@ -1,7 +1,0 @@
-fastapi
-uvicorn[standard]
-python-multipart
-pillow
-torch
-torchvision
-joblib
