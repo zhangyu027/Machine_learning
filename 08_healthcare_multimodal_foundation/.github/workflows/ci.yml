@@ -1,4 +1,135 @@
 name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install \
+            -r requirements.txt \
+            -r requirements-production.txt \
+            -r requirements-dev.txt
+
+      - name: Check formatting and linting
+        run: |
+          ruff check .
+
+      - name: Compile Python
+        run: |
+          python -m compileall \
+            api \
+            app \
+            feedback \
+            fhir \
+            observability \
+            rag \
+            retrieval \
+            scripts \
+            src \
+            training
+
+      - name: Run type checks
+        run: |
+          mypy api feedback fhir src --ignore-missing-imports
+
+      - name: Run tests
+        env:
+          API_KEY: ci-test-secret
+        run: |
+          pytest -q \
+            --cov=. \
+            --cov-report=term-missing \
+            --cov-report=xml
+
+      - name: Run dependency audit
+        run: |
+          pip-audit \
+            -r requirements.txt \
+            -r requirements-production.txt
+
+      - name: Run security scan
+        run: |
+          bandit -q -r \
+            api \
+            feedback \
+            fhir \
+            observability \
+            rag \
+            retrieval \
+            scripts \
+            src \
+            training
+
+  container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: quality
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Build container
+        run: |
+          docker build \
+            -t healthcare-mm:${{ github.sha }} \
+            .
+
+      - name: Start container
+        run: |
+          docker run -d \
+            --name healthcare-mm-api \
+            -p 8000:8000 \
+            -e API_KEY=ci-test-secret \
+            healthcare-mm:${{ github.sha }}
+
+      - name: Wait for health endpoint
+        run: |
+          for attempt in {1..30}; do
+            if curl --fail --silent \
+              http://127.0.0.1:8000/health; then
+              exit 0
+            fi
+            sleep 2
+          done
+
+          docker logs healthcare-mm-api
+          exit 1
+
+      - name: Test authenticated prediction
+        run: |
+          curl --fail \
+            -X POST \
+            http://127.0.0.1:8000/v1/predict \
+            -H "Content-Type: application/json" \
+            -H "X-API-Key: ci-test-secret" \
+            -d '{"patient_id":"synthetic-ci-patient"}'
+
+      - name: Show logs after failure
+        if: failure()
+        run: docker logs healthcare-mm-apiname: CI
 on: [push, pull_request]
 jobs:
   test-build:
