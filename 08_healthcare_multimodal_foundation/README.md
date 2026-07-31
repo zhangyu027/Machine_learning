@@ -21,7 +21,7 @@ This project shows how a Principal Data Engineer can design the enterprise data 
 ## Folder Structure
 
 ```text
-app/                    Streamlit entry point placeholder
+app/                    Streamlit user interface entry point
 data/sample/            Synthetic local demo data
 docs/                   Executive and architecture documentation
 notebooks/              Demonstration notebook
@@ -106,7 +106,7 @@ Healthcare multimodal pipeline completed successfully.
 2 passed
 ```
 
-This confirms that the healthcare multimodal foundation model system is functioning correctly from ingestion through model evaluation.
+This confirms that the synthetic-data pipeline executes from ingestion through evaluation artifact generation. It does not establish clinical validity or useful predictive performance.
 
 ## Principal Data Engineer Interview Narrative
 
@@ -165,7 +165,7 @@ Endpoints:
 
 ```text
 GET  /health
-GET  /metrics
+GET  /metrics  # add only after completing the API integration steps below
 POST /v1/predict
 POST /v1/reviews
 ```
@@ -195,3 +195,23 @@ Docker / Kubernetes / GPU Serving
 ## Responsible interview positioning
 
 This is a synthetic-data, portfolio-grade reference implementation. The local NumPy fusion encoder, in-memory vector store, FHIR simulator, and JSON registry fallback are executable demonstrations. PyTorch distributed training, Feast, external FHIR servers, production vector databases, GPU serving, and hospital deployment are integration paths and scaffolds—not claims of live clinical deployment.
+
+
+## Model-performance interpretation
+
+The included baseline model is a pipeline-validation artifact trained on synthetic data. Reported metrics validate code execution and artifact generation only. They must not be interpreted as evidence of clinical usefulness. A production evaluation would require patient-level leakage controls, prevalence reporting, calibration analysis, fairness analysis, external validation, and clinical review.
+
+## Safety disclaimer
+
+This repository uses synthetic data and is intended for educational and portfolio demonstration purposes only. It is not a medical device and must not be used for diagnosis, treatment, triage, or clinical decision-making.
+
+## Implementation status
+
+| Capability | Status |
+|---|---|
+| Synthetic multimodal ingestion and gold-table pipeline | Executable locally |
+| Baseline model and governance artifacts | Executable locally |
+| In-memory retrieval and evaluation utilities | Executable demonstration |
+| FastAPI health, prediction, and review endpoints | Executable demonstration |
+| Prometheus `/metrics` endpoint | Requires API integration described in `API_PATCH_GUIDE.md` |
+| External FHIR servers, production vector databases, Feast, distributed training, GPU serving, and hospital deployment | Integration paths/scaffolds |

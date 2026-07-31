@@ -28,3 +28,8 @@ pytest -q
 ```
 
 The repository is ready for GitHub finalization after committing the updated files and excluding generated outputs, model artifacts, virtual environments, and zip files.
+
+
+## Responsible Positioning
+
+The package uses synthetic data and is a portfolio reference implementation. The baseline model and local retrieval components demonstrate reproducible platform workflows; they are not clinically validated systems. External FHIR connectivity, production vector databases, distributed training, GPU serving, and hospital deployment remain integration paths.

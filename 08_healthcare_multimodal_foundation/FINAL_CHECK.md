@@ -1,69 +1,47 @@
-# Final Check — Healthcare Multimodal Foundation Model System
+# Final Check — Healthcare Multimodal AI Data Foundation
 
-## Status
+## Patch status
 
-Final package check completed for the merged Principal Data Engineer edition.
+This patch addresses the highest-priority review items that can be changed safely from the supplied files:
 
-## Validated Commands
+- corrects Recall@K and preserves the prior binary behavior as Hit Rate@K;
+- adds focused evaluation unit tests;
+- expands architecture documentation and implementation-status labeling;
+- improves model-performance and clinical-safety wording;
+- replaces the placeholder notebook with a portable demonstration notebook;
+- separates development dependencies; and
+- documents the remaining API integration work without overwriting the existing unknown API implementation.
+
+## Validation commands
 
 ```bash
-python scripts/run_pipeline.py
+pip install -r requirements-dev.txt
 python -m scripts.run_pipeline
 pytest -q
+uvicorn api.main:app --reload
 ```
 
-Expected result:
+## Manual API checks
 
-```text
-2 passed
+```bash
+curl http://127.0.0.1:8000/health
+curl http://127.0.0.1:8000/openapi.json
+curl http://127.0.0.1:8000/metrics
 ```
 
-The pipeline writes generated artifacts to `outputs/` and `models/`. These folders are intentionally excluded from Git commits.
+The `/metrics` check should be performed only after applying `API_PATCH_GUIDE.md`.
 
-## Final Updates Applied
-
-- Fixed `python scripts/run_pipeline.py` so it works directly from the repository root.
-- Added `pytest.ini` so test imports resolve consistently.
-- Expanded tests to validate model training and model-card output creation.
-- Updated model training paths so generated artifacts are written to controlled output/model folders.
-- Improved README with validated run commands and output locations.
-- Expanded architecture and executive summary documentation.
-- Removed duplicate root-level `scripts_run_pipeline.py` to avoid confusion.
-- Removed Mac metadata files from the final package.
-
-## GitHub Readiness
-
-Recommended files to commit:
-
-- `README.md`
-- `FINAL_CHECK.md`
-- `pytest.ini`
-- `requirements.txt`
-- `scripts/run_pipeline.py`
-- `src/healthcare_mm/**`
-- `tests/test_pipeline.py`
-- `docs/**`
-- `aws/**`
-- `.github/workflows/ci.yml`
-- `executive_materials/**`
-- `notebooks/**`
-- `data/sample/**`
-
-Do not commit generated folders:
+## Generated content to exclude
 
 - `outputs/`
 - `models/`
 - `.pytest_cache/`
 - `__pycache__/`
+- `.venv/`
+- `mlruns/`
 - zip files
+- `.DS_Store`
 
-## Principal Data Engineer Positioning
+## Merge condition
 
-This project is ready to present as a healthcare AI platform/lakehouse project emphasizing:
-
-- multimodal healthcare source integration
-- reusable gold patient-encounter table
-- feature engineering pipeline
-- model governance and model-card generation
-- AWS Glue/SageMaker/Step Functions/Terraform architecture skeleton
-- CI/CD and security-aware portfolio design
+Merge after the existing pipeline tests and the new evaluation tests pass, the notebook runs from the repository root or notebook folder, and the API documentation accurately matches the implemented endpoints.
