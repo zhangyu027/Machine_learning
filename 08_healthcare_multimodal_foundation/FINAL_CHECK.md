@@ -1,4 +1,26 @@
-# Final Check — Healthcare Multimodal AI Data Foundation
+# Final Validation Check
+
+## Environment
+
+- Python: 3.11
+- Platform: macOS local development and GitHub Actions Ubuntu
+- Data: synthetic only
+- API version: 2.1.0
+
+## Required commands
+
+```bash
+python -m pip install --upgrade pip
+pip install \
+  -r requirements.txt \
+  -r requirements-production.txt \
+  -r requirements-dev.txt
+
+ruff check .
+python -m compileall api app feedback fhir observability rag retrieval scripts src training
+mypy api feedback fhir src --ignore-missing-imports
+python -m scripts.run_pipeline
+pytest -q
 
 ## Patch status
 

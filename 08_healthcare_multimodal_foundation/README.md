@@ -1,4 +1,15 @@
 # 08 Healthcare Multimodal Foundation Model System
+> **Important:** This repository uses synthetic data and is intended for
+> educational and portfolio demonstration only. It is not a medical device
+> and must not be used for diagnosis, treatment, triage, or other clinical
+> decision-making.
+
+# Healthcare Multimodal Foundation Model System
+
+> **Important:** This repository uses synthetic data and is intended for
+> educational and portfolio demonstration only. It is not a medical device
+> and must not be used for diagnosis, treatment, triage, or other clinical
+> decision-making.
 
 **Merged Principal Data Engineer Edition**
 
@@ -103,7 +114,7 @@ Expected result:
 
 ```text
 Healthcare multimodal pipeline completed successfully.
-2 passed
+22 passed
 ```
 
 This confirms that the synthetic-data pipeline executes from ingestion through evaluation artifact generation. It does not establish clinical validity or useful predictive performance.
@@ -157,17 +168,23 @@ This edition adds an executable and production-oriented AI layer on top of the e
 ```bash
 pip install -r requirements.txt -r requirements-production.txt
 export PYTHONPATH=.
-export API_KEY=demo-key
+API_KEY=test-secret python -m pytest -q
 uvicorn api.main:app --reload
 ```
+The generated API key is stored only in the current terminal session. Use the
+same value in the `X-API-Key` request header when calling protected endpoints.
 
 Endpoints:
 
 ```text
-GET  /health
-GET  /metrics  # add only after completing the API integration steps below
-POST /v1/predict
-POST /v1/reviews
+### API endpoints
+
+| Method | Endpoint | Purpose | Authentication |
+|---|---|---|---|
+| GET | `/health` | Service health and version | No |
+| GET | `/metrics/` | app.mount("/metrics", make_asgi_app()) | No |
+| POST | `/v1/predict` | Demonstration multimodal prediction | API key |
+| POST | `/v1/reviews` | Clinician-review feedback | API key |
 ```
 
 ## V2 Architecture
@@ -204,6 +221,16 @@ The included baseline model is a pipeline-validation artifact trained on synthet
 ## Safety disclaimer
 
 This repository uses synthetic data and is intended for educational and portfolio demonstration purposes only. It is not a medical device and must not be used for diagnosis, treatment, triage, or clinical decision-making.
+
+## Modeling limitation
+
+The production API currently uses a deterministic completeness-based
+demonstration heuristic. It does not load the pipeline's trained
+`readmission_gbm.joblib` artifact.
+
+The trained baseline model and the API-serving heuristic are separate
+portfolio demonstrations. Neither has been clinically validated, and neither
+should be used for diagnosis, treatment, triage, or patient-level decisions.
 
 ## Implementation status
 
