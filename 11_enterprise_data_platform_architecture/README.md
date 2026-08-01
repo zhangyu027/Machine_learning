@@ -1,66 +1,120 @@
 # 11 Enterprise Data Platform Architecture
 
-**Principal Data Engineer Portfolio Package**
+**Principal Data Engineer architecture and executable reference portfolio**
 
-This project is an architecture-first portfolio package demonstrating how a Principal Data Engineer designs, operates, governs, and scales an enterprise data platform.
+> This repository is a synthetic, portfolio-grade reference architecture. It does not represent a live enterprise deployment or contain production data.
 
-Unlike project folders focused mainly on model development or notebooks, this package focuses on platform leadership: architecture decisions, operating model, governance, lineage, monitoring, cost control, security, CI/CD, and cloud data platform design.
+## Purpose
 
-## What This Demonstrates
+This project demonstrates how a Principal Data Engineer defines the architecture, operating model, governance, reliability, security, cost controls, and reusable implementation patterns for an enterprise analytical and AI data platform.
 
-- Enterprise data platform architecture leadership
-- Azure Synapse, ADF, ADLS, Purview, and Databricks positioning
-- Bronze / Silver / Gold lakehouse design
-- Data contracts and quality framework
-- Metadata catalog and lineage strategy
-- CI/CD and environment promotion model
-- Monitoring, alerting, incident response, and cost governance
-- Principal Data Engineer interview narrative
+The package combines architecture leadership artifacts with a small executable reference pipeline. The implementation proves the metadata, contract, quality, lineage, and Bronze/Silver/Gold patterns without claiming that Azure infrastructure has been deployed.
 
-## Folder Structure
+## Preferred reference architecture
 
-```text
-architecture_decision_records/   Architecture Decision Records for platform design choices
-architecture_diagrams/           Mermaid and text architecture diagrams
-platform_blueprints/             Azure and lakehouse platform blueprints
-docs/                            Architecture, operating model, and data platform documents
-security_governance/             RBAC, Purview, PII, and governance artifacts
-monitoring_cost/                 Monitoring, observability, cost governance templates
-executive_materials/             Executive summary and leadership narrative
-interview_narrative/             Principal Data Engineer talk tracks and Q&A
-templates/                       Reusable data contract and operational templates
+| Capability | Preferred service |
+|---|---|
+| Lake storage | ADLS Gen2 with Delta Lake |
+| Ingestion and orchestration | Azure Data Factory |
+| Transformation | Azure Databricks |
+| Governed SQL | Synapse Serverless SQL |
+| Catalog, classification, and lineage | Microsoft Purview |
+| Identity and secrets | Microsoft Entra ID, managed identities, Key Vault |
+| Monitoring | Azure Monitor and Log Analytics |
+| CI/CD | GitHub Actions |
+| Infrastructure as code | Terraform |
+
+Supported alternatives are documented, but the repository uses the choices above as the decisive reference architecture.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    SRC[Batch / streaming / API / database sources] --> LAND[Landing, quarantine, archive]
+    LAND --> BR[Bronze source-aligned data]
+    BR --> SI[Silver conformed data products]
+    SI --> GO[Gold certified products]
+    GO --> BI[Semantic models and BI]
+    GO --> AI[AI and feature consumers]
+    CTRL[Contracts, metadata, quality, orchestration] -. controls .-> LAND
+    GOV[Purview, identity, policy, lineage] -. governs .-> BR
+    GOV -. governs .-> SI
+    GOV -. governs .-> GO
+    OBS[Operational, data, security, and cost telemetry] -. observes .-> GO
 ```
 
-## Recommended Interview Positioning
+See:
 
-> I designed an enterprise data platform architecture that supports regulated analytics and AI workloads. The platform uses a Bronze/Silver/Gold lakehouse model, metadata-driven pipelines, data contracts, automated quality checks, lineage, cataloging, monitoring, CI/CD, and role-based access controls. The focus is not only building pipelines, but operating the platform reliably at enterprise scale.
+- `architecture/logical_architecture.md`
+- `architecture/physical_azure_architecture.md`
+- `architecture/security_boundaries.md`
 
-## Azure Platform Mapping
+## What is executable versus architectural
 
-| Capability | Azure Service |
+| Component | Status |
 |---|---|
-| Data Lake Storage | ADLS Gen2 |
-| Pipeline Orchestration | Azure Data Factory / Synapse Pipelines |
-| Distributed Processing | Synapse Spark / Azure Databricks |
-| SQL Analytics | Synapse Serverless SQL / Dedicated SQL |
-| Data Governance | Microsoft Purview |
-| Metadata and Lineage | Purview + Pipeline Metadata |
-| CI/CD | Azure DevOps / GitHub Actions |
-| Monitoring | Azure Monitor / Log Analytics |
-| Security | Azure AD, RBAC, ACLs, Key Vault |
+| JSON data-contract validation | Executable local reference |
+| Bronze/Silver/Gold sample pipeline | Executable local reference |
+| Severity-aware quality gates | Executable local reference |
+| Lineage manifest and run metadata | Executable local reference |
+| Architecture-document validation | Executable tests and CI |
+| Terraform module boundaries | Validation scaffold; no Azure deployment claim |
+| Azure Data Factory, Databricks, Purview, Synapse | Target production architecture |
+| Multi-region disaster recovery | Documented design; not deployed |
 
-## How to Use This Package
+## Executable reference implementation
 
-This package is documentation-first. There is no production deployment required. Use it to support interviews, architecture discussions, and portfolio review.
+```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e reference_implementation
 
-Recommended review order:
+enterprise-platform-demo \
+  --config reference_implementation/config/sample_pipeline.json
 
-1. `docs/enterprise_data_platform_architecture.md`
-2. `platform_blueprints/azure_synapse_adls_purview_databricks_blueprint.md`
-3. `architecture_decision_records/`
-4. `interview_narrative/principal_de_story.md`
-5. `executive_materials/executive_summary.md`
+pytest -q tests reference_implementation/tests
+```
 
-## Principal DE Message
+The run writes reproducible governance artifacts under `reference_implementation/outputs/sample_run/`:
 
-Principal Data Engineers are evaluated on platform ownership, tradeoff decisions, operational reliability, governance, and cross-team leadership. This package is designed to demonstrate those capabilities directly.
+- Bronze, Silver, and Gold JSON outputs
+- Data-quality results
+- Source-hash and lineage manifest
+- Pipeline-run summary
+
+Generated outputs are ignored by Git.
+
+## Repository structure
+
+```text
+architecture/                    Logical, physical, and security architecture
+architecture_decision_records/   Platform decisions and revisit triggers
+contracts/                       Completed contract examples
+cost_management/                 FinOps scorecard and controls
+disaster_recovery/               RTO/RPO and recovery strategy
+docs/                            Platform architecture, quality, operating model
+executive_materials/             Executive summary
+infra/terraform/                 Reference module and environment boundaries
+interview_narrative/             Principal-level narrative
+monitoring_cost/                 Observability and cost-governance framework
+reference_implementation/        Executable contract/quality/lineage pipeline
+reliability/                     SLIs, SLOs, error budgets
+runbooks/                        Completed operational runbook
+security_governance/             Security model and access matrix
+templates/                       Reusable contract and runbook templates
+tests/                           Architecture-document validation
+.github/workflows/               CI validation
+```
+
+## Principal Data Engineer interview positioning
+
+> I designed a governed enterprise data platform pattern rather than a single pipeline. I selected a decisive Azure reference stack, separated the data and control planes, defined data-product contracts and quality gates, established security and environment boundaries, created measurable reliability and cost controls, and added an executable reference pipeline to prove that the architectural patterns can be implemented consistently.
+
+## Production limitations
+
+- No Azure resources are provisioned by this repository.
+- Terraform is intentionally a module-boundary scaffold.
+- The local pipeline uses synthetic JSON records and the Python standard library.
+- Purview lineage, ADF orchestration, Databricks processing, and multi-region recovery require enterprise implementation and validation.
+- Security policies, retention periods, SLOs, and cost thresholds must be approved for the actual organization and regulatory context.

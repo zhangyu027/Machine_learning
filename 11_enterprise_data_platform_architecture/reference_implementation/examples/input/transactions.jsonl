@@ -1,0 +1,3 @@
+{"record_id":"T-1001","domain":"Finance","status":"open","amount":125.5}
+{"record_id":"T-1002","domain":"Finance","status":"closed","amount":88.25}
+{"record_id":"T-1003","domain":"Operations","status":"OPEN","amount":210.0}

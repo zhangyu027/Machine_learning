@@ -1,47 +1,55 @@
-# Data Contract Template
+# Enterprise Data Contract Template
 
-## Dataset Name
+## Dataset identity
 
-`<domain>.<dataset_name>`
+- Dataset name:
+- Contract version:
+- Business owner:
+- Technical owner:
+- Data steward:
+- Consumer groups:
 
-## Owner
+## Purpose and grain
 
-Business Owner:
-Technical Owner:
-Data Steward:
+- Business purpose:
+- One row represents:
+- Primary/business key:
 
-## Purpose
+## Delivery expectations
 
-Describe what this dataset supports.
-
-## Grain
-
-One row represents:
+- Update frequency:
+- Freshness SLA:
+- Availability deadline:
+- Source dependency:
 
 ## Schema
 
-| Column | Type | Required | Description | Example |
+| Column | Type | Required | Classification | Description | Example |
+|---|---|---|---|---|---|
+| id | string | yes | internal | Unique identifier | 123 |
+
+## Quality and reconciliation
+
+| Rule | Dimension | Severity | Action | Owner |
 |---|---|---|---|---|
-| id | string | yes | Unique identifier | 123 |
+| Required fields not null | Completeness | Critical | Stop and quarantine | Technical owner |
 
-## Quality Rules
+## Governance
 
-| Rule | Severity | Action |
-|---|---|---|
-| Required fields not null | Critical | Stop pipeline |
-| No duplicate grain records | Critical | Stop pipeline |
-| Codes must match reference table | High | Alert and quarantine |
+- Classification:
+- Retention period:
+- Permitted purposes:
+- Access policy:
+- Lineage requirements:
 
-## Freshness SLA
+## Evolution and compatibility
 
-Expected update frequency:
-Expected availability time:
+- Backward-compatibility policy:
+- Schema-evolution policy:
+- Deprecation window:
+- Consumer-notification process:
 
-## Change Management
+## Approval history
 
-Breaking changes require:
-
-- PR review
-- Business owner approval
-- Consumer notification
-- Version update
+| Version | Date | Change | Approvers | Status |
+|---|---|---|---|---|

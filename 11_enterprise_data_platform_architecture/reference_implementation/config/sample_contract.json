@@ -1,0 +1,12 @@
+{
+  "dataset": "finance.transaction_event",
+  "version": "1.0.0",
+  "grain": ["record_id"],
+  "freshness_hours": 24,
+  "fields": [
+    {"name": "record_id", "type": "string", "required": true},
+    {"name": "domain", "type": "string", "required": true},
+    {"name": "status", "type": "string", "required": true, "allowed_values": ["OPEN", "CLOSED", "open", "closed"]},
+    {"name": "amount", "type": "number", "required": true}
+  ]
+}

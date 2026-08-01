@@ -1,0 +1,15 @@
+README.md
+pyproject.toml
+src/enterprise_data_platform/__init__.py
+src/enterprise_data_platform/cli.py
+src/enterprise_data_platform/contracts.py
+src/enterprise_data_platform/pipeline.py
+src/enterprise_data_platform/quality.py
+src/enterprise_data_platform_reference.egg-info/PKG-INFO
+src/enterprise_data_platform_reference.egg-info/SOURCES.txt
+src/enterprise_data_platform_reference.egg-info/dependency_links.txt
+src/enterprise_data_platform_reference.egg-info/entry_points.txt
+src/enterprise_data_platform_reference.egg-info/top_level.txt
+tests/test_contracts.py
+tests/test_pipeline.py
+tests/test_quality.py

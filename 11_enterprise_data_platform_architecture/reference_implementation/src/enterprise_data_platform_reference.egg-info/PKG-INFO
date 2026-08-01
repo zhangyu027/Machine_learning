@@ -1,0 +1,5 @@
+Metadata-Version: 2.4
+Name: enterprise-data-platform-reference
+Version: 3.0.0
+Summary: Executable metadata, contract, quality, lineage, and lakehouse reference patterns.
+Requires-Python: >=3.10

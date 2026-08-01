@@ -1,0 +1,23 @@
+{
+  "dataset": "public_health.event",
+  "version": "1.2.0",
+  "business_owner": "Public Health Program Director",
+  "technical_owner": "Health Data Product Team",
+  "data_steward": "Public Health Data Steward",
+  "purpose": "Supports regulated operational reporting and approved analytical use cases.",
+  "grain": ["event_id"],
+  "update_frequency": "daily",
+  "freshness_sla_hours": 24,
+  "classification": "confidential",
+  "retention_years": 7,
+  "schema_evolution": "Backward-compatible additive changes are permitted in minor versions; breaking changes require a major version and consumer approval.",
+  "fields": [
+    {"name": "event_id", "type": "string", "required": true, "description": "Stable source event identifier"},
+    {"name": "county_code", "type": "string", "required": true, "description": "Approved county reference code"},
+    {"name": "event_date", "type": "date", "required": true, "description": "Business event date"},
+    {"name": "program_code", "type": "string", "required": true, "description": "Approved program code"}
+  ],
+  "approval_history": [
+    {"version": "1.2.0", "status": "approved", "approvers": ["Business Owner", "Technical Owner", "Data Steward"]}
+  ]
+}

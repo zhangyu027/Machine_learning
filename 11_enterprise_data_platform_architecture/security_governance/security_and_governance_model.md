@@ -1,32 +1,41 @@
 # Security and Governance Model
 
-## Security Principles
+## Security principles
 
-- Least privilege access
-- Role-based access control
-- Separation of development and production
-- Sensitive data classification
-- Audit-ready access reviews
-- Secrets stored in Key Vault
+- Zero trust and least privilege
+- Managed identities and workload federation
+- Environment and duty separation
+- Private networking by default
+- Classification-driven controls
+- Auditable and time-bound privileged access
+- Encryption at rest and in transit
+- Data minimization and purpose limitation
 
-## Access Levels
+## Control matrix
 
-| Access Level | Description |
-|---|---|
-| Admin | Platform setup and infrastructure support |
-| Contributor | Pipeline and code development |
-| Reader | Review, validation, and reporting consumption |
-| Restricted | Sensitive PII/PHI access only when approved |
+| Role | Bronze | Silver | Gold | Secrets | Production deployment |
+|---|---|---|---|---|---|
+| Platform administrator | Support access | Support access | Support access | Admin by exception | Infrastructure only |
+| Data engineer | Domain write in dev/test | Domain write | No direct business approval | Read assigned secrets | Through CI/CD |
+| Data steward | Read | Read/quality approval | Certification approval | None | None |
+| Analyst/consumer | None | Restricted read | Approved read | None | None |
+| Security auditor | Audit read | Audit read | Audit read | Audit metadata | Read deployment evidence |
 
-## Governance Capabilities
+## Required mechanisms
 
-- Business glossary
-- Dataset catalog
-- Lineage tracking
-- PII classification
-- Data quality scorecards
-- Ownership metadata
+- Microsoft Entra ID groups mapped to Azure RBAC, storage ACLs, and workspace permissions.
+- Key Vault with managed-identity access, rotation, and access logging.
+- Private endpoints, network segmentation, egress controls, and disabled public access where practical.
+- Customer-managed keys for domains requiring enhanced regulatory control.
+- Row-level security, column-level security, masking, and tokenization for sensitive products.
+- Quarterly access certification and automatic removal of inactive or expired access.
+- Break-glass access with approval, expiration, incident ticket, and post-use review.
+- Audit-log retention aligned to regulatory and incident-response requirements.
 
-## Purview Role
+## Governance capabilities
 
-Microsoft Purview should provide cataloging, classification, glossary, lineage, and discoverability across the enterprise data estate.
+- Purview catalog, glossary, ownership, classification, and lineage
+- Data-product certification and deprecation states
+- Contract and quality-scorecard linkage
+- Retention, legal-hold, and deletion policy
+- Responsible AI and feature-use metadata for AI consumers

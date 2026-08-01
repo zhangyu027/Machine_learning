@@ -1,43 +1,28 @@
-# Final Check
+# Final Validation Check
 
-## Package Status
+## Local validation
 
-This package is GitHub-ready as an architecture-first Principal Data Engineer portfolio project.
-
-## Included
-
-- README
-- Enterprise architecture document
-- Azure platform blueprint
-- Architecture Decision Records
-- Data quality framework
-- Data contract template
-- Purview / lineage / governance notes
-- Monitoring and cost governance framework
-- Principal Data Engineer interview narrative
-- Executive summary
-
-## Validation
-
-This package is documentation-first and does not require code execution.
-
-Recommended final Git checks:
+From the repository root:
 
 ```bash
-git status
-git add 11_enterprise_data_platform_architecture
-git commit -m "Add Enterprise Data Platform Architecture portfolio package"
-git push origin main
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install pytest ruff
+python -m pip install -e reference_implementation
+
+ruff check reference_implementation/src reference_implementation/tests tests
+python -m compileall reference_implementation/src
+pytest -q tests reference_implementation/tests
+enterprise-platform-demo --config reference_implementation/config/sample_pipeline.json
+terraform fmt -check -recursive infra/terraform
 ```
 
-## Do Not Commit
+## Required evidence before merge
 
-```text
-.venv/
-__pycache__/
-.DS_Store
-*.zip
-large datasets
-secret files
-.env
-```
+- All architecture and reference-implementation tests pass.
+- The sample pipeline produces Bronze, Silver, Gold, quality, lineage, and run artifacts.
+- Terraform formatting passes.
+- GitHub Actions passes.
+- No `.DS_Store`, `__MACOSX`, secrets, state files, virtual environments, or generated outputs are tracked.
+- Documentation distinguishes executable patterns from the target Azure architecture.

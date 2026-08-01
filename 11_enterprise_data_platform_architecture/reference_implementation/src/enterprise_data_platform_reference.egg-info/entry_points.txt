@@ -1,0 +1,2 @@
+[console_scripts]
+enterprise-platform-demo = enterprise_data_platform.cli:main

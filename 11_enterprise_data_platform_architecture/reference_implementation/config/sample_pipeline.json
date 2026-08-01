@@ -1,0 +1,5 @@
+{
+  "input_path": "reference_implementation/examples/input/transactions.jsonl",
+  "contract_path": "reference_implementation/config/sample_contract.json",
+  "output_root": "reference_implementation/outputs/sample_run"
+}

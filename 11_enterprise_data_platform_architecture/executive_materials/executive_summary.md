@@ -1,31 +1,19 @@
 # Executive Summary
 
-## Enterprise Data Platform Architecture
+The Enterprise Data Platform Architecture provides a reusable operating pattern for governed analytics and AI. It separates raw, conformed, and certified data products; centralizes contracts, metadata, quality, and orchestration; and applies security, lineage, observability, reliability, and cost governance across the platform lifecycle.
 
-This package presents a Principal Data Engineer-level reference architecture for enterprise data platforms supporting analytics, reporting, and AI workloads.
+## Business value
 
-The architecture is based on:
+- Faster onboarding through metadata-driven standards and reusable implementation patterns
+- Reduced reporting and AI risk through certified Gold products and fail-fast quality controls
+- Improved auditability through ownership, contracts, lineage, and immutable run evidence
+- Better reliability through measurable SLOs, runbooks, replay-based recovery, and error-budget governance
+- Predictable cost through tagging, showback, lifecycle policies, job compute, and workload scorecards
 
-- Bronze / Silver / Gold lakehouse layers
-- ADLS storage foundation
-- Synapse / Databricks processing
-- ADF / Synapse pipeline orchestration
-- Purview cataloging, lineage, and governance
-- Data contracts and quality rules
-- CI/CD and PR-based deployment
-- Monitoring, incident response, and cost governance
+## Preferred Azure stack
 
-## Business Value
+ADLS Gen2, Azure Data Factory, Azure Databricks, Synapse Serverless SQL, Microsoft Purview, Microsoft Entra ID, Key Vault, Azure Monitor/Log Analytics, GitHub Actions, and Terraform.
 
-The platform design supports:
+## Evidence included
 
-- Reusable business logic
-- Trusted reporting datasets
-- Improved validation and auditability
-- Faster onboarding of analytics and AI use cases
-- Reduced duplication across reports and pipelines
-- Stronger security and governance posture
-
-## Leadership Positioning
-
-This package demonstrates the shift from building isolated pipelines to designing an operating platform that can be governed, scaled, monitored, and reused across teams.
+The package contains fifteen architecture decisions, logical/physical/security diagrams, a security control matrix, SLOs, disaster-recovery strategy, cost scorecard, completed contract and runbook examples, Terraform boundaries, CI validation, and a tested local reference implementation for contracts, quality, Bronze/Silver/Gold processing, lineage, and run metadata.
