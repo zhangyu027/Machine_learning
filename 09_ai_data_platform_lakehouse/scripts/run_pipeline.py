@@ -1,42 +1,20 @@
-from pathlib import Path
-import sys
-
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.append(str(ROOT))
-
-from src.data_generator import generate_synthetic_public_health_events
-from src.lakehouse_pipeline import run_lakehouse_pipeline
-from src.quality import run_quality_checks
-from src.feature_store import build_feature_store
-from ml.train_forecast_model import train_forecasting_model
-from src.visualization import generate_figures
-
+from ai_data_platform_lakehouse.config.settings import settings
+from ai_data_platform_lakehouse.ingestion.generator import generate_synthetic_public_health_events
+from ai_data_platform_lakehouse.transformations.lakehouse import bronze_ingest,silver_clean,gold_certified_tables
+from ai_data_platform_lakehouse.quality.checks import run_quality_checks
+from ai_data_platform_lakehouse.features.store import build_feature_store
+from ai_data_platform_lakehouse.modeling.forecast import train_forecasting_model
+from ai_data_platform_lakehouse.visualization.figures import generate_figures
 
 def main():
-    print("Step 1: Generate synthetic healthcare/public-sector events")
-    generate_synthetic_public_health_events(
-        n_records=10000,
-        output_path=ROOT / "data/raw/public_health_events.csv",
-    )
-
-    print("Step 2: Run Bronze/Silver/Gold lakehouse pipeline")
-    run_lakehouse_pipeline()
-
-    print("Step 3: Run data quality checks")
-    run_quality_checks()
-
-    print("Step 4: Build feature store")
-    build_feature_store()
-
-    print("Step 5: Train forecasting model")
-    metrics = train_forecasting_model()
-    print(metrics)
-
-    print("Step 6: Generate visual outputs")
-    generate_figures()
-
-    print("Done. Review outputs/tables and outputs/figures.")
-
-
-if __name__ == "__main__":
-    main()
+    o=settings.outputs_dir
+    generate_synthetic_public_health_events(10000,settings.raw_path,settings.random_seed)
+    bronze_ingest(settings.raw_path,settings.bronze_path)
+    silver_clean(settings.bronze_path,settings.silver_path)
+    gold_certified_tables(settings.silver_path,settings.gold_path,o/'tables/gold_monthly_program_demand.csv')
+    run_quality_checks(settings.silver_path,o/'tables/data_quality_report.csv')
+    build_feature_store(settings.gold_path,settings.feature_path,o/'tables/monthly_program_features.csv')
+    metrics=train_forecasting_model(settings.feature_path,o/'models/demand_forecast_model.joblib',o/'tables/forecast_model_metrics.json',o/'tables/forecast_predictions.csv')
+    generate_figures(output_dir=o/'figures')
+    print({"status":"completed","metrics":metrics})
+if __name__=='__main__': main()

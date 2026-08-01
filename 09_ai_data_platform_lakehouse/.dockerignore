@@ -1,0 +1,13 @@
+.git
+.venv
+__pycache__
+*.pyc
+.pytest_cache
+.DS_Store
+__MACOSX
+outputs
+data/bronze
+data/silver
+data/gold
+data/feature_store
+mlruns

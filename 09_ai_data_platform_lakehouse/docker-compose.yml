@@ -1,0 +1,9 @@
+services:
+  dashboard:
+    build: .
+    image: ai-data-platform-lakehouse:3.0.0
+    ports: ["8501:8501"]
+    volumes:
+      - ./outputs:/app/outputs
+      - ./data:/app/data
+    restart: unless-stopped
