@@ -1,0 +1,5 @@
+pypdf>=4,<6
+pillow>=10,<12
+faiss-cpu>=1.8,<2
+sentence-transformers>=3,<4
+ollama>=0.3,<1

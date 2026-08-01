@@ -1,0 +1,13 @@
+services:
+  api:
+    build: .
+    image: enterprise-ai-knowledge-agent:3.0.0
+    environment:
+      EAK_API_KEY: ${EAK_API_KEY:?EAK_API_KEY must be set}
+      EAK_INDEX_PATH: /app/vector_store/versions/active
+      EAK_DATABASE_PATH: /app/data/runtime/enterprise_agent.db
+    ports: ["8000:8000"]
+    volumes:
+      - ./vector_store:/app/vector_store
+      - ./data/runtime:/app/data/runtime
+    restart: unless-stopped

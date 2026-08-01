@@ -1,0 +1,6 @@
+-r requirements.txt
+-r requirements-api.txt
+-r requirements-ui.txt
+-r requirements-rag.txt
+-r requirements-dev.txt
+-e .

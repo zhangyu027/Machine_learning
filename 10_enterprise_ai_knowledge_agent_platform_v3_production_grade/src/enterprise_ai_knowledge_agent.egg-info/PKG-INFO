@@ -1,0 +1,5 @@
+Metadata-Version: 2.4
+Name: enterprise-ai-knowledge-agent
+Version: 3.0.0
+Summary: Production-oriented enterprise RAG and knowledge-agent reference platform
+Requires-Python: >=3.10

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: enterprise-ai-agent}
+spec:
+  replicas: 2
+  selector: {matchLabels: {app: enterprise-ai-agent}}
+  template:
+    metadata: {labels: {app: enterprise-ai-agent}}
+    spec:
+      automountServiceAccountToken: false
+      securityContext: {runAsNonRoot: true, seccompProfile: {type: RuntimeDefault}}
+      containers:
+        - name: api
+          image: enterprise-ai-knowledge-agent:3.0.0
+          ports: [{containerPort: 8000}]
+          env:
+            - name: EAK_API_KEY
+              valueFrom: {secretKeyRef: {name: enterprise-ai-agent-secrets, key: api-key}}
+          readinessProbe: {httpGet: {path: /ready, port: 8000}, periodSeconds: 10}
+          livenessProbe: {httpGet: {path: /health, port: 8000}, periodSeconds: 20}
+          securityContext: {allowPrivilegeEscalation: false, capabilities: {drop: ["ALL"]}}
+          resources: {requests: {cpu: "250m", memory: "512Mi"}, limits: {cpu: "1", memory: "2Gi"}}
