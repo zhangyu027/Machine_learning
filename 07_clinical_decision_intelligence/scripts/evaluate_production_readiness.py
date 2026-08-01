@@ -2,9 +2,9 @@ import json, joblib
 from pathlib import Path
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from src.ml.train_xgboost_readmission import FEATURES
-from src.evaluation.calibration import calibration_report
-from src.evaluation.fairness import subgroup_fairness_report
+from clinical_decision_intelligence.ml.train_xgboost_readmission import FEATURES
+from clinical_decision_intelligence.evaluation.calibration import calibration_report
+from clinical_decision_intelligence.evaluation.fairness import subgroup_fairness_report
 ROOT=Path(__file__).resolve().parents[1]
 df=pd.read_csv(ROOT/'data/raw/patient_encounters.csv')
 bundle=joblib.load(ROOT/'models/xgboost_readmission_model.joblib')

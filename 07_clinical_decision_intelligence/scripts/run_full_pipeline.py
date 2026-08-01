@@ -1,8 +1,8 @@
 import json
 from pathlib import Path
 import pandas as pd
-from src.ml.train_xgboost_readmission import train_xgboost_readmission, save_model
-from src.causal.propensity_matching import estimate_propensity_scores, nearest_neighbor_att
+from clinical_decision_intelligence.ml.train_xgboost_readmission import train_xgboost_readmission, save_model
+from clinical_decision_intelligence.causal.propensity_matching import estimate_propensity_scores, nearest_neighbor_att
 
 ROOT = Path(__file__).resolve().parents[1]
 

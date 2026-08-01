@@ -1,7 +1,7 @@
 from __future__ import annotations
 import joblib
 import pandas as pd
-from src.ml.train_xgboost_readmission import FEATURES
+from clinical_decision_intelligence.ml.train_xgboost_readmission import FEATURES
 
 class ReadmissionPredictor:
     def __init__(self, model_path):

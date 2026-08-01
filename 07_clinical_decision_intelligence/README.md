@@ -1,103 +1,104 @@
-# Clinical Decision Intelligence V3 — Production Healthcare ML
+# 07 Clinical Decision Intelligence — Production Reference Platform
 
-A production-oriented healthcare decision-support portfolio project combining readmission-risk prediction, causal treatment-effect estimation, explainability, model governance, API serving, monitoring, and simulated clinical integration.
+> **Important:** This repository uses synthetic data and is intended for educational and portfolio demonstration only. It is not a medical device and must not be used for diagnosis, treatment, triage, or other clinical decision-making.
 
-> **Safety boundary:** This is an educational portfolio system, not a medical device and not intended for diagnosis or treatment decisions without clinician review and formal validation.
+This project demonstrates how a Principal Data Engineer or ML Platform Engineer can turn clinical prediction and causal-inference workflows into a governed, observable, deployable decision-support platform.
 
-## Architecture
+## What the platform demonstrates
+
+- 30-day readmission-risk modeling
+- Propensity-score and doubly robust treatment-effect estimation
+- Causal-forest-style heterogeneous treatment-effect modeling
+- SHAP explainability, calibration, fairness, and drift utilities
+- Authenticated FastAPI serving with typed OpenAPI contracts
+- FHIR R4-style `RiskAssessment` output
+- Clinician feedback capture
+- Prometheus/Grafana observability
+- MLflow experiment tracking
+- Docker, Kubernetes, and GitHub Actions deployment scaffolding
+
+## Safety and implementation boundaries
+
+The included models and data are demonstration artifacts. The repository has not undergone clinical validation, regulatory review, hospital security review, prospective evaluation, or human-factors testing. The local feedback store is JSONL-based and the FHIR adapter is a simulation rather than a certified EHR integration.
+
+## Repository structure
 
 ```text
-FHIR/EHR simulation or feature store
-              ↓
-        FastAPI service
-              ↓
- XGBoost risk model + causal models
-              ↓
- Calibration + fairness + SHAP
-              ↓
- Clinician review and feedback log
-              ↓
- Prometheus/Grafana + drift monitoring
-              ↓
- MLflow experiments and model registry
+src/clinical_decision_intelligence/
+  api/            FastAPI service and schemas
+  causal/         Treatment-effect methods
+  core/           Central configuration
+  evaluation/     Calibration and fairness
+  features/       Feature-store abstraction
+  integrations/   FHIR and clinician feedback
+  ml/             Training, prediction, explainability
+  monitoring/     Metrics and drift
+scripts/          Pipeline, evaluation, and MLflow entry points
+tests/            Unit and API integration tests
+k8s/              Kubernetes Deployment, Service, and HPA
+monitoring/       Prometheus and Grafana assets
+docs/             Architecture, deployment, validation, and review documents
 ```
 
-## V3 production additions
-
-- MLflow experiment tracking and registered-model scaffold
-- Authenticated FastAPI prediction and FHIR-style endpoints
-- Docker, Docker Compose, Kubernetes Deployment, Service, and HPA
-- Prometheus metrics and starter Grafana dashboard
-- Local feature-store abstraction designed for migration to Feast
-- Fairness evaluation by sex and insurance group
-- Calibration curve data and Brier score
-- FHIR R4 `RiskAssessment` simulation
-- Clinician accept/reject feedback loop
-- GitHub Actions testing, evaluation, and Docker build
-- Drift utility using Population Stability Index
-
-## Existing analytical foundation
-
-- XGBoost 30-day readmission model
-- SHAP explainability
-- Propensity score matching
-- Doubly robust treatment-effect estimation
-- Causal-forest-style T-learner
-- Patient-level risk and treatment-benefit recommendations
-
-## Local run
+## Local installation
 
 ```bash
-python -m venv .venv
+python3.11 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
-export PYTHONPATH=$PWD
-export CDI_API_KEY=demo-secret
-uvicorn src.api.app:app --reload
+python -m pip install --upgrade pip
+python -m pip install -r requirements-all.txt
 ```
 
-Test:
+## Run tests and pipeline
 
 ```bash
-curl -X POST http://localhost:8000/v1/predict   -H 'Content-Type: application/json'   -H 'X-API-Key: demo-secret'   -d '{"patient_id":"P-100","age":72,"sex":"F","insurance":"Medicare","hospital_id":"H1","comorbidity_index":4,"prior_admissions_12m":2,"severity_score":7.5,"care_management_program":1,"length_of_stay":5}'
+CDI_API_KEY=test-secret pytest -q
+python -m scripts.run_full_pipeline
+python -m scripts.evaluate_production_readiness
 ```
 
-## Production evaluation
+## Run the API
 
 ```bash
-python scripts/evaluate_production_readiness.py
-python scripts/train_with_mlflow.py
+export CDI_API_KEY="$(python -c 'import secrets; print(secrets.token_urlsafe(32))')"
+uvicorn clinical_decision_intelligence.api.app:app --reload
 ```
 
-## Full stack
+### API endpoints
+
+| Method | Endpoint | Purpose | Authentication |
+|---|---|---|---|
+| GET | `/health` | Process health and version | No |
+| GET | `/ready` | Model readiness | No |
+| GET | `/version` | Service version | No |
+| GET | `/metrics` | Prometheus metrics | No |
+| POST | `/v1/predict` | Readmission-risk estimate | API key |
+| POST | `/v1/predict/fhir` | FHIR-style RiskAssessment | API key |
+| POST | `/v1/feedback` | Clinician feedback | API key |
+
+Swagger UI: `http://127.0.0.1:8000/docs`
+
+## Docker Compose
 
 ```bash
 cp .env.example .env
-# edit .env before use
-docker compose up --build
+# Replace the API key in .env before starting.
+docker compose up --build -d
+docker compose ps
+curl --fail http://127.0.0.1:8000/health
 ```
 
-Services: API `:8000`, MLflow `:5000`, Prometheus `:9090`, Grafana `:3000`.
+Services: API `8000`, MLflow `5000`, Prometheus `9090`, Grafana `3000`.
 
-## Interview narrative
+## Interview positioning
 
-“I built a clinical decision-intelligence platform that predicts 30-day readmission risk and estimates heterogeneous benefit from a care-management intervention. I extended the analytical pipeline into a production architecture with MLflow model governance, authenticated FastAPI serving, fairness and calibration evaluation, a FHIR-style integration layer, clinician feedback capture, Prometheus/Grafana monitoring, Docker/Kubernetes deployment, and automated CI. I treated the recommendation as decision support rather than autonomous medicine, preserving clinician review and auditability.”
+> I designed a clinical decision-intelligence platform that combines predictive risk modeling with treatment-effect estimation. I focused on the data and ML platform around the models: reproducible packaging, governed API contracts, FHIR-style interoperability, clinician feedback, fairness and calibration evaluation, model monitoring, MLflow tracking, container deployment, Kubernetes security controls, and CI quality gates. I explicitly positioned the output as clinician-reviewed decision support rather than autonomous medicine.
 
-## Tradeoffs to discuss
+## Principal-level design tradeoffs
 
-- Prediction performance versus calibration and subgroup reliability
-- Real-time feature freshness versus operational complexity
-- Local feature-store demo versus managed Feast infrastructure
+- Predictive discrimination versus calibration and subgroup reliability
+- Real-time features versus operational and governance complexity
+- Model reproducibility versus artifact size and distribution strategy
+- Local JSONL feedback versus transactional, auditable clinical systems
 - FHIR simulation versus certified EHR integration
-- Risk score usefulness versus alert fatigue
-- Model automation versus mandatory clinician oversight
-
-## Repository map
-
-- `src/api/` serving, schemas, authentication, rate limiting
-- `src/evaluation/` calibration and fairness
-- `src/features/` feature-store abstraction
-- `src/integrations/` FHIR simulation and clinician feedback
-- `src/monitoring/` Prometheus metrics and drift
-- `scripts/` training and production evaluation
-- `monitoring/`, `k8s/`, `.github/workflows/` operations scaffolding
+- Automated recommendations versus mandatory clinician oversight

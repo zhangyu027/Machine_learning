@@ -1,8 +1,8 @@
 import numpy as np, pandas as pd
-from src.evaluation.calibration import calibration_report
-from src.evaluation.fairness import subgroup_fairness_report
-from src.integrations.fhir import patient_features_to_fhir_risk_assessment
-from src.monitoring.drift import population_stability_index
+from clinical_decision_intelligence.evaluation.calibration import calibration_report
+from clinical_decision_intelligence.evaluation.fairness import subgroup_fairness_report
+from clinical_decision_intelligence.integrations.fhir import patient_features_to_fhir_risk_assessment
+from clinical_decision_intelligence.monitoring.drift import population_stability_index
 
 def test_calibration_report():
     r=calibration_report([0,0,1,1],[.1,.2,.8,.9],bins=2); assert r['brier_score'] < .1

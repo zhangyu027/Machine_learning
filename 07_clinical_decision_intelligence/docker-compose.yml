@@ -1,21 +1,53 @@
 services:
   api:
-    build: .
-    env_file: .env
-    ports: ["8000:8000"]
-    depends_on: [mlflow]
+    build:
+      context: .
+    image: clinical-decision-intelligence:3.1.0
+    environment:
+      CDI_API_KEY: ${CDI_API_KEY:?CDI_API_KEY must be set}
+      CDI_RATE_LIMIT_PER_MINUTE: ${CDI_RATE_LIMIT_PER_MINUTE:-60}
+      CDI_MODEL_PATH: /app/models/xgboost_readmission_model.joblib
+      CDI_FEEDBACK_PATH: /app/data/feedback/clinician_feedback.jsonl
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+    ports:
+      - "8000:8000"
+    depends_on:
+      mlflow:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
   mlflow:
     image: ghcr.io/mlflow/mlflow:v2.22.0
-    command: mlflow server --host 0.0.0.0 --port 5000 --backend-store-uri sqlite:///mlflow.db --default-artifact-root /mlartifacts
-    ports: ["5000:5000"]
-    volumes: ["mlflow-data:/mlartifacts"]
+    command: >-
+      mlflow server --host 0.0.0.0 --port 5000
+      --backend-store-uri sqlite:////mlflow-data/mlflow.db
+      --default-artifact-root /mlflow-data/artifacts
+    ports:
+      - "5001:5000"
+    volumes:
+      - mlflow-data:/mlflow-data
+
   prometheus:
     image: prom/prometheus:v2.54.1
-    ports: ["9090:9090"]
-    volumes: ["./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro"]
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      api:
+        condition: service_healthy
+
   grafana:
     image: grafana/grafana:11.2.0
-    ports: ["3000:3000"]
-    depends_on: [prometheus]
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
 volumes:
   mlflow-data:

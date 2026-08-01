@@ -1,26 +1,77 @@
 apiVersion: apps/v1
 kind: Deployment
-metadata: {name: cdi-api}
+metadata:
+  name: cdi-api
+  labels:
+    app: cdi-api
 spec:
   replicas: 2
-  selector: {matchLabels: {app: cdi-api}}
+  selector:
+    matchLabels:
+      app: cdi-api
   template:
-    metadata: {labels: {app: cdi-api}}
+    metadata:
+      labels:
+        app: cdi-api
     spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       containers:
-      - name: api
-        image: ghcr.io/your-org/clinical-decision-intelligence:latest
-        ports: [{containerPort: 8000}]
-        env:
-        - name: CDI_API_KEY
-          valueFrom: {secretKeyRef: {name: cdi-secrets, key: api-key}}
-        readinessProbe: {httpGet: {path: /health, port: 8000}, initialDelaySeconds: 10}
-        livenessProbe: {httpGet: {path: /health, port: 8000}, initialDelaySeconds: 20}
-        resources: {requests: {cpu: 250m, memory: 512Mi}, limits: {cpu: "1", memory: 2Gi}}
+        - name: api
+          image: ghcr.io/your-org/clinical-decision-intelligence:3.1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8000
+          env:
+            - name: CDI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cdi-secrets
+                  key: api-key
+            - name: CDI_MODEL_PATH
+              value: /app/models/xgboost_readmission_model.joblib
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 2Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            failureThreshold: 30
+            periodSeconds: 2
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 20
+            timeoutSeconds: 3
 ---
 apiVersion: v1
 kind: Service
-metadata: {name: cdi-api}
+metadata:
+  name: cdi-api
 spec:
-  selector: {app: cdi-api}
-  ports: [{port: 80, targetPort: 8000}]
+  selector:
+    app: cdi-api
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
