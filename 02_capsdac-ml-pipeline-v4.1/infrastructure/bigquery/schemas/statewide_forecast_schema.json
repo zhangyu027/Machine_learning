@@ -1,0 +1,7 @@
+[
+  {"name":"ForecastMonth","type":"STRING","mode":"REQUIRED"},
+  {"name":"PredictedEnrollment","type":"FLOAT","mode":"REQUIRED"},
+  {"name":"model_version","type":"STRING","mode":"NULLABLE"},
+  {"name":"run_id","type":"STRING","mode":"NULLABLE"},
+  {"name":"created_at_utc","type":"TIMESTAMP","mode":"NULLABLE"}
+]

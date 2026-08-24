@@ -1,0 +1,21 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+__MACOSX/
+
+# Never commit real CAPSDAC child-level extracts.
+data/private/*
+!data/private/.gitkeep
+
+# Generated artifacts
+outputs/forecasts/*.csv
+outputs/metrics/*.csv
+outputs/metrics/*.json
+outputs/reports/*.json
+outputs/experiments/*.csv
+outputs/retraining/*.json
+models/*.joblib
+models/registry/*.joblib

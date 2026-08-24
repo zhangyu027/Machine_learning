@@ -1,0 +1,38 @@
+project_name: capsdac_ml_pipeline_v4
+environment: portfolio_demo
+data_scope: CAPSDAC site-month aggregate forecasting derived from 12 months of child reporting
+privacy:
+  raw_child_data_committed: false
+  child_pii_selected: false
+  aggregate_modeling_grain: site_month
+model:
+  type: champion_selected_by_expanding_window_cv
+  horizon_months: 1
+  history_months_expected: 12
+  features:
+    - enrollment_t
+    - lag_1
+    - lag_2
+    - lag_3
+    - rolling_3
+    - month_sin
+    - month_cos
+    - trend_index
+    - ft_share
+    - iep_share
+    - dll_share
+    - homeless_eligibility_share
+    - median_family_monthly_income
+    - mean_family_size
+    - agency_enrollment
+    - agency_active_sites
+validation:
+  strategy: expanding_window
+  min_train_feature_months: 4
+  validation_months: 1
+outputs:
+  - site_forecast
+  - vendor_forecast
+  - statewide_forecast
+  - model_leaderboard
+  - drift_report

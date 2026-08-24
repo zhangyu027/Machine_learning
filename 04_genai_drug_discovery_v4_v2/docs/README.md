@@ -203,3 +203,34 @@ The central lesson is transferable to clinical AI: **the model is not the final 
 ## Evidence policy
 
 No performance result should be promoted to the main README unless it is generated from a versioned dataset through a reproducible experiment. Planned features must be labeled as planned; optional architectures must not be described as validated models.
+# Benchmark module patch
+
+Copy the included `pharma_genai/data` and `pharma_genai/models` folders into the root-level `pharma_genai` package.
+
+Then run:
+
+```bash
+pip install -e .
+python experiments/run_scientific_benchmark.py \
+  --input data/demo_smiles.csv \
+  --target target
+```
+
+The input CSV must contain both `smiles` and `target`, and `target` must be a binary 0/1 label.
+{
+  "version": "4.0.0",
+  "project_folder": "04_genai_drug_discovery_v4_principal_enterprise",
+  "fixed": [
+    "Renamed visible V3 titles and headers to V4",
+    "Updated Streamlit imports to pipeline_v4",
+    "Added pipeline_v4 public wrapper",
+    "Kept pipeline_v3 only for backward compatibility",
+    "Removed stale egg-info and __pycache__",
+    "Removed active rdkit-pypi packaging dependency",
+    "Added V4 install/run notes",
+    "Added FastAPI root route where possible"
+  ],
+  "run_streamlit": "PYTHONPATH=. streamlit run app/streamlit_app.py",
+  "run_api": "PYTHONPATH=. uvicorn pharma_genai.api:app --reload",
+  "test": "pytest -q"
+}

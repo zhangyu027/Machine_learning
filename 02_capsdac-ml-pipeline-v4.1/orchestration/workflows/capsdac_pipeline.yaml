@@ -1,0 +1,19 @@
+# Google Workflows-style orchestration sketch
+main:
+  steps:
+    - ingest:
+        call: http.post
+        args:
+          url: https://example.com/ingest
+    - validate_contracts:
+        call: http.post
+        args:
+          url: https://example.com/validate
+    - train_forecast:
+        call: http.post
+        args:
+          url: https://example.com/train
+    - publish_outputs:
+        call: http.post
+        args:
+          url: https://example.com/publish

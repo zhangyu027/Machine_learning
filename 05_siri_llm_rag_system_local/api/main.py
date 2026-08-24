@@ -6,7 +6,6 @@ import logging
 import time
 import uuid
 from pathlib import Path
-
 from fastapi import Depends, FastAPI, Header, HTTPException, Request, status
 from fastapi.responses import Response, StreamingResponse
 from pydantic import BaseModel, Field
@@ -103,7 +102,6 @@ def health():
 def metrics():
     return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
-
 async def retrieve(question: str, top_k: int):
     start = time.perf_counter()
     with span("retrieval"):
@@ -113,7 +111,6 @@ async def retrieve(question: str, top_k: int):
         RETRIEVAL_SCORE.observe(results[0]["score"])
     return results
 
-
 @app.post("/v1/query", response_model=QueryResponse, dependencies=[Depends(require_api_key)])
 async def query(payload: QueryRequest, request: Request):
     started = time.perf_counter()
@@ -121,6 +118,7 @@ async def query(payload: QueryRequest, request: Request):
     results = await retrieve(payload.question, payload.top_k)
     if not results:
         raise HTTPException(status_code=404, detail="No indexed context found")
+
 
     generation_start = time.perf_counter()
     with span("generation"):
@@ -137,7 +135,6 @@ async def query(payload: QueryRequest, request: Request):
         sources=[Source(**item) for item in results],
         latency_ms=round((time.perf_counter() - started) * 1000, 2),
     )
-
 
 @app.post("/v1/query/stream", dependencies=[Depends(require_api_key)])
 async def query_stream(payload: QueryRequest):

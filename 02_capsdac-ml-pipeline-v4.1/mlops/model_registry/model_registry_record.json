@@ -1,0 +1,8 @@
+{
+  "model_name": "capsdac_random_forest_forecast",
+  "version": "2.0.0",
+  "artifact_path": "models/capsdac_random_forest_forecast.joblib",
+  "metrics_path": "outputs/metrics/model_metrics.json",
+  "intended_use": "aggregate CSPP enrollment planning",
+  "not_for": "child-level eligibility or official certified counts"
+}

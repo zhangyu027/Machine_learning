@@ -1,0 +1,22 @@
+steps:
+  - name: python:3.11
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        pip install -r requirements.txt
+        export PYTHONPATH=$$PWD/forecasting
+        pytest
+
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - us-central1-docker.pkg.dev/capsdac2-ml/capsdac-ml/capsdac-forecast-api:latest
+      - .
+
+images:
+  - us-central1-docker.pkg.dev/capsdac2-ml/capsdac-ml/capsdac-forecast-api:latest
+
+options:
+  logging: CLOUD_LOGGING_ONLY

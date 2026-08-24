@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+          pip install -e .
+      - run: ruff check .
+      - run: python -m compileall src scripts
+      - run: mypy src --ignore-missing-imports
+      - run: pytest -q --cov=clinical_decision_intelligence --cov-report=term-missing --cov-report=xml
+        env:
+          CDI_API_KEY: ci-test-secret
+      - run: bandit -q -r src scripts
+      - run: pip-audit -r requirements.txt
+
+  container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: quality
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t cdi:${{ github.sha }} .
+      - run: |
+          docker run -d --name cdi-api -p 8000:8000 \
+            -e CDI_API_KEY=ci-test-secret \
+            cdi:${{ github.sha }}
+      - run: |
+          for i in {1..30}; do
+            curl --fail --silent http://127.0.0.1:8000/health && exit 0
+            sleep 2
+          done
+          docker logs cdi-api
+          exit 1
+      - if: failure()
+        run: docker logs cdi-api

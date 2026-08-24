@@ -1,0 +1,15 @@
+feature_sets:
+  enrollment_forecasting:
+    entity_keys: [ForecastEntityType, ForecastEntityId]
+    time_key: EnrollmentMonth
+    features:
+      - lag_1
+      - lag_3
+      - lag_6
+      - lag_12
+      - rolling_3
+      - rolling_6
+      - month_sin
+      - month_cos
+      - trend_index
+    target: EnrollmentCount
