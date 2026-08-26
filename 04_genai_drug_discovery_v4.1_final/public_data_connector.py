@@ -1,0 +1,1 @@
+from pharma_genai.connectors.public_data import CompoundRecord, PublicDataConnector

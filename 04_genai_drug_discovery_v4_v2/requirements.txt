@@ -1,0 +1,37 @@
+# Core deployable requirements for V4 demo and Streamlit/FastAPI validation
+# Core scientific stack
+pandas==2.2.3
+numpy==1.26.4
+scipy==1.15.3
+
+scikit-learn==1.6.1
+joblib==1.5.1
+
+requests==2.32.4
+
+pydantic==2.11.7
+
+fastapi==0.115.14
+uvicorn==0.35.0
+
+streamlit==1.47.1
+plotly==6.2.0
+
+pytest==8.4.1
+
+# Optional chemistry acceleration; V3 code gracefully falls back if unavailable
+torch==2.7.1
+transformers>=4.45
+sentence-transformers>=3.0
+
+shap>=0.48
+mlflow>=3.1
+
+biopython>=1.85
+faiss-cpu>=1.11
+
+
+# RDKit is optional; install with conda if needed:
+# Install with conda if possible
+rdkit
+torch-geometric

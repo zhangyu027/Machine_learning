@@ -1,0 +1,4 @@
+model_family,metric_wins,fraction_of_all_metric_wins
+classical_random_forest,13,0.5416666666666666
+classical_logistic,10,0.4166666666666667
+multitask_mlp,1,0.041666666666666664
