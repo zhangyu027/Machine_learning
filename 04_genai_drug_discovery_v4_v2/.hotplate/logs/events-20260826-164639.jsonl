@@ -36,3 +36,8 @@
 {"ts":"2026-08-26T19:39:42.306Z","session":"20260826-164639","kind":"file_change","data":{"path":"docs_v4.1_final/03_portfolio/V4_EXECUTIVE_NARRATIVE.md","ext":"md","change":"modify"}}
 {"ts":"2026-08-26T19:39:47.508Z","session":"20260826-164639","kind":"file_change","data":{"path":"docs_v4.1_final/03_portfolio/V4_EXECUTIVE_NARRATIVE_FINAL.md","ext":"md","change":"modify"}}
 {"ts":"2026-08-26T19:40:00.005Z","session":"20260826-164639","kind":"file_change","data":{"path":"docs_v4.1_final/03_portfolio/V4_EXECUTIVE_NARRATIVE.md","ext":"md","change":"modify"}}
+{"ts":"2026-08-26T21:26:48.982Z","session":"20260826-164639","kind":"file_change","data":{"path":"requirements.txt","ext":"txt","change":"modify"}}
+{"ts":"2026-08-26T21:27:02.653Z","session":"20260826-164639","kind":"file_change","data":{"path":"FINAL_CLEANUP_MANIFEST.json","ext":"json","change":"create"}}
+{"ts":"2026-08-26T21:27:02.964Z","session":"20260826-164639","kind":"file_change","data":{"path":"docs/00_overview/README_V4.1.md","ext":"md","change":"create"}}
+{"ts":"2026-08-26T21:27:03.118Z","session":"20260826-164639","kind":"file_change","data":{"path":"notebooks/experiment_notes.md","ext":"md","change":"create"}}
+{"ts":"2026-08-26T21:27:09.730Z","session":"20260826-164639","kind":"file_change","data":{"path":"docs_v4.1_final/00_overview/README_V4.1.md","ext":"md","change":"create"}}

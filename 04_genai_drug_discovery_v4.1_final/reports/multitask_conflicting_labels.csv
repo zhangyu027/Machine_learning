@@ -1,4 +1,0 @@
-endpoint,smiles,n_rows,labels,action
-hERG,CCC(=O)c1cn(-c2ccc(F)cc2)c2ccc(Cl)cc12,2,0|1,excluded_conflicting_duplicate
-hERG,CCC(CC)c1cn(-c2ccc(F)cc2)c2ccc(Cl)cc12,2,0|1,excluded_conflicting_duplicate
-hERG,CCc1cn(-c2ccc(F)cc2)c2ccc(Cl)cc12,2,0|1,excluded_conflicting_duplicate

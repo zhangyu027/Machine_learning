@@ -1,2 +1,0 @@
-n_candidates,top_candidate,mean_admet_score,model_metrics
-81,OCC(OO)1,0.44478271604938263,"{'mae': 0.014915456841959903, 'r2': 0.8553853908962245, 'n_training_samples': 10}"
