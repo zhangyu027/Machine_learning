@@ -1,0 +1,5 @@
+{
+  "ready": false,
+  "index": "vector_store/active",
+  "database": "data/runtime/enterprise_agent.db"
+}

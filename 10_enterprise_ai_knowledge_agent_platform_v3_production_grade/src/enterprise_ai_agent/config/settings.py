@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     enable_ollama: bool = False
     ollama_model: str = "llama3.2"
     ollama_host: str = "http://127.0.0.1:11434"
-    index_path: Path = Path("vector_store/active")
+    index_path: Path = Path("vector_store/versions/active")
     database_path: Path = Path("data/runtime/enterprise_agent.db")
     top_k: int = 5
     chunk_size: int = 800

@@ -2,7 +2,7 @@ import numpy as np
 from src.healthcare_mm.models.multimodal_transformer import MultimodalFusionEncoder
 from retrieval.vector_store import InMemoryVectorStore
 from rag.clinical_rag import ClinicalRAG
-from evaluation.multimodal_eval import recall_at_k, reciprocal_rank
+from src.healthcare_mm.evaluation.multimodal_eval import recall_at_k, reciprocal_rank
 from fhir.client import FHIRClient
 from feedback.review import FeedbackRepository, ClinicianReview
 
