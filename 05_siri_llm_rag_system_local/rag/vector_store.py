@@ -1,3 +1,4 @@
+from functools import lru_cache
 from pathlib import Path
 from typing import List, Dict
 import json
@@ -9,6 +10,7 @@ from sentence_transformers import SentenceTransformer
 DEFAULT_EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 
 
+@lru_cache(maxsize=2)
 def load_embedding_model(model_name: str = DEFAULT_EMBEDDING_MODEL):
     return SentenceTransformer(model_name)
 
