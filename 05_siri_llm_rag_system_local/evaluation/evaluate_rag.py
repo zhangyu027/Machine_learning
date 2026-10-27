@@ -38,15 +38,17 @@ def evaluate(eval_file: str, index_dir: str, top_k: int, model: str, generate_an
         recall_at_k = float(any(relevant))
         precision_at_k = sum(relevant) / max(len(results), 1)
         mrr = reciprocal_rank(results, expected)
+        hit_at_1 = float(any(relevant[:1]))
+        hit_at_3 = float(any(relevant[:3]))
 
         answer = ""
-        groundedness = 0.0
-        has_citation = 0.0
+        groundedness = None
+        has_citation = None
         if generate_answers:
             answer = ask_ollama(question, results, model_name=model)
             context = " ".join(item["text"] for item in results)
             groundedness = token_overlap(answer, context)
-            has_citation = citation_rate(answer)
+            has_citation = citation_rate(answer, results)
 
         rows.append({
             "question": question,
@@ -54,6 +56,8 @@ def evaluate(eval_file: str, index_dir: str, top_k: int, model: str, generate_an
             "recall_at_k": recall_at_k,
             "precision_at_k": precision_at_k,
             "reciprocal_rank": mrr,
+            "hit_at_1": hit_at_1,
+            "hit_at_3": hit_at_3,
             "groundedness_proxy": groundedness,
             "citation_present": has_citation,
             "top_sources": ", ".join(item["filename"] for item in results),
@@ -66,8 +70,10 @@ def evaluate(eval_file: str, index_dir: str, top_k: int, model: str, generate_an
         "recall_at_k": float(out["recall_at_k"].mean()) if len(out) else 0,
         "precision_at_k": float(out["precision_at_k"].mean()) if len(out) else 0,
         "mrr": float(out["reciprocal_rank"].mean()) if len(out) else 0,
-        "groundedness_proxy": float(out["groundedness_proxy"].mean()) if len(out) else 0,
-        "citation_rate": float(out["citation_present"].mean()) if len(out) else 0,
+        "hit_at_1": float(out["hit_at_1"].mean()) if len(out) else 0,
+        "hit_at_3": float(out["hit_at_3"].mean()) if len(out) else 0,
+        "groundedness_proxy": float(out["groundedness_proxy"].mean()) if generate_answers and len(out) else None,
+        "citation_rate": float(out["citation_present"].mean()) if generate_answers and len(out) else None,
     }
     output_dir = Path(__file__).resolve().parent
     out.to_csv(output_dir / "rag_evaluation_results.csv", index=False)
