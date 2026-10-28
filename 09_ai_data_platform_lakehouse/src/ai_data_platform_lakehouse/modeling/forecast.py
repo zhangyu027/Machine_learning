@@ -21,8 +21,11 @@ def train_forecasting_model(feature_path: str | Path, model_path: str | Path, me
     df=pd.read_parquet(feature_path); train,test=chronological_split(df,test_fraction)
     if test.empty: raise ValueError("Not enough rows for chronological test split")
     model=RandomForestRegressor(n_estimators=250,random_state=42,min_samples_leaf=2,n_jobs=-1); model.fit(train[FEATURE_COLS],train.target_next_month_demand); pred=model.predict(test[FEATURE_COLS])
-    baseline=test["total_services_lag1"].to_numpy() * 10.0
+    # A leakage-safe, training-only group mean benchmark (global fallback).
+    group_means=train.groupby(["county","program"]).target_next_month_demand.mean()
+    global_mean=float(train.target_next_month_demand.mean())
+    baseline=pd.Series([group_means.get((r.county,r.program),global_mean) for r in test.itertuples()],index=test.index)
     baseline_mae=float(mean_absolute_error(test.target_next_month_demand,baseline))
-    metrics={"baseline_mae":baseline_mae,"mae":float(mean_absolute_error(test.target_next_month_demand,pred)),"rmse":float(mean_squared_error(test.target_next_month_demand,pred)**.5),"r2":float(r2_score(test.target_next_month_demand,pred)),"n_train":int(len(train)),"n_test":int(len(test)),"train_end":str(pd.to_datetime(train.event_month).max().date()),"test_start":str(pd.to_datetime(test.event_month).min().date()),"model_type":"RandomForestRegressor","validation":"chronological_holdout"}
+    metrics={"baseline_mae":baseline_mae,"baseline_name":"train_group_mean","wape":float(abs(test.target_next_month_demand-pred).sum()/abs(test.target_next_month_demand).sum()),"bias":float((pred-test.target_next_month_demand).mean()),"mae":float(mean_absolute_error(test.target_next_month_demand,pred)),"rmse":float(mean_squared_error(test.target_next_month_demand,pred)**.5),"r2":float(r2_score(test.target_next_month_demand,pred)),"n_train":int(len(train)),"n_test":int(len(test)),"train_end":str(pd.to_datetime(train.event_month).max().date()),"test_start":str(pd.to_datetime(test.event_month).min().date()),"model_type":"RandomForestRegressor","validation":"chronological_holdout"}
     mp=Path(model_path); jp=Path(metrics_path); pp=Path(predictions_path); mp.parent.mkdir(parents=True,exist_ok=True); jp.parent.mkdir(parents=True,exist_ok=True); pp.parent.mkdir(parents=True,exist_ok=True); joblib.dump(model,mp); jp.write_text(json.dumps(metrics,indent=2),encoding='utf-8')
     out=test[["event_month","county","program",*FEATURE_COLS]].copy(); out["actual_demand"]=test.target_next_month_demand.values; out["predicted_demand"]=pred; out.to_csv(pp,index=False); return metrics
