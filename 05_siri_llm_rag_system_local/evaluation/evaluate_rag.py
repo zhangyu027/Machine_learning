@@ -38,6 +38,22 @@ def evaluate(eval_file: str, index_dir: str, top_k: int, model: str, generate_an
     from rag.ollama_client import ask_ollama
     from rag.vector_store import search_index
     df = pd.read_csv(eval_file)
+    from rag.vector_store import load_faiss_index
+    required = {"question", "expected_source_keyword"}
+    missing = required - set(df.columns)
+    if missing:
+        raise ValueError(f"Evaluation CSV missing columns: {sorted(missing)}")
+    _, metadata = load_faiss_index(index_dir)
+    filenames = {str(chunk["filename"]).lower() for chunk in metadata["chunks"]}
+    expected = {str(v).strip().lower() for v in df["expected_source_keyword"].dropna() if str(v).strip()}
+    absent = sorted(v for v in expected if not any(v in name for name in filenames))
+    if absent:
+        raise ValueError(
+            f"Evaluation/index mismatch: no indexed filenames match {absent}. "
+            f"Indexed filenames: {sorted(filenames)}. "
+            "Build the sample index using --input-dir data/sample_documents "
+            "--index-dir vector_store_eval and evaluate against vector_store_eval."
+        )
     rows = []
     for _, row in df.iterrows():
         question = str(row["question"])
