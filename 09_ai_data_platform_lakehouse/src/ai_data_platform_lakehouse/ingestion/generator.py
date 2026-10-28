@@ -16,5 +16,12 @@ def generate_synthetic_public_health_events(n_records: int = 10000, output_path:
       "age_band":rng.choice(["0-17","18-34","35-54","55+"],n_records,p=[.18,.28,.32,.22]),
       "risk_score":rng.beta(2.2,4.8,n_records),"service_count":rng.poisson(2.2,n_records)+1,
       "prior_utilization":rng.poisson(1.8,n_records),"social_need_index":rng.normal(.45,.18,n_records).clip(0,1)})
-    df["target_next_month_demand"]=(10+2.5*df.service_count+8*df.risk_score+3*df.prior_utilization+12*df.social_need_index+rng.normal(0,4,n_records)).clip(0)
+    # Generate realized demand first; derive next-month labels by group and time.
+    df["realized_demand"]=(10+2.5*df.service_count+8*df.risk_score+3*df.prior_utilization+12*df.social_need_index+rng.normal(0,4,n_records)).clip(0)
+    monthly=df.groupby(["event_month","county","program"])["realized_demand"].sum().rename("realized_monthly_demand").reset_index()
+    monthly=monthly.sort_values(["county","program","event_month"])
+    monthly["target_next_month_demand"]=monthly.groupby(["county","program"])["realized_monthly_demand"].shift(-1)
+    df=df.merge(monthly[["event_month","county","program","target_next_month_demand"]],on=["event_month","county","program"],how="left")
+    df=df.drop(columns=["realized_demand"])
+    df=df.dropna(subset=["target_next_month_demand"])
     p=Path(output_path); p.parent.mkdir(parents=True,exist_ok=True); df.to_csv(p,index=False); return df
