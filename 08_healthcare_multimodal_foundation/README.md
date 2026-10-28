@@ -242,3 +242,74 @@ should be used for diagnosis, treatment, triage, or patient-level decisions.
 | FastAPI health, prediction, and review endpoints | Executable demonstration |
 | Prometheus `/metrics` endpoint | Requires API integration described in `API_PATCH_GUIDE.md` |
 | External FHIR servers, production vector databases, Feast, distributed training, GPU serving, and hospital deployment | Integration paths/scaffolds |
+
+
+---
+
+## Verified local API workflow (October 27, 2026)
+
+The healthcare multimodal FastAPI demonstration was launched on **port 8001** to avoid a local port-8000 conflict with another application. Swagger UI at \`http://127.0.0.1:8001/docs\` displayed **Healthcare Multimodal Foundation Model API v2.1.0**, including \`GET /health\`, \`POST /v1/predict\`, and \`POST /v1/reviews\`.
+
+**Local automated test result:** \`22 passed, 1 warning in 2.75s\` using the project's \`.venv\` with Python 3.13. The warning was a \`StarletteDeprecationWarning\` involving \`httpx\` and \`starlette.testclient\`. This is a passing test run, not a claim of clinical validity or proof that every live HTTP workflow was exercised.
+
+### Start the service in an isolated environment
+
+From \`08_healthcare_multimodal_foundation/\`:
+
+\`\`\`bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt -r requirements-production.txt
+API_KEY=test-secret python -m pytest -q
+API_KEY=test-secret python -m uvicorn api.main:app --host 127.0.0.1 --port 8001 --reload
+\`\`\`
+
+Use \`test-secret\` only for local synthetic-data demonstrations. Set a securely managed secret for any nonlocal deployment. The \`API_KEY\` variable must be available to the **server process**, not only to pytest. The existing \`pytest.ini\` sets \`pythonpath = .\`; exporting \`PYTHONPATH=.\` is not required for this local test command.
+
+### Smoke-test the live API
+
+Keep Uvicorn running and use a second terminal:
+
+\`\`\`bash
+# Health endpoint
+curl -i http://127.0.0.1:8001/health
+
+# Authenticated prediction with synthetic data
+curl -i -X POST http://127.0.0.1:8001/v1/predict \
+  -H 'Content-Type: application/json' \
+  -H 'X-API-Key: test-secret' \
+  -d '{"patient_id":"synthetic-patient-001","structured_features":{"age":65,"prior_admissions":2},"note":"Synthetic test only","image_embedding":[0.1,0.2,0.3]}'
+
+# Authentication negative test: should return HTTP 401
+curl -i -X POST http://127.0.0.1:8001/v1/predict \
+  -H 'Content-Type: application/json' \
+  -d '{"patient_id":"synthetic-patient-001"}'
+
+# Prometheus exposition (mounted ASGI endpoint)
+curl -i http://127.0.0.1:8001/metrics/
+\`\`\`
+
+After a successful prediction, use its returned \`prediction_id\` to test \`POST /v1/reviews\` with an authorized \`X-API-Key\` header and a synthetic clinician ID. Inspect the response and confirm the feedback was recorded. Swagger loading and the 22 passing tests do **not** substitute for verifying these live requests.
+
+### API endpoints
+
+| Method | Path | Purpose | API key |
+| --- | --- | --- | --- |
+| GET | \`/health\` | Service health and version | No |
+| GET | \`/metrics/\` | Prometheus metrics | No |
+| POST | \`/v1/predict\` | Synthetic-data demonstration risk estimate and FHIR RiskAssessment | Yes |
+| POST | \`/v1/reviews\` | Record demonstration clinician feedback | Yes |
+
+The API's prediction is currently a **deterministic completeness-based heuristic**, not an inference call to the trained baseline model. Its scores must not be interpreted as calibrated clinical risk.
+
+### Next development priorities
+
+- [ ] **Live API integration tests:** verify authenticated prediction, HTTP 401 for missing/invalid keys, request validation, FHIR output, review submission, and metrics response.
+- [ ] **Resolve dependency warning:** investigate the Starlette/\`httpx\` deprecation in a separate dependency upgrade, confirm compatible versions, and re-run all tests; do not install \`httpx2\` blindly.
+- [ ] **Improve metrics verification:** confirm prediction counts and latency observations change after synthetic requests, and test failure-path instrumentation. Avoid patient identifiers in metric labels.
+- [ ] **Document environment reproducibility:** choose and test a supported Python version, pin or lock dependency versions, and validate the same commands in CI.
+- [ ] **Harden API security:** test secret configuration, authentication failures, request-size constraints, and feedback data handling before any shared deployment.
+- [ ] **Clarify serving vs. training:** keep the heuristic API separate from the trained pipeline model in documentation; any future model-serving integration requires proper calibration, leakage assessment, external validation, and clinical governance.
+- [ ] **Reconcile existing README guidance:** the older production API command and implementation-status notes may be outdated; treat this verified port-8001 workflow and the current \`api/main.py\` as the source of truth for the local demo.
+
+**Scope:** synthetic data and portfolio engineering demonstration only; not for diagnosis, treatment, triage, or real patient-level decisions.
