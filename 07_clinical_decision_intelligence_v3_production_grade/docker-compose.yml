@@ -26,9 +26,11 @@ services:
     command: >-
       mlflow server --host 0.0.0.0 --port 5000
       --backend-store-uri sqlite:////mlflow-data/mlflow.db
-      --default-artifact-root /mlflow-data/artifacts
+      --serve-artifacts
+      --artifacts-destination /mlflow-data/artifacts
+      --default-artifact-root mlflow-artifacts:/
     ports:
-      - "5000:5000"
+      - "5001:5000"
     volumes:
       - mlflow-data:/mlflow-data
 
@@ -41,7 +43,6 @@ services:
     depends_on:
       api:
         condition: service_healthy
-
   grafana:
     image: grafana/grafana:11.2.0
     ports:

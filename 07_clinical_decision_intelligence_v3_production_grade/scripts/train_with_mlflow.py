@@ -1,9 +1,9 @@
 from pathlib import Path
 import json, pandas as pd, mlflow, mlflow.sklearn
-from clinical_decision_intelligence.core.config import MLFLOW_TRACKING_URI
+from clinical_decision_intelligence.core.config import settings
 from clinical_decision_intelligence.ml.train_xgboost_readmission import train_xgboost_readmission
 ROOT=Path(__file__).resolve().parents[1]
-mlflow.set_tracking_uri(MLFLOW_TRACKING_URI); mlflow.set_experiment("clinical-decision-intelligence")
+mlflow.set_tracking_uri(settings.mlflow_tracking_uri); mlflow.set_experiment("clinical-decision-intelligence-v3")
 df=pd.read_csv(ROOT/'data/raw/patient_encounters.csv')
 with mlflow.start_run():
     model, columns, metrics=train_xgboost_readmission(df)
