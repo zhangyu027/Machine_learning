@@ -88,7 +88,7 @@ docker compose ps
 curl --fail http://127.0.0.1:8000/health
 ```
 
-Services: API `8000`, MLflow `5000`, Prometheus `9090`, Grafana `3000`.
+Services (host ports): API `8000`, MLflow `5001` (container port `5000`), Prometheus `9090`, Grafana `3000`.
 
 ## Interview positioning
 
@@ -102,3 +102,45 @@ Services: API `8000`, MLflow `5000`, Prometheus `9090`, Grafana `3000`.
 - Local JSONL feedback versus transactional, auditable clinical systems
 - FHIR simulation versus certified EHR integration
 - Automated recommendations versus mandatory clinician oversight
+
+## Verified local integration and model results (2026-10-28)
+
+The following observations were reported from a local macOS/Python 3.11 and Docker Compose test. They are **development smoke tests, not clinical validation or production deployment evidence**.
+
+| Component | Observed result |
+|---|---|
+| API `GET /health`, `/ready`, `/version` | Successful; model loaded, service version 3.1.0 |
+| Authenticated `POST /v1/predict` | HTTP 200 for a synthetic encounter; risk 0.4024517536, category `moderate`, clinician review required |
+| Authenticated `POST /v1/predict/fhir` | HTTP 200; FHIR-style `RiskAssessment` with probability 0.402452 |
+| Authenticated `POST /v1/feedback` | HTTP 200; synthetic feedback acknowledged (durable persistence not independently verified) |
+| Prometheus | `http://api:8000/metrics` target UP (1/1) |
+| MLflow | Experiment creation, metric/artifact logging, model registration succeeded |
+| Grafana | Login UI reachable; datasource and dashboard queries not yet verified |
+| Kubernetes, CI, production security | Not established by these local checks |
+
+**Latest MLflow training run:** `clinical-decision-intelligence-v3`, run `1164e2fd7bf94475b4b8791c4f3562c3` (`defiant-cat-899`), registered model `readmission-risk-xgboost` version **1**.
+
+| Metric | Latest local MLflow run | Earlier package validation (see `docs/VALIDATION_REPORT.md`) |
+|---|---:|---:|
+| ROC-AUC | **0.7432348469** | 0.7434 |
+| Average precision | **0.5620893332** | 0.5619 |
+
+These are **different runs**; no claim is made about statistical significance, real-world generalization, calibration, clinical utility, or performance on actual patient data. A model-signature/input-example warning remains a documentation/deployment improvement opportunity.
+
+### Reproduce the MLflow run locally
+
+The MLflow server is pinned to `ghcr.io/mlflow/mlflow:v2.22.0`. **Pin the Mac client to `mlflow==2.22.0` too** (see `requirements.txt`) to avoid newer-client `/api/2.0/mlflow/logged-models` 404 errors.
+
+```bash
+python -m pip install -r requirements.txt
+export CDI_API_KEY="$(python -c 'import secrets; print(secrets.token_urlsafe(32))')"
+docker compose config --quiet
+docker compose up -d --build
+curl --fail http://127.0.0.1:5001/health
+export MLFLOW_TRACKING_URI=http://127.0.0.1:5001
+python scripts/train_with_mlflow.py
+```
+
+For Mac-hosted training use `http://127.0.0.1:5001`; from containers use `http://mlflow:5000`. The MLflow server must serve artifacts via `--serve-artifacts --artifacts-destination /mlflow-data/artifacts` and retain its `mlflow-data` volume. Existing experiments with old local artifact URIs may need a fresh experiment rather than simply re-running. Never use `docker compose down -v` when preserving MLflow experiments.
+
+See [interview notes](docs/INTERVIEW_NOTES.md) for a concise explanation of design decisions, debugging, results, and limitations.
