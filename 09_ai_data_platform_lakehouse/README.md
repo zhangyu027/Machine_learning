@@ -31,9 +31,13 @@ streamlit run app/streamlit_app.py
 
 Dashboard: `http://127.0.0.1:8501`
 
+## October 2026 synthetic evaluation
+
+Holdout: 300 predictions; Random Forest MAE ~1.805, RMSE ~2.336, R² ~0.851, WAPE ~5.65%; last-observed-month baseline MAE ~1.817. The ~0.66% MAE advantage is marginal and does not demonstrate consistent superiority. The 9/9 quality checks cover implemented rules only. The final feature month has no next-month label and must not be plotted as zero. Synthetic demand contains designed persistence and seasonality and is not evidence of real-world performance. Inspect expanding-window fold results and test across multiple seeds before making broader claims.
+
 ## Modeling integrity
 
-Lag and rolling features use `shift(1)` before aggregation so the current month is never used to predict itself. Evaluation uses a chronological holdout rather than random train/test splitting. Metrics validate the synthetic demonstration only and are not evidence of real-world operational performance.
+The end-of-month t forecast uses observed month t and earlier demand to predict t+1. Lag features are groupwise historical shifts; rolling features use no future observations. Evaluation uses a chronological holdout rather than random train/test splitting. Metrics validate the synthetic demonstration only and are not evidence of real-world operational performance.
 
 ## Architecture
 
