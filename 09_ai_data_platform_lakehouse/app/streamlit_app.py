@@ -57,8 +57,12 @@ with tab_model:
         c1.metric("MAE", f"{metrics['mae']:.2f}")
         c2.metric("RMSE", f"{metrics['rmse']:.2f}")
         c3.metric("R²", f"{metrics['r2']:.3f}")
+        improvement=metrics.get("baseline_improvement_pct")
+        if improvement is not None: st.metric("MAE improvement vs baseline",f"{improvement:+.2f}%")
+        summary=metrics.get("backtest_summary",{})
+        if summary: st.caption(f"Backtest: model wins {summary['model_wins']} of {summary['folds']} months ({summary['ties']} ties); mean model MAE {summary['mean_model_mae']:.2f}, baseline {summary['mean_baseline_mae']:.2f}.")
 
-    for fig in ["monthly_program_demand_trend.png", "actual_vs_predicted_demand.png", "forecast_model_metrics.png"]:
+    for fig in ["monthly_program_demand_trend.png", "actual_vs_predicted_demand.png", "forecast_model_metrics.png", "forecast_residuals.png"]:
         path = FIGURE_DIR / fig
         if path.exists():
             st.image(str(path), caption=fig, use_container_width=True)
