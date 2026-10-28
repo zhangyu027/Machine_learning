@@ -21,7 +21,11 @@ def generate_synthetic_public_health_events(n_records: int = 10000, output_path:
     monthly=df.groupby(["event_month","county","program"])["realized_demand"].sum().rename("realized_monthly_demand").reset_index()
     monthly=monthly.sort_values(["county","program","event_month"])
     monthly["target_next_month_demand"]=monthly.groupby(["county","program"])["realized_monthly_demand"].shift(-1)
+    counts=df.groupby(["event_month","county","program"]).size().rename("group_count").reset_index()
     df=df.merge(monthly[["event_month","county","program","target_next_month_demand"]],on=["event_month","county","program"],how="left")
+    df=df.merge(counts,on=["event_month","county","program"],how="left")
+    df["target_next_month_demand"]=df["target_next_month_demand"]/df["group_count"]
+    df=df.drop(columns=["group_count"])
     df=df.drop(columns=["realized_demand"])
     df=df.dropna(subset=["target_next_month_demand"])
     p=Path(output_path); p.parent.mkdir(parents=True,exist_ok=True); df.to_csv(p,index=False); return df
