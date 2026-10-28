@@ -36,6 +36,7 @@ def train_forecasting_model(feature_path,model_path,metrics_path,predictions_pat
     metrics.update({"baseline_name":"last_observed_month","baseline_mae":float(mean_absolute_error(test.target_next_month_demand,baseline)),
                     "n_train":len(train),"n_test":len(test),"train_end":str(train.event_month.max().date()),
                     "test_start":str(test.event_month.min().date()),"model_type":"RandomForestRegressor","validation":"chronological_holdout"})
+    metrics["baseline_improvement_pct"]=100*(metrics["baseline_mae"]-metrics["mae"])/metrics["baseline_mae"] if metrics["baseline_mae"] else None
     # Expanding-window one-step backtests; each fold uses only months earlier than its test month.
     months=sorted(df.event_month.unique());folds=[]
     for month in months[max(12,len(months)//2):]:
@@ -47,6 +48,7 @@ def train_forecasting_model(feature_path,model_path,metrics_path,predictions_pat
                       "model_mae":float(mean_absolute_error(te.target_next_month_demand,m.predict(te[FEATURE_COLS]))),
                       "baseline_mae":float(mean_absolute_error(te.target_next_month_demand,te.demand_t))})
     metrics["backtest_folds"]=folds
+    metrics["backtest_summary"]={"folds":len(folds),"model_wins":sum(f["model_mae"]<f["baseline_mae"] for f in folds),"ties":sum(f["model_mae"]==f["baseline_mae"] for f in folds),"mean_model_mae":float(np.mean([f["model_mae"] for f in folds])) if folds else None,"mean_baseline_mae":float(np.mean([f["baseline_mae"] for f in folds])) if folds else None}
     mp=Path(model_path);jp=Path(metrics_path);pp=Path(predictions_path)
     for p in [mp,jp,pp]:p.parent.mkdir(parents=True,exist_ok=True)
     joblib.dump(model,mp);jp.write_text(json.dumps(metrics,indent=2),encoding="utf-8")
