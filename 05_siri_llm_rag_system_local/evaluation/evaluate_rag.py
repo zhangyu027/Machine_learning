@@ -21,9 +21,18 @@ def token_overlap(answer: str, context: str) -> float:
     return len(answer_tokens & context_tokens) / max(len(answer_tokens), 1)
 
 
-def citation_rate(answer: str) -> float:
-    return 1.0 if re.search(r"chunk\s*\d+", answer, re.I) else 0.0
-
+def citation_rate(answer: str, results: list[dict]) -> float:
+    """Check whether an answer cites at least one actual retrieved source/chunk."""
+    citations = re.findall(
+        r"\[Source:\s*([^|\]]+?)\s*\|\s*Chunk:\s*(\d+)\s*\]",
+        answer,
+        re.I,
+    )
+    valid = {
+        (str(item["filename"]).strip().lower(), int(item["chunk_index"]))
+        for item in results
+    }
+    return float(any((name.strip().lower(), int(chunk)) in valid for name, chunk in citations))
 
 def evaluate(eval_file: str, index_dir: str, top_k: int, model: str, generate_answers: bool):
     from rag.ollama_client import ask_ollama
