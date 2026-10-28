@@ -1,4 +1,4 @@
-# 09 AI Data Platform Lakehouse — Production Grade
+# AI Data Platform Lakehouse — Reference Implementation
 
 > **Important:** This repository uses synthetic data for portfolio and educational purposes. It is not a live healthcare or government production platform.
 
@@ -46,6 +46,43 @@ Synthetic source -> Bronze immutable landing -> Silver validation/standardizatio
 -> Gold certified aggregates -> Offline feature store -> Forecast training/evaluation
 -> Governed tables, metrics, figures, and dashboard
 ```
+
+## Technical documentation and interview preparation
+
+- [Technical Findings and Remediation](docs/lakehouse_technical_findings.md) — Temporal split issues, synthetic target redesign, leakage-safe feature timing, model evaluation, and engineering remediation.
+- [Interview Questions and Talking Points](docs/lakehouse_interview_questions.md) — Architecture, data quality, forecasting, evaluation, limitations, and interview-ready explanations.
+
+## Forecasting results at a glance
+
+| Metric | Random Forest | Previous-month baseline |
+|---|---:|---:|
+| MAE | 1.805 | 1.817 |
+| RMSE | 2.336 | Not reported |
+| R² | 0.851 | Not reported |
+| WAPE | 5.65% | Not reported |
+
+**MAE improvement: approximately 0.66%.** This marginal improvement was measured on synthetic holdout data and is not evidence of reliable superiority. The dashboard reports expanding-window backtest results; inspect individual folds before claiming consistent improvement.
+
+## Engineering lessons learned
+
+1. **Temporal separation:** A chronological split must keep complete months together, rather than splitting rows within the same month.
+2. **Target integrity:** The next-month label should be constructed from subsequently observed monthly demand, not same-event attributes.
+3. **Feature availability:** At the end of month t, use observed demand from t and earlier to forecast t+1, never future information.
+4. **Baseline comparison:** Evaluate the model against the last-observed-month forecast before claiming ML adds value.
+5. **Missing future labels:** The final feature month has no known next-month target; do not display missing demand as zero.
+6. **Data quality and limits:** Nine passing checks validate only the implemented rules; synthetic results do not establish production readiness.
+
+## Reproducibility and verification
+
+From the project directory:
+
+```bash
+python -m scripts.run_pipeline
+pytest -q
+streamlit run app/streamlit_app.py
+```
+
+Inspect `outputs/tables/forecast_model_metrics.json`, the generated forecast figures, and the expanding-window backtest summary. The final local test run remains to be confirmed by the user.
 
 ## Principal Data Engineer narrative
 
