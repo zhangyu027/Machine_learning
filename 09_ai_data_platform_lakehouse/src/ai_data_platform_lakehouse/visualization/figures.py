@@ -20,7 +20,7 @@ def generate_figures(
 
     gold["event_month"] = pd.to_datetime(gold["event_month"])
 
-    monthly = gold.groupby("event_month", as_index=False)["target_next_month_demand"].sum()
+    monthly = gold.dropna(subset=["target_next_month_demand"]).groupby("event_month", as_index=False)["target_next_month_demand"].sum(min_count=1)
 
     plt.figure(figsize=(9, 5))
     plt.plot(monthly["event_month"], monthly["target_next_month_demand"], marker="o")
