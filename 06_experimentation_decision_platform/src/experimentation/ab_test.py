@@ -1,4 +1,5 @@
 """Frequentist two-arm experiment estimators."""
+
 from __future__ import annotations
 
 import numpy as np

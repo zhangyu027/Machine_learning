@@ -1,4 +1,5 @@
 """Thompson Sampling simulation for Bernoulli rewards."""
+
 from __future__ import annotations
 
 from collections.abc import Sequence
@@ -30,7 +31,9 @@ def simulate_thompson_sampling(
         if step % snapshot_every == 0 or step == steps:
             row: dict[str, float | int] = {"step": step, "selected_arm": arm}
             for index in range(rates.size):
-                row[f"posterior_mean_arm_{index}"] = float(alpha[index] / (alpha[index] + beta[index]))
+                row[f"posterior_mean_arm_{index}"] = float(
+                    alpha[index] / (alpha[index] + beta[index])
+                )
                 row[f"pulls_arm_{index}"] = int(pulls[index])
             rows.append(row)
     return pd.DataFrame(rows)

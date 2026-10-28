@@ -19,5 +19,9 @@ def test_pipeline_writes_expected_artifacts(monkeypatch, tmp_path: Path) -> None
     assert result["pipeline_status"] == "completed_successfully"
     report = tmp_path / "reports" / "model_outputs" / "executive_decision_report.json"
     assert report.exists()
-    assert json.loads(report.read_text())["decision"] in {"ship", "do_not_ship", "continue_experiment"}
+    assert json.loads(report.read_text())["decision"] in {
+        "ship",
+        "do_not_ship",
+        "continue_experiment",
+    }
     assert (tmp_path / "models" / "uplift_t_learner.joblib").exists()

@@ -1,4 +1,5 @@
 """T-Learner for heterogeneous treatment-effect estimation."""
+
 from __future__ import annotations
 
 import numpy as np
@@ -18,7 +19,7 @@ class TLearnerUpliftModel:
         )
         self.feature_columns: list[str] | None = None
 
-    def fit(self, X: pd.DataFrame, y: pd.Series, treatment: pd.Series) -> "TLearnerUpliftModel":
+    def fit(self, X: pd.DataFrame, y: pd.Series, treatment: pd.Series) -> TLearnerUpliftModel:
         if not ({0, 1} <= set(treatment.unique())):
             raise ValueError("Treatment indicator must contain both control (0) and treatment (1)")
         self.feature_columns = list(X.columns)

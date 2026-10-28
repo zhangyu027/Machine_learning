@@ -1,16 +1,15 @@
 """FastAPI service for experiment decision summaries."""
+
 from __future__ import annotations
 
 import hmac
 import os
 from typing import Literal
 
-import pandas as pd
 from fastapi import Depends, FastAPI, Header, HTTPException, status
 from prometheus_client import make_asgi_app
 from pydantic import BaseModel, Field
 
-from experimentation.ab_test import difference_in_means
 from experimentation.bayesian_ab_test import beta_binomial_ab_test
 
 app = FastAPI(
@@ -24,7 +23,9 @@ app.mount("/metrics", make_asgi_app())
 def require_api_key(x_api_key: str = Header(default="", alias="X-API-Key")) -> None:
     expected = os.getenv("API_KEY")
     if not expected:
-        raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE, "API authentication is not configured")
+        raise HTTPException(
+            status.HTTP_503_SERVICE_UNAVAILABLE, "API authentication is not configured"
+        )
     if not x_api_key or not hmac.compare_digest(x_api_key, expected):
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Invalid API key")
 
@@ -63,8 +64,13 @@ def health() -> HealthResponse:
     dependencies=[Depends(require_api_key)],
 )
 def analyze_conversion(request: ConversionAnalysisRequest) -> ConversionAnalysisResponse:
-    if request.treatment.conversions > request.treatment.observations or request.control.conversions > request.control.observations:
-        raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, "Conversions cannot exceed observations")
+    if (
+        request.treatment.conversions > request.treatment.observations
+        or request.control.conversions > request.control.observations
+    ):
+        raise HTTPException(
+            status.HTTP_422_UNPROCESSABLE_CONTENT, "Conversions cannot exceed observations"
+        )
     result = beta_binomial_ab_test(
         request.treatment.conversions,
         request.treatment.observations,

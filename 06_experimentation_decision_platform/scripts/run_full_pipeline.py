@@ -1,4 +1,5 @@
 """Run the complete experimentation decision workflow."""
+
 from __future__ import annotations
 
 import json
@@ -13,11 +14,11 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from bandits.thompson_sampling import simulate_thompson_sampling
-from causal.uplift_t_learner import TLearnerUpliftModel
-from experimentation.ab_test import difference_in_means
-from experimentation.bayesian_ab_test import beta_binomial_ab_test
-from experimentation.cuped import apply_cuped
+from bandits.thompson_sampling import simulate_thompson_sampling  # noqa: E402
+from causal.uplift_t_learner import TLearnerUpliftModel  # noqa: E402
+from experimentation.ab_test import difference_in_means  # noqa: E402
+from experimentation.bayesian_ab_test import beta_binomial_ab_test  # noqa: E402
+from experimentation.cuped import apply_cuped  # noqa: E402
 
 
 def build_decision(probability: float, expected_lift: float) -> str:
@@ -57,7 +58,9 @@ def main() -> dict[str, object]:
     )
 
     feature_columns = ["customer_age", "prior_spend_30d", "prior_visits_30d", "pre_period_revenue"]
-    model = TLearnerUpliftModel().fit(df[feature_columns], df["post_period_revenue"], df["treatment"])
+    model = TLearnerUpliftModel().fit(
+        df[feature_columns], df["post_period_revenue"], df["treatment"]
+    )
     df["estimated_cate"] = model.predict_cate(df[feature_columns])
     bandit = simulate_thompson_sampling(
         [success_c / n_c, success_t / n_t], steps=2_000, snapshot_every=100
@@ -69,7 +72,9 @@ def main() -> dict[str, object]:
     for directory in (processed_dir, output_dir, model_dir):
         directory.mkdir(parents=True, exist_ok=True)
     df.to_csv(processed_dir / "experiment_analysis_dataset.csv", index=False)
-    df[["user_id", "treatment", "estimated_cate"]].to_csv(output_dir / "uplift_scores.csv", index=False)
+    df[["user_id", "treatment", "estimated_cate"]].to_csv(
+        output_dir / "uplift_scores.csv", index=False
+    )
     bandit.to_csv(output_dir / "thompson_sampling_bandit.csv", index=False)
     joblib.dump(model, model_dir / "uplift_t_learner.joblib")
     (output_dir / "executive_decision_report.json").write_text(

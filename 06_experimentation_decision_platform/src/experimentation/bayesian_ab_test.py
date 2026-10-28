@@ -1,4 +1,5 @@
 """Beta-Binomial Bayesian A/B testing."""
+
 from __future__ import annotations
 
 import numpy as np

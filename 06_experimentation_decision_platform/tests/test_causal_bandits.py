@@ -9,7 +9,9 @@ from causal.uplift_t_learner import TLearnerUpliftModel
 
 
 def test_t_learner_fit_and_predict() -> None:
-    frame = pd.DataFrame({"x": [0, 1, 2, 3, 4, 5], "t": [0, 0, 0, 1, 1, 1], "y": [0, 1, 2, 2, 4, 6]})
+    frame = pd.DataFrame(
+        {"x": [0, 1, 2, 3, 4, 5], "t": [0, 0, 0, 1, 1, 1], "y": [0, 1, 2, 2, 4, 6]}
+    )
     model = TLearnerUpliftModel(n_estimators=10).fit(frame[["x"]], frame["y"], frame["t"])
     predictions = model.predict_cate(frame[["x"]])
     assert len(predictions) == len(frame)

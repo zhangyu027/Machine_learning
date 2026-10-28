@@ -9,7 +9,9 @@ from experimentation.cuped import apply_cuped
 
 
 def sample_frame() -> pd.DataFrame:
-    return pd.DataFrame({"treatment": [0, 0, 1, 1], "outcome": [1.0, 2.0, 3.0, 4.0], "pre": [1.0, 2.0, 1.5, 2.5]})
+    return pd.DataFrame(
+        {"treatment": [0, 0, 1, 1], "outcome": [1.0, 2.0, 3.0, 4.0], "pre": [1.0, 2.0, 1.5, 2.5]}
+    )
 
 
 def test_difference_in_means_returns_expected_lift() -> None:
