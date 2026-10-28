@@ -1,0 +1,11 @@
+
+# Local RAG data and generated artifacts
+venv/
+.venv/
+__pycache__/
+vector_store/
+vector_store_eval/
+data/uploaded_documents/
+evaluation/rag_evaluation_results.csv
+evaluation/rag_evaluation_summary.json
+evaluation/retrieval_evaluation_results.csv
