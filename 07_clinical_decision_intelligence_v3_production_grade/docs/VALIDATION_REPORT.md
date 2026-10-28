@@ -37,3 +37,17 @@ Merge only when:
 4. Kubernetes manifests validate.
 5. No secrets, generated reports, processed data, caches, or unintended model artifacts are tracked.
 6. OpenAPI and documentation match observed API behavior.
+
+## Supplemental local Docker and MLflow validation — 2026-10-28
+
+The earlier results above are retained as a **separate package-validation run**. The following observations were reported from a subsequent macOS Python 3.11 / Docker Compose local test; they do not supersede the earlier metrics.
+
+- FastAPI health, readiness and version endpoints responded; authenticated prediction, FHIR-style prediction and clinician feedback requests returned HTTP 200 using synthetic test data.
+- Prometheus reported its API scrape target UP (1/1). Grafana login UI loaded; Grafana datasource/dashboard query validation remains outstanding.
+- MLflow experiment `clinical-decision-intelligence-v3` successfully logged a model and registered `readmission-risk-xgboost` **version 1**.
+- Successful MLflow run: `1164e2fd7bf94475b4b8791c4f3562c3` (`defiant-cat-899`).
+- Latest **ROC-AUC 0.7432348468848465**; **average precision 0.5620893332451523**.
+- Earlier MLflow runs failed before model registration due to cross-environment artifact URI configuration and a client/server mismatch (Mac 3.16.1 vs Docker 2.22.0). Artifact serving was configured, a fresh experiment created, and the client pinned to 2.22.0.
+- Remaining warning: logged model has no signature or input example.
+
+These observations partially address the original “Docker smoke test not executed” gap but **do not demonstrate** a clean CI run, Kubernetes validation, prospective/clinical validation, production-grade security, or full monitoring dashboard operation. Keep the merge gates above in force.
