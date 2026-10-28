@@ -514,3 +514,43 @@ python -m evaluation.evaluate_rag --eval-file evaluation/sample_eval_questions.c
 Results are written to `evaluation/rag_evaluation_results.csv` and `evaluation/rag_evaluation_summary.json`. Without `--generate-answers`, groundedness and citation rate are `null` (not evaluated). Citations use `[Source: filename.txt | Chunk: 0]`; the citation metric checks whether at least one cited source/chunk pair was retrieved, not whether every claim is supported. Recall/precision currently rely on expected filename substrings, and groundedness is only token overlap. The four-question sample is a smoke test, not a rigorous benchmark.
 
 Keep the sample evaluation index in `vector_store_eval/` separately from the personal PDF index in `vector_store/`. The evaluator fails early if expected filenames are absent from the selected index.
+
+---
+
+## Next iteration: evaluation improvement checklist (October 27, 2026)
+
+The following results are from the **four-question sample evaluation** on the three sample documents, using `vector_store_eval/`, `--top-k 5`, `--generate-answers`, and Ollama `llama3.2`. These are a reproducibility baseline, **not production-level quality claims**.
+
+| Metric | Baseline |
+| --- | ---: |
+| Questions | 4 |
+| Recall@5 | 1.000 |
+| Precision@5 | 0.333 |
+| MRR | 0.708 |
+| Hit@1 | 0.500 |
+| Hit@3 | 1.000 |
+| Groundedness proxy | 0.720 |
+| Citation rate | 0.500 |
+
+### Next-time priorities
+
+- [ ] **Improve citation reliability:** inspect the two of four generated answers that did not pass citation validation. Check whether the model omitted citations, changed the required `[Source: filename.txt | Chunk: N]` format, or cited an unretrieved chunk. Add regression tests for those failure cases. Aim for 100% valid citations on the sample, then test a larger set.
+- [ ] **Expand the evaluation dataset:** grow beyond four questions; include multiple documents, paraphrased questions, ambiguous queries, irrelevant questions, and cases where the correct response is “not found.” Keep expected sources/chunks as reviewed labels.
+- [ ] **Strengthen groundedness evaluation:** token overlap is only a proxy, not proof that statements are supported. Add manual claim-level review and consider NLI-based verification or a governed LLM-as-judge process. Track unsupported claims separately from citation formatting.
+- [ ] **Improve top-rank retrieval:** Hit@1 is 50% despite Hit@3 of 100%. Inspect rankings and experiment with chunk size/overlap, hybrid search, or reranking. Compare against this baseline on the same dataset.
+- [ ] **Make evaluation repeatable:** save the index source, embedding model, Ollama model/version, evaluation questions, and run settings. Re-run the same questions multiple times to assess generation variability.
+- [ ] **Validate on realistic documents:** test PDF extraction and retrieval on a separate, appropriately licensed or private local corpus. Never commit personal PDFs, generated indexes, or evaluation artifacts.
+
+### Re-run the baseline
+
+```bash
+python build_index.py --input-dir data/sample_documents --index-dir vector_store_eval
+python -m evaluation.evaluate_rag \
+  --eval-file evaluation/sample_eval_questions.csv \
+  --index-dir vector_store_eval \
+  --top-k 5 \
+  --generate-answers \
+  --model llama3.2
+```
+
+**Success criterion for the next iteration:** improve validated citations and answer support without sacrificing retrieval recall; report results on a larger labeled evaluation set. Groundedness proxy scores can vary between generation runs.
