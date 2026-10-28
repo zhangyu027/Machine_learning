@@ -7,5 +7,6 @@ def build_feature_store(gold_path: str | Path, feature_path: str | Path, csv_pat
     for c in BASE:
         df[f"{c}_lag1"]=groups[c].shift(1)
         df[f"{c}_rolling3"]=groups[c].transform(lambda s:s.shift(1).rolling(3,min_periods=1).mean())
+    df["record_count_lag1"]=groups["record_count"].shift(1)
     df=df.dropna().reset_index(drop=True)
     p=Path(feature_path); cp=Path(csv_path); p.parent.mkdir(parents=True,exist_ok=True); cp.parent.mkdir(parents=True,exist_ok=True); df.to_parquet(p,index=False); df.to_csv(cp,index=False); return df
