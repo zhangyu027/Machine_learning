@@ -501,14 +501,16 @@ This project demonstrates a modern local RAG application using Ollama, FAISS, se
 From the project root, first build the sample index, then run retrieval-only evaluation:
 
 ```bash
-python build_index.py --input-dir data/sample_documents --index-dir vector_store
-python -m evaluation.evaluate_rag --eval-file evaluation/sample_eval_questions.csv --index-dir vector_store --top-k 5
+python build_index.py --input-dir data/sample_documents --index-dir vector_store_eval
+python -m evaluation.evaluate_rag --eval-file evaluation/sample_eval_questions.csv --index-dir vector_store_eval --top-k 5
 ```
 
 For generation metrics, start Ollama and install `llama3.2`, then run:
 
 ```bash
-python -m evaluation.evaluate_rag --eval-file evaluation/sample_eval_questions.csv --index-dir vector_store --top-k 5 --generate-answers --model llama3.2
+python -m evaluation.evaluate_rag --eval-file evaluation/sample_eval_questions.csv --index-dir vector_store_eval --top-k 5 --generate-answers --model llama3.2
 ```
 
 Results are written to `evaluation/rag_evaluation_results.csv` and `evaluation/rag_evaluation_summary.json`. Without `--generate-answers`, groundedness and citation rate are `null` (not evaluated). Citations use `[Source: filename.txt | Chunk: 0]`; the citation metric checks whether at least one cited source/chunk pair was retrieved, not whether every claim is supported. Recall/precision currently rely on expected filename substrings, and groundedness is only token overlap. The four-question sample is a smoke test, not a rigorous benchmark.
+
+Keep the sample evaluation index in `vector_store_eval/` separately from the personal PDF index in `vector_store/`. The evaluator fails early if expected filenames are absent from the selected index.
