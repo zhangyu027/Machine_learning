@@ -24,7 +24,7 @@ def generate_figures(
 
     plt.figure(figsize=(9, 5))
     plt.plot(monthly["event_month"], monthly["target_next_month_demand"], marker="o")
-    plt.title("Gold Layer: Monthly Program Demand")
+    plt.title("Gold Layer: Next-Month Target by Feature Month")
     plt.xlabel("Month")
     plt.ylabel("Demand")
     plt.grid(True)
@@ -34,6 +34,10 @@ def generate_figures(
 
     plt.figure(figsize=(8, 5))
     plt.scatter(pred["actual_demand"], pred["predicted_demand"], alpha=0.6)
+    lo=min(pred["actual_demand"].min(),pred["predicted_demand"].min())
+    hi=max(pred["actual_demand"].max(),pred["predicted_demand"].max())
+    plt.plot([lo,hi],[lo,hi],"k--",label="Perfect prediction")
+    plt.legend()
     plt.title("Forecast Model: Actual vs Predicted Demand")
     plt.xlabel("Actual Demand")
     plt.ylabel("Predicted Demand")
@@ -42,14 +46,25 @@ def generate_figures(
     plt.close()
 
     metric_df = pd.DataFrame({
-        "metric": ["mae", "rmse", "r2"],
-        "value": [metrics["mae"], metrics["rmse"], metrics["r2"]],
+        "metric": ["mae", "rmse", "baseline_mae"],
+        "value": [metrics["mae"], metrics["rmse"], metrics["baseline_mae"]],
     })
     plt.figure(figsize=(7, 5))
     plt.bar(metric_df["metric"], metric_df["value"])
     plt.title("Forecast Model Metrics")
     plt.grid(axis="y")
     plt.savefig(output_dir / "forecast_model_metrics.png", bbox_inches="tight")
+    plt.close()
+
+    plt.figure(figsize=(8, 4))
+    residuals=pred["predicted_demand"]-pred["actual_demand"]
+    plt.scatter(pred["actual_demand"],residuals,alpha=.6)
+    plt.axhline(0,color="black",linestyle="--")
+    plt.title("Residuals vs Actual Demand")
+    plt.xlabel("Actual demand")
+    plt.ylabel("Prediction minus actual")
+    plt.grid(True)
+    plt.savefig(output_dir / "forecast_residuals.png",bbox_inches="tight")
     plt.close()
 
     if Path(quality_csv).exists():
